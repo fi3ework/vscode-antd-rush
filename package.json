@@ -63,9 +63,14 @@
 		"watch": "tsc -watch -p ./"
 	},
 	"devDependencies": {
+		"@types/fs-extra": "^8.0.1",
 		"@types/node": "^6.0.40",
+		"@types/vscode": "^1.39.0",
 		"tslint": "^5.16.0",
-		"typescript": "^3.5.1",
-		"@types/vscode": "^1.39.0"
+		"typescript": "^3.5.1"
+	},
+	"dependencies": {
+		"@octokit/rest": "^16.35.2",
+		"fs-extra": "^8.1.0"
 	}
 }

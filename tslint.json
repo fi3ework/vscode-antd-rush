@@ -1,6 +1,6 @@
 {
-	"rules": {
-		"indent": [true, "tabs"],
-		"semicolon": [true, "always"]
-	}
+  "rules": {
+    "indent": [true, "spaces", 2],
+    "semicolon": [false]
+  }
 }
