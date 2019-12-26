@@ -82,6 +82,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/js-base64@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.npmjs.org/@types/js-base64/-/js-base64-2.3.1.tgz#c39f14f129408a3d96a1105a650d8b2b6eeb4168"
+  integrity sha512-4RKbhIDGC87s4EBy2Cp2/5S2O6kmCRcZnD5KRCq1q9z2GhBte1+BdsfVKCpG8yKpDGNyEE2G6IqFIh6W2YwWPA==
+
 "@types/node@*", "@types/node@>= 8":
   version "13.1.0"
   resolved "https://registry.npmjs.org/@types/node/-/node-13.1.0.tgz#225cbaac5fdb2b9ac651b02c070d8aa3c37cc812"
@@ -308,6 +313,11 @@ isobject@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/isobject/-/isobject-4.0.0.tgz#3f1c9155e73b192022a80819bacd0343711697b0"
   integrity sha512-S/2fF5wH8SJA/kmwr6HYhK/RI/OkhD84k8ntalo0iJjZikgq1XFvR5M8NPT1x5F7fBwCG3qHfnzeP/Vh/ZxCUA==
+
+js-base64@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.npmjs.org/js-base64/-/js-base64-2.5.1.tgz#1efa39ef2c5f7980bb1784ade4a8af2de3291121"
+  integrity sha512-M7kLczedRMYX4L8Mdh4MzyAMM9O5osx+4FcOQuTvr3A9F2D9S5JXheN0ewNbrvK2UatkTRhL5ejGmGSjNMiZuw==
 
 js-tokens@^4.0.0:
   version "4.0.0"
