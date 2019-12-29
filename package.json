@@ -65,14 +65,17 @@
 	"devDependencies": {
 		"@types/fs-extra": "^8.0.1",
 		"@types/js-base64": "^2.3.1",
-		"@types/node": "^6.0.40",
+		"@types/node": "^13.1.1",
 		"@types/vscode": "^1.39.0",
 		"tslint": "^5.16.0",
 		"typescript": "^3.5.1"
 	},
 	"dependencies": {
 		"@octokit/rest": "^16.35.2",
+		"decamelize": "^3.2.0",
 		"fs-extra": "^8.1.0",
-		"js-base64": "^2.5.1"
+		"js-base64": "^2.5.1",
+		"remark-parse": "^7.0.2",
+		"unified": "^8.4.2"
 	}
 }
