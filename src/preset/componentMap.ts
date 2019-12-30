@@ -8,12 +8,12 @@ export interface ComponentDocLocation {
 }
 
 export const antdComponentMap: ComponentMapping = {
-  Affix: {
-    anchorBeforeProps: '## API',
-  },
-  // Alert: {
+  // Affix: {
   //   anchorBeforeProps: '## API',
   // },
+  Alert: {
+    anchorBeforeProps: '## API',
+  },
   // Anchor: {
   //   anchorBeforeProps: '## API',
   // },

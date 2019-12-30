@@ -76,6 +76,9 @@
 		"fs-extra": "^8.1.0",
 		"js-base64": "^2.5.1",
 		"remark-parse": "^7.0.2",
-		"unified": "^8.4.2"
+		"remark-stringify": "^7.0.4",
+		"unified": "^8.4.2",
+		"unist-util-find": "^1.0.1",
+		"unist-util-find-after": "^2.0.4"
 	}
 }
