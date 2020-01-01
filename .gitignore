@@ -1,4 +1,4 @@
 out
 node_modules
-src/preset/token.ts
-src/doc
+src/defComposer/token.ts
+doc-dist

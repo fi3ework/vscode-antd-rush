@@ -4,7 +4,7 @@ import path from 'path'
 
 import Octokit, { ReposGetContentsResponse } from '@octokit/rest'
 
-import { ANTD_GITHUB } from './constant'
+import { ANTD_GITHUB, STORAGE } from './constant'
 import { GITHUB_TOKEN } from './token'
 
 const octokit = new Octokit({
@@ -64,9 +64,9 @@ async function downloadFile(componentName: string, fileName: string, fileSha: st
     repo: ANTD_GITHUB.REPO_NAME,
     file_sha: fileSha,
   })
-  ensureDirSync(path.resolve(__dirname, `../doc/${componentName}`))
+  ensureDirSync(path.resolve(__dirname, `${STORAGE.mdPath}/${componentName}`))
   await outputFile(
-    path.resolve(__dirname, `../doc/${componentName}/${fileName}`),
+    path.resolve(__dirname, `${STORAGE.mdPath}/${componentName}/${fileName}`),
     Base64.decode(contentRes.data.content)
   )
   console.log(`✅ ${componentName}/${fileName} download succeed.`)

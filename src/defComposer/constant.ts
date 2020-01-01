@@ -1,7 +1,3 @@
-export const GITHUB_CONFIG = {
-  token: '31458295030af086eab61049da18a529ff4518c6',
-}
-
 export const ANTD_GITHUB = {
   OWNER_NAME: 'ant-design',
   REPO_NAME: 'ant-design',
@@ -11,5 +7,11 @@ export const ANTD_GITHUB = {
 }
 
 export const STORAGE = {
-  path: './docs',
+  distPath: '../../doc-dist',
+  get mdPath() {
+    return STORAGE.distPath + '/md'
+  },
+  get definitionPath() {
+    return STORAGE.distPath + '/definition.json'
+  },
 }
