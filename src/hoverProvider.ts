@@ -25,7 +25,7 @@ export const provideHover = async (
   const defPath = definition.uri.path
   const regResult = isFromNodeModules(defPath)
   if (regResult === null) return // not from antd
-  readAst(document.getText())
+  readAst(document)
 
   return new Hover('I am a hover!~')
 }
