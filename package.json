@@ -1,85 +1,91 @@
 {
-	"name": "references-plusplus",
-	"displayName": "References++",
-	"description": "Show the results of 'Find References' as formatted text in an editor",
-	"version": "0.0.5",
-	"publisher": "vscode-samples",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-extension-samples"
-	},
-	"bugs": {
-		"url": "https://github.com/Microsoft/vscode-extension-samples/issues"
-	},
-	"engines": {
-		"vscode": "^1.39.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onCommand:editor.printReferences"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "editor.printReferences",
-				"title": "Show All References"
-			}
-		],
-		"menus": {
-			"editor/context": [
-				{
-					"command": "editor.printReferences",
-					"when": "editorHasReferenceProvider",
-					"group": "navigation@1.31"
-				}
-			]
-		},
-		"languages": [
-			{
-				"id": "locations",
-				"aliases": [
-					"Locations"
-				],
-				"extensions": [
-					".locations"
-				]
-			}
-		],
-		"grammars": [
-			{
-				"language": "locations",
-				"path": "./locations-syntax.json",
-				"scopeName": "source.locations"
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"lint": "tslint -p ./",
-		"watch": "tsc -watch -p ./"
-	},
-	"devDependencies": {
-		"@types/fs-extra": "^8.0.1",
-		"@types/js-base64": "^2.3.1",
-		"@types/node": "^13.1.1",
-		"@types/vscode": "^1.39.0",
-		"tslint": "^5.16.0",
-		"typescript": "^3.5.1"
-	},
-	"dependencies": {
-		"@octokit/rest": "^16.35.2",
-		"decamelize": "^3.2.0",
-		"fs-extra": "^8.1.0",
-		"js-base64": "^2.5.1",
-		"remark-parse": "^7.0.2",
-		"remark-stringify": "^7.0.4",
-		"unified": "^8.4.2",
-		"unist-util-find": "^1.0.1",
-		"unist-util-find-after": "^2.0.4",
-		"unist-util-visit-all-after": "^1.0.0"
-	}
+  "name": "vscode-antd-hero",
+  "displayName": "Ant-Design hero",
+  "description": "Your Ant-Design hero",
+  "version": "0.0.1",
+  "publisher": "fi3ework",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fi3ework/vscode-antd-hero"
+  },
+  "bugs": {
+    "url": "https://github.com/fi3ework/vscode-antd-hero/issues"
+  },
+  "engines": {
+    "vscode": "^1.39.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "capabilities": {
+      "hoverProvider": "true"
+    },
+    "commands": [
+      {
+        "command": "editor.printReferences",
+        "title": "Show All References"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "editor.printReferences",
+          "when": "editorHasReferenceProvider",
+          "group": "navigation@1.31"
+        }
+      ]
+    },
+    "languages": [
+      {
+        "id": "locations",
+        "aliases": [
+          "Locations"
+        ],
+        "extensions": [
+          ".locations"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "locations",
+        "path": "./locations-syntax.json",
+        "scopeName": "source.locations"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "lint": "tslint -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^8.0.1",
+    "@types/js-base64": "^2.3.1",
+    "@types/node": "^13.1.1",
+    "@types/vscode": "^1.39.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.5.1"
+  },
+  "dependencies": {
+    "@octokit/rest": "^16.35.2",
+    "decamelize": "^3.2.0",
+    "fs-extra": "^8.1.0",
+    "js-base64": "^2.5.1",
+    "remark-parse": "^7.0.2",
+    "remark-stringify": "^7.0.4",
+    "unified": "^8.4.2",
+    "unist-util-find": "^1.0.1",
+    "unist-util-find-after": "^2.0.4",
+    "unist-util-visit-all-after": "^1.0.0"
+  }
 }
