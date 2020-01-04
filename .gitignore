@@ -1,4 +1,4 @@
 out
 node_modules
-src/defComposer/token.ts
+src/prebuildDoc/token.ts
 doc-dist
