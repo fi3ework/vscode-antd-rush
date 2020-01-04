@@ -1,20 +1,21 @@
+import decamelize from 'decamelize'
 import {
   CancellationToken,
   commands,
   Hover,
   Location,
-  Position,
-  TextDocument,
-  SymbolInformation,
   MarkdownString,
+  Position,
+  SymbolInformation,
+  TextDocument,
 } from 'vscode'
 
-import { LanguageService, createLanguageService } from 'typescript'
-import { readAst } from './ast'
-import antdDocJson from './definition.json'
-import * as vscode from 'vscode'
+import { antdComponentMap } from './defComposer/componentMap'
+import { ComponentsDoc } from './defComposer/type'
+import _antdDocJson from './definition.json'
+import { composeDocLink, matchAntdModule, throwAntdHeroError } from './utils'
 
-const isFromNodeModules = (path: string) => path.match(/(.*)\/node_modules\/antd\/lib\/(.*)\/(.*)/)
+const antdDocJson: ComponentsDoc = _antdDocJson
 
 export const provideHover = async (
   document: TextDocument,
@@ -22,7 +23,7 @@ export const provideHover = async (
   token: CancellationToken
 ) => {
   const range = document.getWordRangeAtPosition(position)
-  const text = document.getText(range)
+  const propText = document.getText(range)
 
   const definitionLocs = await commands.executeCommand<Location[]>(
     'vscode.executeDefinitionProvider',
@@ -32,14 +33,13 @@ export const provideHover = async (
 
   // not definition available
   if (!definitionLocs?.length) return
-  if (definitionLocs.length > 1) console.log('[antd-hero]: more than one definition')
+  if (definitionLocs.length > 1) console.info('[antd-hero]: get more than one definition')
   const definitionLoc = definitionLocs[0]
   const definitionPath = definitionLoc.uri.path
-  const regResult = isFromNodeModules(definitionPath)
+  const antdMatched = matchAntdModule(definitionPath)
   // not from antd
-  if (regResult === null) return
-  const [, , componentFolder, filePath] = regResult
-  // readAst(document)
+  if (antdMatched === null) return
+  const { componentFolder, filePath } = antdMatched
 
   const symbolTree = await commands.executeCommand<SymbolInformation[]>(
     'vscode.executeDocumentSymbolProvider',
@@ -48,17 +48,60 @@ export const provideHover = async (
 
   const propsInteraceName = getProps(symbolTree, definitionLoc)
   if (propsInteraceName === null) return
-  const componentName = getComponentFromIterface(propsInteraceName)
+  const componentName = getAstNodeName(propsInteraceName)
   if (componentName === null) return
-  // @ts-ignore
-  const desc = antdDocJson[componentName][text].description
-  // @ts-ignore
-  const defaultValue = antdDocJson[componentName][text].default
-  const md = new MarkdownString(`**描述**: ${desc}  \n`)
-  md.appendMarkdown(`**默认值**: ${defaultValue}  \n`)
-  md.isTrusted = true
 
-  return new Hover(md)
+  if (componentName.type === 'props') {
+    const matchedComponent = antdDocJson[componentName.name]
+    if (!matchedComponent)
+      throw throwAntdHeroError(`did not match component for ${componentName.name}`)
+
+    const desc = matchedComponent[propText].description
+    const type = matchedComponent[propText].type
+    const version = matchedComponent[propText].version
+    const defaultValue = matchedComponent[propText].default
+    const md = new MarkdownString(`**描述**: ${desc}  \n`)
+    appendType(md, type)
+    md.appendMarkdown(`**默认值**: ${defaultValue}  \n`)
+    if (version) {
+      md.appendMarkdown(`**版本**: ${version}  \n`)
+    }
+    md.isTrusted = true
+
+    return new Hover(md)
+  }
+
+  if (componentName.type === 'component') {
+    const matchedComponent = antdComponentMap[componentName.name]
+
+    if (!matchedComponent)
+      throw throwAntdHeroError(`did not match component for ${componentName.name}`)
+
+    const aliasName = decamelize(matchedComponent.docAlias || componentName.name)
+    const md = new MarkdownString(
+      `**Alert** documentation \[ [en](${composeDocLink(
+        aliasName,
+        'en'
+      )}) | [中文](${composeDocLink(aliasName, 'zh')}) \]`
+    )
+
+    return new Hover(md)
+  }
+
+  return
+}
+
+const appendType = (md: MarkdownString, typeStr: string) => {
+  const types = typeStr.split('\\|')
+  md.appendMarkdown(`**类型**: `)
+  types.forEach((type, index) => {
+    md.appendMarkdown(`\`${type}\``)
+    if (index !== types.length - 1) {
+      md.appendMarkdown(' | ')
+    }
+  })
+  md.appendMarkdown('  \n')
+  return md
 }
 
 const getProps = (symbols: SymbolInformation[] | undefined, loc: Location) => {
@@ -69,8 +112,20 @@ const getProps = (symbols: SymbolInformation[] | undefined, loc: Location) => {
   return outerContainer ? outerContainer.name : null
 }
 
-const getComponentFromIterface = (interfaceName: string) => {
-  if (!interfaceName.endsWith('Props')) return null
-  const breadName = interfaceName.slice(0, interfaceName.length - 'Props'.length).split(/(?=[A-Z])/)
-  return breadName.join('.')
+type DocType = 'component' | 'props'
+
+const getAstNodeName = (name: string): null | { type: DocType; name: string } => {
+  if (name.endsWith('Props')) {
+    const breadName = name.slice(0, name.length - 'Props'.length).split(/(?=[A-Z])/)
+
+    return {
+      type: 'props',
+      name: breadName.join('.'),
+    }
+  }
+
+  return {
+    type: 'component',
+    name: name,
+  }
 }
