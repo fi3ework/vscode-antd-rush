@@ -3,6 +3,8 @@
 ## roadmap
 
 - [ ] Show props description and default value
+  - [ ] nested deconstruction type definition
+  - [ ] Go to type definition
 - [ ] Show all available props of current component
 - [ ] Split a webview of component's document via context menu
 - [ ] Automatic generate handler for functional or class component

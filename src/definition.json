@@ -1,4 +1,34 @@
 {
+  "Affix": {
+    "offsetBottom": {
+      "property": "offsetBottom",
+      "description": "距离窗口底部达到指定偏移量后触发",
+      "type": "number",
+      "default": "",
+      "version": ""
+    },
+    "offsetTop": {
+      "property": "offsetTop",
+      "description": "距离窗口顶部达到指定偏移量后触发",
+      "type": "number",
+      "default": "",
+      "version": ""
+    },
+    "target": {
+      "property": "target",
+      "description": "设置 `Affix` 需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数",
+      "type": "() => HTMLElement",
+      "default": "() => window",
+      "version": ""
+    },
+    "onChange": {
+      "property": "onChange",
+      "description": "固定状态改变时触发的回调函数",
+      "type": "Function(affixed)",
+      "default": "无",
+      "version": ""
+    }
+  },
   "Anchor": {
     "affix": {
       "property": "affix",
@@ -69,6 +99,29 @@
       "type": "(currentActiveLink: string) => void",
       "default": "",
       "version": "3.24.0"
+    }
+  },
+  "Anchor.Link": {
+    "href": {
+      "property": "href",
+      "description": "锚点链接",
+      "type": "string",
+      "default": "",
+      "version": ""
+    },
+    "title": {
+      "property": "title",
+      "description": "文字内容",
+      "type": "string\\|ReactNode",
+      "default": "",
+      "version": ""
+    },
+    "target": {
+      "property": "target",
+      "description": "该属性指定在何处显示链接的资源。",
+      "type": "string",
+      "default": "",
+      "version": ""
     }
   },
   "Alert": {
