@@ -25,16 +25,7 @@ export const provideHover = async (
   const range = document.getWordRangeAtPosition(position)
   const propText = document.getText(range)
 
-  const definitionLocs = await commands.executeCommand<Location[]>(
-    'vscode.executeDefinitionProvider',
-    document.uri,
-    position
-  )
-
-  // not definition available
-  if (!definitionLocs?.length) return
-  if (definitionLocs.length > 1) console.info('[antd-hero]: get more than one definition')
-  const definitionLoc = definitionLocs[0]
+  const definitionLoc = await getDefinitionUnderAntdModule(document, position)
   const definitionPath = definitionLoc.uri.path
   const antdMatched = matchAntdModule(definitionPath)
   // not from antd
@@ -48,13 +39,13 @@ export const provideHover = async (
 
   const propsInteraceName = getProps(symbolTree, definitionLoc)
   if (propsInteraceName === null) return
-  const componentName = getAstNodeName(propsInteraceName)
-  if (componentName === null) return
+  const nodeName = getAstNodeName(propsInteraceName)
+  if (nodeName === null) return
 
-  if (componentName.type === 'props') {
-    const matchedComponent = antdDocJson[componentName.name]
-    if (!matchedComponent)
-      throw throwAntdHeroError(`did not match component for ${componentName.name}`)
+  // prop provider
+  if (nodeName.type === 'props') {
+    const matchedComponent = antdDocJson[nodeName.name]
+    if (!matchedComponent) throw throwAntdHeroError(`did not match component for ${nodeName.name}`)
 
     const desc = matchedComponent[propText].description
     const type = matchedComponent[propText].type
@@ -71,13 +62,13 @@ export const provideHover = async (
     return new Hover(md)
   }
 
-  if (componentName.type === 'component') {
-    const matchedComponent = antdComponentMap[componentName.name]
+  // component provider
+  if (nodeName.type === 'component') {
+    const matchedComponent = antdComponentMap[nodeName.name]
 
-    if (!matchedComponent)
-      throw throwAntdHeroError(`did not match component for ${componentName.name}`)
+    if (!matchedComponent) throw throwAntdHeroError(`did not match component for ${nodeName.name}`)
 
-    const aliasName = decamelize(matchedComponent.docAlias || componentName.name)
+    const aliasName = componentFolder
     const md = new MarkdownString(
       `**Alert** documentation \[ [en](${composeDocLink(
         aliasName,
@@ -89,6 +80,32 @@ export const provideHover = async (
   }
 
   return
+}
+
+const getDefinitionUnderAntdModule = async (document: TextDocument, position: Position) => {
+  const [definitions, typeDefinitions] = await Promise.all([
+    await commands.executeCommand<Location[]>(
+      'vscode.executeDefinitionProvider',
+      document.uri,
+      position
+    ),
+    await commands.executeCommand<Location[]>(
+      'vscode.executeTypeDefinitionProvider',
+      document.uri,
+      position
+    ),
+  ])
+
+  const definitionsUnderAntd = (definitions || []).filter(d => matchAntdModule(d.uri.path))
+  const typeDefinitionsUnderAntd = (typeDefinitions || []).filter(d => matchAntdModule(d.uri.path))
+
+  if (typeDefinitionsUnderAntd.length > 1)
+    console.info('[antd-hero]: get more than one type definition')
+  if (definitionsUnderAntd.length > 1) console.info('[antd-hero]: get more than one definition')
+
+  // TODO: difference between definition and type definition
+  const definition = typeDefinitionsUnderAntd.concat(definitionsUnderAntd)[0] || null
+  return definition
 }
 
 const appendType = (md: MarkdownString, typeStr: string) => {
@@ -112,20 +129,20 @@ const getProps = (symbols: SymbolInformation[] | undefined, loc: Location) => {
   return outerContainer ? outerContainer.name : null
 }
 
-type DocType = 'component' | 'props'
+const getAstNodeName = (name: string): null | { type: 'component' | 'props'; name: string } => {
+  let type: 'component' | 'props' = 'component'
+  let breadName = name.split(/(?=[A-Z])/).join('.')
 
-const getAstNodeName = (name: string): null | { type: DocType; name: string } => {
   if (name.endsWith('Props')) {
-    const breadName = name.slice(0, name.length - 'Props'.length).split(/(?=[A-Z])/)
-
-    return {
-      type: 'props',
-      name: breadName.join('.'),
-    }
+    type = 'props'
+    breadName = name
+      .slice(0, name.length - 'Props'.length)
+      .split(/(?=[A-Z])/)
+      .join('.')
   }
 
   return {
-    type: 'component',
-    name: name,
+    type,
+    name: breadName,
   }
 }
