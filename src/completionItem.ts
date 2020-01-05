@@ -1,6 +1,18 @@
-import { TextDocument, Position, CompletionItem, Range, CompletionItemKind } from 'vscode'
-import { matchAntdModule, throwAntdHeroError } from './utils'
+import {
+  CancellationToken,
+  CompletionItem,
+  CompletionItemKind,
+  Position,
+  Range,
+  TextDocument,
+  TextEdit,
+  Command,
+  commands,
+  window,
+} from 'vscode'
+
 import { getClosetComponentNode } from './ast'
+import { matchAntdModule, throwAntdHeroError } from './utils'
 
 // TODO: just for prototype, move to assets
 const handlerMapping: { [k: string]: string[] } = {
@@ -8,19 +20,31 @@ const handlerMapping: { [k: string]: string[] } = {
   Alert: ['afterClose', 'onClose'],
 }
 
-const transformHandlerToItem = (handlerName: string): CompletionItem => {
-  return new CompletionItem(`#${handlerName}`, CompletionItemKind.Method)
+const transformHandlerToItem = (handlerName: string, range: Range): CompletionItem => {
+  const item = new CompletionItem(handlerName, CompletionItemKind.Method)
+  // TODO: handler documentation
+  // item.documentation =
+  item.insertText = handlerName
+  // item.range = range
+  const cmd = {
+    title: 'delete #',
+    command: 'editor.antdHeroReplace',
+  }
+  item.command = cmd
+  return item
 }
 
 export const provideCompletionItems = (
   document: TextDocument,
   position: Position
 ): CompletionItem[] => {
-  const start: Position = new Position(0, 0)
-  const range: Range = new Range(start, position)
-  const text = document.getText(range)
+  const range: Range = new Range(
+    new Position(position.line, position.character - 5),
+    new Position(position.line, position.character + 5)
+  )
 
-  let linePrefix = document.lineAt(position).text.substr(0, position.character)
+  const range2 = document.getWordRangeAtPosition(position)
+  const r3 = document.getWordRangeAtPosition(position)
 
   const componentName = getClosetComponentNode(document, position)
   if (componentName === null) return []
@@ -28,7 +52,14 @@ export const provideCompletionItems = (
   const availableHandler = handlerMapping[componentName]
   if (!availableHandler) return []
 
-  const items = availableHandler.map(transformHandlerToItem)
+  const items = availableHandler.map(h => transformHandlerToItem(h, range))
 
   return items
+}
+
+export const resolveCompletionItem = (item: CompletionItem, token: CancellationToken) => {
+  console.log(item)
+  return item
+
+  // return new CompletionItem(`kkkk`, CompletionItemKind.Method)
 }
