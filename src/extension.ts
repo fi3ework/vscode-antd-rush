@@ -1,6 +1,6 @@
-import { commands, Disposable, ExtensionContext, Hover, languages, window, workspace } from 'vscode'
+import { ExtensionContext, languages } from 'vscode'
 
-// import { provideCompletionItems } from './completionItem'
+import { provideCompletionItems } from './completionItem'
 import { provideHover } from './hoverProvider'
 
 export function activate(context: ExtensionContext) {
@@ -12,10 +12,13 @@ export function activate(context: ExtensionContext) {
     },
   })
 
-  // const completionItemRegistration = languages.registerCompletionItemProvider('javascript', {
-  //   provideCompletionItems,
-  // })
+  const completionItemRegistration = languages.registerCompletionItemProvider(
+    [{ language: 'javascript', scheme: 'file' }],
+    {
+      provideCompletionItems,
+    },
+    '#'
+  )
 
-  context.subscriptions.push(hoverRegistration)
-  // completionItemRegistration)
+  context.subscriptions.push(hoverRegistration, completionItemRegistration)
 }

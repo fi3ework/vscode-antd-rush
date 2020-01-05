@@ -3,7 +3,7 @@
     "module": "commonjs",
     "target": "es6",
     "outDir": "out",
-    "lib": ["es2015", "es2017", "es2018"],
+    "lib": ["es2015", "es2016", "es2017", "es2018"],
     "sourceMap": true,
     "strict": true,
     "rootDir": "src",
