@@ -27,7 +27,10 @@ export const readAst = (document: TextDocument) => {
  * JsxOpeningElement = 266,
  */
 
-export const getClosetComponentNode = (document: TextDocument, position: Position) => {
+export const getClosetComponentNode = (
+  document: TextDocument,
+  position: Position
+): string | null => {
   const sFile = ts.createSourceFile(
     document.uri.toString(),
     document.getText(),
@@ -37,7 +40,7 @@ export const getClosetComponentNode = (document: TextDocument, position: Positio
   const offset = document.offsetAt(position)
   const parents: Node[] = getNodeWithParentsAt(sFile, offset)
 
-  if (!parents.length) return
+  if (!parents.length) return null
   const [jsxElement, jsxText] = parents.slice(-2) // TS do not support array deconstruction operator?
 
   if (
@@ -46,8 +49,10 @@ export const getClosetComponentNode = (document: TextDocument, position: Positio
   ) {
     const componentName = jsxElement.tagName.getText(sFile)
     // TODO: rename import
-    console.log(componentName)
+    return componentName
   }
+
+  return null
 }
 
 const getNodeWithParentsAt = (node: Node, offset: number, initialParents?: Node[]) => {

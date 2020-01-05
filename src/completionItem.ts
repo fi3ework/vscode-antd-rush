@@ -1,6 +1,16 @@
 import { TextDocument, Position, CompletionItem, Range, CompletionItemKind } from 'vscode'
-import { matchAntdModule } from './utils'
+import { matchAntdModule, throwAntdHeroError } from './utils'
 import { getClosetComponentNode } from './ast'
+
+// TODO: just for prototype, move to assets
+const handlerMapping: { [k: string]: string[] } = {
+  Affix: ['onChange'],
+  Alert: ['afterClose', 'onClose'],
+}
+
+const transformHandlerToItem = (handlerName: string): CompletionItem => {
+  return new CompletionItem(`#${handlerName}`, CompletionItemKind.Method)
+}
 
 export const provideCompletionItems = (
   document: TextDocument,
@@ -9,18 +19,16 @@ export const provideCompletionItems = (
   const start: Position = new Position(0, 0)
   const range: Range = new Range(start, position)
   const text = document.getText(range)
-  // get all text until the `position` and check if it reads `console.`
-  // and if so then complete if `log`, `warn`, and `error`
+
   let linePrefix = document.lineAt(position).text.substr(0, position.character)
-  // if (!linePrefix.endsWith('xxx.$')) {
-  //   return []
-  // }
 
-  getClosetComponentNode(document, position)
+  const componentName = getClosetComponentNode(document, position)
+  if (componentName === null) return []
 
-  return [
-    new CompletionItem('#log', CompletionItemKind.Method),
-    new CompletionItem('#warn', CompletionItemKind.Method),
-    new CompletionItem('#error', CompletionItemKind.Method),
-  ]
+  const availableHandler = handlerMapping[componentName]
+  if (!availableHandler) return []
+
+  const items = availableHandler.map(transformHandlerToItem)
+
+  return items
 }
