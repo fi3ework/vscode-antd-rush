@@ -1,4 +1,4 @@
-import { ExtensionContext, languages, commands, Range } from 'vscode'
+import { commands, ExtensionContext, languages, Range } from 'vscode'
 
 import { provideCompletionItems, resolveCompletionItem } from './completionItem'
 import { provideHover } from './hoverProvider'
@@ -6,14 +6,10 @@ import { provideHover } from './hoverProvider'
 export function activate(context: ExtensionContext) {
   console.log('✨ ANTD HERO STARTED')
 
-  const commandRegistration = commands.registerTextEditorCommand(
-    'editor.antdHeroReplace',
-    (editor, cb) => {
-      console.log(editor)
-      // const uri = encodeLocation(editor.document.uri, editor.selection.active)
-      // return workspace
-      //   .openTextDocument(uri)
-      //   .then(doc => window.showTextDocument(doc, editor.viewColumn! + 1))
+  const commandDeletePrefix = commands.registerTextEditorCommand(
+    'editor.antdHeroDeletePrefix',
+    (editor, edit, rangeToDelete: Range) => {
+      edit.delete(rangeToDelete)
     }
   )
 
@@ -32,5 +28,5 @@ export function activate(context: ExtensionContext) {
     '#'
   )
 
-  context.subscriptions.push(hoverRegistration, completionItemRegistration, commandRegistration)
+  context.subscriptions.push(hoverRegistration, completionItemRegistration, commandDeletePrefix)
 }

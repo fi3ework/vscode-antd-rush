@@ -30,7 +30,7 @@
     },
     "commands": [
       {
-        "command": "editor.antdHeroReplace",
+        "command": "editor.antdHeroDeletePrefix",
         "title": "[antd hero internal] replace string"
       }
     ],

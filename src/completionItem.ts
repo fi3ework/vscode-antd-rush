@@ -20,16 +20,21 @@ const handlerMapping: { [k: string]: string[] } = {
   Alert: ['afterClose', 'onClose'],
 }
 
-const transformHandlerToItem = (handlerName: string, range: Range): CompletionItem => {
+const transformHandlerToItem = (handlerName: string, position: Position): CompletionItem => {
   const item = new CompletionItem(handlerName, CompletionItemKind.Method)
   // TODO: handler documentation
   // item.documentation =
   item.insertText = handlerName
-  // item.range = range
-  const cmd = {
+  const rangeOfSharp = new Range(
+    new Position(position.line, position.character - 1),
+    new Position(position.line, position.character)
+  )
+  const cmd: Command = {
     title: 'delete #',
-    command: 'editor.antdHeroReplace',
+    command: 'editor.antdHeroDeletePrefix',
+    arguments: [rangeOfSharp],
   }
+
   item.command = cmd
   return item
 }
@@ -38,21 +43,13 @@ export const provideCompletionItems = (
   document: TextDocument,
   position: Position
 ): CompletionItem[] => {
-  const range: Range = new Range(
-    new Position(position.line, position.character - 5),
-    new Position(position.line, position.character + 5)
-  )
-
-  const range2 = document.getWordRangeAtPosition(position)
-  const r3 = document.getWordRangeAtPosition(position)
-
   const componentName = getClosetComponentNode(document, position)
   if (componentName === null) return []
 
   const availableHandler = handlerMapping[componentName]
   if (!availableHandler) return []
 
-  const items = availableHandler.map(h => transformHandlerToItem(h, range))
+  const items = availableHandler.map(h => transformHandlerToItem(h, position))
 
   return items
 }
