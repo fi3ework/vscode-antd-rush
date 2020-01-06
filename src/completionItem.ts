@@ -9,9 +9,10 @@ import {
   Command,
   commands,
   window,
+  TextEditorEdit,
 } from 'vscode'
 
-import { getClosetComponentNode } from './ast'
+import { getClosetElementNode } from './ast'
 import { matchAntdModule, throwAntdHeroError } from './utils'
 
 // TODO: just for prototype, move to assets
@@ -20,9 +21,13 @@ const handlerMapping: { [k: string]: string[] } = {
   Alert: ['afterClose', 'onClose'],
 }
 
-const transformHandlerToItem = (handlerName: string, position: Position): CompletionItem => {
+const transformHandlerToItem = (
+  handlerName: string,
+  position: Position,
+  document: TextDocument
+): CompletionItem => {
   const item = new CompletionItem(handlerName, CompletionItemKind.Method)
-  // TODO: handler documentation
+  // TODO: show documentation of handler
   // item.documentation =
   item.insertText = handlerName
   const rangeOfSharp = new Range(
@@ -31,8 +36,8 @@ const transformHandlerToItem = (handlerName: string, position: Position): Comple
   )
   const cmd: Command = {
     title: 'delete #',
-    command: 'editor.antdHeroDeletePrefix',
-    arguments: [rangeOfSharp],
+    command: 'editor.antdHeroAfterCompletion',
+    arguments: [rangeOfSharp, document],
   }
 
   item.command = cmd
@@ -43,20 +48,21 @@ export const provideCompletionItems = (
   document: TextDocument,
   position: Position
 ): CompletionItem[] => {
-  const componentName = getClosetComponentNode(document, position)
+  const componentName = getClosetElementNode(document, position)
   if (componentName === null) return []
 
   const availableHandler = handlerMapping[componentName]
   if (!availableHandler) return []
 
-  const items = availableHandler.map(h => transformHandlerToItem(h, position))
+  const items = availableHandler.map(h => transformHandlerToItem(h, position, document))
 
   return items
 }
 
 export const resolveCompletionItem = (item: CompletionItem, token: CancellationToken) => {
-  console.log(item)
   return item
+}
 
-  // return new CompletionItem(`kkkk`, CompletionItemKind.Method)
+export const cleanCompletion = (edit: TextEditorEdit, rangeToDelete: Range) => {
+  edit.delete(rangeToDelete)
 }
