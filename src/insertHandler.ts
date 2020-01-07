@@ -1,5 +1,5 @@
 import { TextDocument, Position, commands, Location, workspace } from 'vscode'
-import { getClosetComponentNode, insertCurrentMemberInClass, buildTsFromDts } from './ast'
+import { getClosetComponentNode, insertStringToClassComponent, buildTsFromDts } from './ast'
 import { isClassDeclaration, ClassDeclaration } from 'typescript'
 import { matchAntdModule } from './utils'
 
@@ -11,9 +11,9 @@ export const insertHandler = async (document: TextDocument, position: Position) 
   if (!classComponent) return
 
   if (isClassDeclaration(classComponent)) {
-    const handlerStrToInsert = await getHandlerDefinition(document, position)
-    if (handlerStrToInsert === null) return
-    insertCurrentMemberInClass(document, classComponent, position, handlerStrToInsert)
+    const stringToInsert = await getHandlerDefinition(document, position)
+    if (stringToInsert === null) return
+    insertStringToClassComponent(document, classComponent, position, stringToInsert)
   }
 
   if (!classComponent) return
@@ -36,6 +36,6 @@ export const getHandlerDefinition = async (document: TextDocument, position: Pos
       dtsDocument.offsetAt(antdDefinition.range.end)
     )
 
-  const strToInsert = buildTsFromDts(definitionStr)
-  return strToInsert
+  const stringToInsert = buildTsFromDts(definitionStr)
+  return stringToInsert
 }

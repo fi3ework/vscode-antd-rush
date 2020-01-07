@@ -1,20 +1,25 @@
+import { ClassMethod, isClass } from 'babel-types'
 import ts, {
   ClassDeclaration,
+  createProgram,
   isClassDeclaration,
   isJsxOpeningElement,
+  isPropertySignature,
   isJsxSelfClosingElement,
   isJsxText,
   Node,
-  createProgram,
+  isFunctionTypeNode,
+  SourceFile,
 } from 'typescript'
-import { commands, Location, Position, TextDocument } from 'vscode'
+import { commands, Location, Position, TextDocument, window } from 'vscode'
 
-import { isFromReactNodeModules, throwAntdHeroError, antdHeroErrorMsg } from './utils'
-import { isClass, ClassMethod } from 'babel-types'
+import { antdHeroErrorMsg, isFromReactNodeModules, throwAntdHeroError } from './utils'
 
 /**
  * NOTE: https://github.com/microsoft/TypeScript/blob/master/lib/typescript.d.ts
  * JsxText = 11,
+ * PropertySignature = 157,
+ * FunctionType = 169,
  * ClassDeclaration = 244,
  * JsxSelfClosingElement = 265,
  * JsxOpeningElement = 266,
@@ -74,7 +79,7 @@ export const getClosetComponentNode = async (
 
   // TODO: functional component
 
-  // TODO: type guard should has narrowed type in above context
+  // TODO: type guard should has narrowed #ype in above context
   if (!isClassDeclaration(classComponentNode)) {
     throw Error(antdHeroErrorMsg('should return classComponentNode node'))
   } else {
@@ -85,11 +90,11 @@ export const getClosetComponentNode = async (
 /**
  *
  */
-export const insertCurrentMemberInClass = async (
+export const insertStringToClassComponent = async (
   document: TextDocument,
   classNode: ClassDeclaration,
   position: Position,
-  insertionStr: string
+  insertion: string
 ) => {
   const offset = document.offsetAt(position)
 
@@ -97,8 +102,12 @@ export const insertCurrentMemberInClass = async (
     return offSetContains(offset, member.pos, member.end)
   })
 
-  const handlerInsertOffset = classNode.members[memberIndex].pos
-  // TODO: insert it!
+  const insertAt = document.positionAt(classNode.members[memberIndex].pos)
+
+  let editor = window.activeTextEditor
+  editor?.edit(builder => {
+    builder.insert(insertAt, insertion)
+  })
 }
 
 /**
@@ -145,6 +154,7 @@ const isClassExtendsReactComponent = async (
 /**
  * Get ast node at postion, return with it's parent nodes
  */
+// TODO: implement by traverseTsAst
 const getNodeWithParentsAt = (node: Node, offset: number, initialParents?: Node[]) => {
   const parents: Node[] = initialParents || []
   let hasFind = false
@@ -178,11 +188,82 @@ const offSetContains = (offset: number, startOrEnd: number, endOrStart: number) 
  */
 export const buildTsFromDts = (dtsStr: string): string | null => {
   // FIXME: only a simple workaround
-  // TODO: ast is too complex
-  const regResult = dtsStr.match(/(.*?)\??: (.*) => (.*)/)
-  if (!regResult) return null
-  const [, handlerName, argsTypeStr, returnTypeStr] = regResult
-  return `${handlerName} = ${argsTypeStr} => {
-
+  // TODO: rebuild from AST
+  // NOTE: definition is a property, should be wrapped in type
+  const dtsInTypeStr = `type DUMMY = {
+  ${dtsStr}
   }`
+
+  const sCode: Node = ts.createSourceFile('', dtsInTypeStr, ts.ScriptTarget.Latest)
+  let handlerName: string = ''
+  const paramTexts: string[] = []
+
+  traverseWithParents(sCode, (node, stack) => {
+    if (isPropertySignature(node)) {
+      if (!node.type) return
+      handlerName = node.name.getText(sCode as SourceFile)
+      if (isFunctionTypeNode(node.type)) {
+        // TODO: lack ts type, only satisfied JS
+        const typeParamsText = node.type.parameters.map(p => {
+          return p.name.getText(sCode as SourceFile)
+        })
+        paramTexts.push(...typeParamsText)
+      }
+    }
+  })
+
+  // TODO: indent
+  return `
+
+  ${handlerName} = (${paramTexts.join(', ')}) => {
+    
+  }`
+}
+
+/**
+ * Traverse ts ast
+ */
+interface TraverseActions {
+  enter?: Function
+  leave?: Function
+}
+
+const noop = () => {}
+
+export const traverseTsAst = (entryNode: Node, traverseActions: TraverseActions) => {
+  const { enter: _enter, leave: _leave } = traverseActions
+  const enter = typeof _enter === 'function' ? _enter : noop
+  const leave = typeof _leave === 'function' ? _leave : noop
+
+  const traverseNode = (node: Node) => {
+    enter(node)
+    node.forEachChild(traverseNode)
+    leave(node)
+  }
+
+  traverseNode(entryNode)
+}
+
+/**
+ * Traverse node with parents
+ */
+export const traverseWithParents = (
+  entryNode: Node,
+  visitor: (node: Node, stack: Node[]) => boolean | void
+) => {
+  const nodeStack: Node[] = []
+
+  const enter = (node: Node) => {
+    nodeStack.push(node)
+    visitor(node, nodeStack)
+  }
+
+  const leave = (node: Node) => {
+    const topNode = nodeStack.pop()
+  }
+
+  traverseTsAst(entryNode, {
+    enter: enter,
+    leave: leave,
+  })
 }
