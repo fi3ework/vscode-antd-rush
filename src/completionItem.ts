@@ -29,11 +29,14 @@ const transformHandlerToItem = (
   const item = new CompletionItem(handlerName, CompletionItemKind.Method)
   // TODO: show documentation of handler
   // item.documentation =
-  item.insertText = handlerName
+  // FIXME: hand coded for class component
+  const camelizedHandlerName = handlerName.slice(0, 1).toUpperCase() + handlerName.slice(1)
+  item.insertText = `${handlerName}={handle${camelizedHandlerName}}`
   const rangeOfSharp = new Range(
     new Position(position.line, position.character - 1),
     new Position(position.line, position.character)
   )
+
   const cmd: Command = {
     title: 'delete #',
     command: 'editor.antdHeroAfterCompletion',
