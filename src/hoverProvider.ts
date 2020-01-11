@@ -10,13 +10,12 @@ import {
 } from 'vscode'
 
 import { antdComponentMap } from './buildResource/componentMap'
+import { DocLanguage } from './buildResource/constant'
 import { ComponentsDoc } from './buildResource/type'
-import _antdZhDocJson from './definition-zh.json'
-import _antdEnDocJson from './definition-en.json'
+import _antdDocJson from './definition.json'
 import { composeDocLink, matchAntdModule, throwAntdHeroError } from './utils'
 
-const antdZhDocJson: ComponentsDoc = _antdZhDocJson
-const antdEnDocJson: ComponentsDoc = _antdEnDocJson
+const antdDocJson: { [k in DocLanguage]: ComponentsDoc } = _antdDocJson
 
 export const provideHover = async (
   document: TextDocument,
@@ -45,7 +44,8 @@ export const provideHover = async (
 
   // prop provider
   if (nodeName.type === 'props') {
-    const matchedComponent = antdZhDocJson[nodeName.name]
+    // TODO: read language from settings
+    const matchedComponent = antdDocJson.zh[nodeName.name]
     if (!matchedComponent) throw throwAntdHeroError(`did not match component for ${nodeName.name}`)
 
     const desc = matchedComponent[propText].description

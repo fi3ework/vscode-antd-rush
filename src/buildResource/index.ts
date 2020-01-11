@@ -1,5 +1,7 @@
-import { copy, remove } from 'fs-extra'
+import { remove, writeJson } from 'fs-extra'
 import path from 'path'
+import fs from 'fs'
+import { promisify } from 'util'
 
 import { DefinitionBuilder } from './buildDocJson'
 import { antdComponentMap } from './componentMap'
@@ -14,13 +16,35 @@ async function buildResource() {
     await Promise.all(downloadByShaMap(shaMap))
     const builder = new DefinitionBuilder(antdComponentMap)
     builder.setDocLanguage('en')
-    builder.emitJson().then(() => {
-      copy(STORAGE.getDefinitionPath('en'), STORAGE.getSrcDefinitionPath('en'))
-    })
+    const enEmit = builder.emitJson()
     builder.setDocLanguage('zh')
-    builder.emitJson().then(() => {
-      copy(STORAGE.getDefinitionPath('zh'), STORAGE.getSrcDefinitionPath('zh'))
-    })
+    const zhEmit = builder.emitJson()
+    const [enJson, zhJson] = await Promise.all([enEmit, zhEmit])
+    const pWriteFile = promisify(fs.writeFile)
+    pWriteFile(
+      path.resolve(__dirname, STORAGE.getDefinitionPath('zh')),
+      JSON.stringify(zhJson, null, 2),
+      {
+        encoding: 'utf8',
+      }
+    )
+    pWriteFile(
+      path.resolve(__dirname, STORAGE.getDefinitionPath('en')),
+      JSON.stringify(enJson, null, 2),
+      'utf8'
+    )
+    pWriteFile(
+      STORAGE.srcDefinitionPath,
+      JSON.stringify(
+        {
+          zh: zhJson,
+          en: enJson,
+        },
+        null,
+        2
+      ),
+      'utf8'
+    )
   } catch (e) {
     console.error(e)
   }

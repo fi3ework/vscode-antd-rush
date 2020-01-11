@@ -156,15 +156,6 @@ export class DefinitionBuilder {
   }
 
   public async emitJson() {
-    const language = this.language
-    const json = await this.buildComponentDefinition()
-    const writeFileP = promisify(fs.writeFile)
-    await writeFileP(
-      path.resolve(__dirname, STORAGE.getDefinitionPath(language)),
-      JSON.stringify(json, null, 2),
-      {
-        encoding: 'utf8',
-      }
-    )
+    return await this.buildComponentDefinition()
   }
 }
