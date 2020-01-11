@@ -1,4 +1,3 @@
-import decamelize from 'decamelize'
 import {
   CancellationToken,
   commands,

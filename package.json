@@ -45,13 +45,20 @@
         ]
       }
     ],
-    "grammars": [
-      {
-        "language": "locations",
-        "path": "./locations-syntax.json",
-        "scopeName": "source.locations"
+    "configuration": {
+      "title": "Antd Hero",
+      "properties": {
+        "antdHero.language": {
+          "type": "string",
+          "default": "English",
+          "enum": [
+            "English",
+            "中文"
+          ],
+          "description": "Language of Ant Design documentation"
+        }
       }
-    ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

@@ -26,6 +26,7 @@
 ## TODO
 
 - [ ] Finish all components mapping
+- [ ] Cache JSON in memory
 - [ ] Contribution
 - [ ] PR/Issue template
 - [ ] Test case

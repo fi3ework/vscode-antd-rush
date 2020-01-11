@@ -2,3 +2,4 @@ out
 node_modules
 src/buildResource/token.ts
 doc-resource
+src/definition.json
