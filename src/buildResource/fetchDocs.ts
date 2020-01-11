@@ -11,6 +11,9 @@ const octokit = new Octokit({
   auth: GITHUB_TOKEN,
 })
 
+/**
+ * These folders are not exported component
+ */
 const IGNORED_COMPONENTS: string[] = [
   '__tests__',
   '_util',
@@ -23,7 +26,7 @@ const IGNORED_COMPONENTS: string[] = [
 
 type IShaMap = { [k: string]: { enSha: string; zhSha: string } }
 
-async function genShaMap(tag: string) {
+export async function buildShaMap(tag: string) {
   const tagContentRes = await octokit.repos.getContents({
     owner: ANTD_GITHUB.OWNER_NAME,
     repo: ANTD_GITHUB.REPO_NAME,
@@ -59,29 +62,26 @@ async function genShaMap(tag: string) {
 }
 
 async function downloadFile(componentName: string, fileName: string, fileSha: string) {
-  const contentRes = await octokit.git.getBlob({
-    owner: ANTD_GITHUB.OWNER_NAME,
-    repo: ANTD_GITHUB.REPO_NAME,
-    file_sha: fileSha,
+  try {
+    const contentRes = await octokit.git.getBlob({
+      owner: ANTD_GITHUB.OWNER_NAME,
+      repo: ANTD_GITHUB.REPO_NAME,
+      file_sha: fileSha,
+    })
+    ensureDirSync(path.resolve(__dirname, `${STORAGE.mdPath}/${componentName}`))
+    await outputFile(
+      path.resolve(__dirname, `${STORAGE.mdPath}/${componentName}/${fileName}`),
+      Base64.decode(contentRes.data.content)
+    )
+    console.log(`✅ ${componentName}/${fileName} download succeed.`)
+  } catch (e) {
+    console.error(`❌ failed to get ${componentName}/${fileName}. Error: ${e}`)
+  }
+}
+
+export function downloadByShaMap(shaMap: IShaMap) {
+  return Object.entries(shaMap).map(async ([componentName, entity]) => {
+    await downloadFile(componentName, ANTD_GITHUB.EN_MD_NAME, entity.enSha)
+    await downloadFile(componentName, ANTD_GITHUB.ZH_MD_NAME, entity.zhSha)
   })
-  ensureDirSync(path.resolve(__dirname, `${STORAGE.mdPath}/${componentName}`))
-  await outputFile(
-    path.resolve(__dirname, `${STORAGE.mdPath}/${componentName}/${fileName}`),
-    Base64.decode(contentRes.data.content)
-  )
-  console.log(`✅ ${componentName}/${fileName} download succeed.`)
 }
-
-async function downloadByShaMap(shaMap: IShaMap) {
-  Object.entries(shaMap).forEach(async ([componentName, entity]) => {
-    downloadFile(componentName, ANTD_GITHUB.EN_MD_NAME, entity.enSha)
-    downloadFile(componentName, ANTD_GITHUB.ZH_MD_NAME, entity.zhSha)
-  })
-}
-
-async function init() {
-  const shaMap = await genShaMap(ANTD_GITHUB.TARGET_TAG)
-  downloadByShaMap(shaMap)
-}
-
-init()

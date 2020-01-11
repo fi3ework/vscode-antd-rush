@@ -21,9 +21,11 @@
     - [ ] Generic (auto detect from component) ⚪️
 - [ ] Antd component playground ⚪️
 - [ ] Support i18n settings (en/zh) 🔵
+- [ ] Preview for `<Icon />` ⚪️
 
 ## TODO
 
+- [ ] Finish all components mapping
 - [ ] Contribution
 - [ ] PR/Issue template
 - [ ] Test case

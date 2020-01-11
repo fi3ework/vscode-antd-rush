@@ -32,10 +32,15 @@ class DefinitionBuilder {
     const promises = Object.entries(this.mapping).map(async ([componentName, loc]) => {
       const rawMd = await this.findComponentMd(componentName, loc)
       const mdAst = this.processor.parse(rawMd) as Parent
-      const anchor = this.findAnchorNode(mdAst, loc.anchorBeforeProps)
+      // TODO: `loc.anchorBeforeProps` may be string[]
+      const anchorProps = Array.isArray(loc.anchorBeforeProps)
+        ? loc.anchorBeforeProps
+        : [loc.anchorBeforeProps]
+      const anchor = this.findAnchorNode(mdAst, anchorProps[0])
       const table = this.findFirstTableAfterAnchor(mdAst, anchor) as Parent
       if (table === null) {
-        throw Error(`failed to find table after ${componentName} - ${loc.anchorBeforeProps}`)
+        console.error(`❌ failed to find table after ${componentName} - ${anchorProps[0]}`)
+        return
       }
 
       const componentDoc = this.extractDocFromTable(table)
@@ -82,7 +87,7 @@ class DefinitionBuilder {
   }
 
   private findComponentMd(componentName: string, loc: ComponentDocLocation) {
-    const docFolderName = decamelize(loc.docAlias || componentName)
+    const docFolderName = decamelize(loc.docAlias || componentName, '-')
     const docContentPath = path.resolve(
       __dirname,
       `${STORAGE.mdPath}/${docFolderName}/${ANTD_GITHUB.ZH_MD_NAME}`
@@ -91,13 +96,13 @@ class DefinitionBuilder {
     return promisify(fs.readFile)(docContentPath, { encoding: 'utf-8' })
   }
 
-  private findAnchorNode(mdAst: Node, anchorStr: string) {
+  private findAnchorNode(mdAst: Node, anchor: string) {
     return find(mdAst, (node: Node) => {
       // anchor's type will not be `tableRow` :)
       if (node.type === 'tableRow') return false
       const stringifiedNode = this.stringifier.stringify(node)
-      if (stringifiedNode === anchorStr) return true
-      return false
+      const anchorReg = new RegExp('^' + anchor + '$')
+      return !!stringifiedNode.match(anchorReg)
     })
   }
 
@@ -136,7 +141,7 @@ class DefinitionBuilder {
   }
 }
 
-const buildComponentsJson = async () => {
+export const buildComponentsJson = async () => {
   const builder = new DefinitionBuilder(antdComponentMap)
   const json = await builder.buildComponentDefinition()
   // TODO: antd tag as its filename
@@ -145,5 +150,3 @@ const buildComponentsJson = async () => {
     encoding: 'utf8',
   })
 }
-
-buildComponentsJson()
