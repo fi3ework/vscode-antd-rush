@@ -1,4 +1,4 @@
 out
 node_modules
-src/prebuildDoc/token.ts
-doc-dist
+src/buildResource/token.ts
+doc-resource

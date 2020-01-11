@@ -10,8 +10,8 @@ import {
   TextDocument,
 } from 'vscode'
 
-import { antdComponentMap } from './prebuildDoc/componentMap'
-import { ComponentsDoc } from './prebuildDoc/type'
+import { antdComponentMap } from './buildResource/componentMap'
+import { ComponentsDoc } from './buildResource/type'
 import _antdDocJson from './definition.json'
 import { composeDocLink, matchAntdModule, throwAntdHeroError } from './utils'
 

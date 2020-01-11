@@ -15,7 +15,7 @@ export const antdComponentMap: ComponentMapping = {
     anchorBeforeProps: '## API',
   },
   Anchor: {
-    anchorBeforeProps: '## API',
+    anchorBeforeProps: '### Anchor Props',
   },
   'Anchor.Link': {
     docAlias: 'anchor',

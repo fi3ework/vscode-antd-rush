@@ -5,3 +5,5 @@ typings/**
 .gitignore
 tsconfig.json
 preview.gif
+
+**/token.js

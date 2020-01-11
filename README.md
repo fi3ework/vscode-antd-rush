@@ -21,3 +21,13 @@
     - [ ] Generic (auto detect from component) ⚪️
 - [ ] Antd component playground ⚪️
 - [ ] Support i18n settings (en/zh) 🔵
+
+## TODO
+
+- [ ] Contribution
+- [ ] PR/Issue template
+- [ ] Test case
+- [ ] Circle CI
+- [ ] Demo Gif
+- [ ] Promotion
+- [ ] Release v1.0

@@ -7,7 +7,7 @@ export const ANTD_GITHUB = {
 }
 
 export const STORAGE = {
-  distPath: '../../doc-dist',
+  distPath: '../../doc-resource',
   get mdPath() {
     return STORAGE.distPath + '/md'
   },

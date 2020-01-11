@@ -1,6 +1,5 @@
 import decamelize from 'decamelize'
 import fs from 'fs'
-import { outputJSON } from 'fs-extra'
 import path from 'path'
 import markdown from 'remark-parse'
 import unified from 'unified'
