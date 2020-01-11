@@ -1,3 +1,6 @@
+import path from 'path'
+type DocLanguage = 'en' | 'zh'
+
 export const ANTD_GITHUB = {
   OWNER_NAME: 'ant-design',
   REPO_NAME: 'ant-design',
@@ -11,7 +14,10 @@ export const STORAGE = {
   get mdPath() {
     return STORAGE.distPath + '/md'
   },
-  get definitionPath() {
-    return STORAGE.distPath + '/definition'
+  getDefinitionPath(language: DocLanguage) {
+    return path.resolve(__dirname, `${STORAGE.distPath}/definition-${language}.json`)
+  },
+  getSrcDefinitionPath(language: DocLanguage) {
+    return path.resolve(__dirname, `../definition-${language}.json`)
   },
 }

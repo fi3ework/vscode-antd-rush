@@ -3,3 +3,5 @@ node_modules
 src/buildResource/token.ts
 doc-resource
 src/definition.json
+src/definition-en.json
+src/definition-zh.json

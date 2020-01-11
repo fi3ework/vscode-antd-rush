@@ -11,10 +11,12 @@ import {
 
 import { antdComponentMap } from './buildResource/componentMap'
 import { ComponentsDoc } from './buildResource/type'
-import _antdDocJson from './definition.json'
+import _antdZhDocJson from './definition-zh.json'
+import _antdEnDocJson from './definition-en.json'
 import { composeDocLink, matchAntdModule, throwAntdHeroError } from './utils'
 
-const antdDocJson: ComponentsDoc = _antdDocJson
+const antdZhDocJson: ComponentsDoc = _antdZhDocJson
+const antdEnDocJson: ComponentsDoc = _antdEnDocJson
 
 export const provideHover = async (
   document: TextDocument,
@@ -43,7 +45,7 @@ export const provideHover = async (
 
   // prop provider
   if (nodeName.type === 'props') {
-    const matchedComponent = antdDocJson[nodeName.name]
+    const matchedComponent = antdZhDocJson[nodeName.name]
     if (!matchedComponent) throw throwAntdHeroError(`did not match component for ${nodeName.name}`)
 
     const desc = matchedComponent[propText].description

@@ -10,7 +10,7 @@ import find from 'unist-util-find'
 
 import { promisify } from 'util'
 
-import { antdComponentMap, ComponentDocLocation, ComponentMapping } from './componentMap'
+import { ComponentDocLocation, ComponentMapping } from './componentMap'
 import { ANTD_GITHUB, STORAGE } from './constant'
 import { ComponentsDoc, Props, Prop } from './type'
 
@@ -159,8 +159,8 @@ export class DefinitionBuilder {
     const language = this.language
     const json = await this.buildComponentDefinition()
     const writeFileP = promisify(fs.writeFile)
-    writeFileP(
-      path.resolve(__dirname, `${STORAGE.definitionPath}-${language}.json`),
+    await writeFileP(
+      path.resolve(__dirname, STORAGE.getDefinitionPath(language)),
       JSON.stringify(json, null, 2),
       {
         encoding: 'utf8',

@@ -1,4 +1,4 @@
-import { remove } from 'fs-extra'
+import { copy, remove } from 'fs-extra'
 import path from 'path'
 
 import { DefinitionBuilder } from './buildDocJson'
@@ -14,9 +14,13 @@ async function buildResource() {
     await Promise.all(downloadByShaMap(shaMap))
     const builder = new DefinitionBuilder(antdComponentMap)
     builder.setDocLanguage('en')
-    builder.emitJson()
+    builder.emitJson().then(() => {
+      copy(STORAGE.getDefinitionPath('en'), STORAGE.getSrcDefinitionPath('en'))
+    })
     builder.setDocLanguage('zh')
-    builder.emitJson()
+    builder.emitJson().then(() => {
+      copy(STORAGE.getDefinitionPath('zh'), STORAGE.getSrcDefinitionPath('zh'))
+    })
   } catch (e) {
     console.error(e)
   }
