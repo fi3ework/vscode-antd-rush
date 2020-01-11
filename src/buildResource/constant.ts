@@ -12,6 +12,6 @@ export const STORAGE = {
     return STORAGE.distPath + '/md'
   },
   get definitionPath() {
-    return STORAGE.distPath + '/definition.json'
+    return STORAGE.distPath + '/definition'
   },
 }

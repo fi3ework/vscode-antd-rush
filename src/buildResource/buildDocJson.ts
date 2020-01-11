@@ -14,7 +14,14 @@ import { antdComponentMap, ComponentDocLocation, ComponentMapping } from './comp
 import { ANTD_GITHUB, STORAGE } from './constant'
 import { ComponentsDoc, Props, Prop } from './type'
 
-class DefinitionBuilder {
+type DocLanguage = 'en' | 'zh'
+
+export class DefinitionBuilder {
+  private language: DocLanguage = 'en'
+  private langToMdName: { [k in DocLanguage]: string } = {
+    en: ANTD_GITHUB.EN_MD_NAME,
+    zh: ANTD_GITHUB.ZH_MD_NAME,
+  }
   private mapping: ComponentMapping
   private processor = unified().use(markdown)
   private stringifier = unified()
@@ -24,6 +31,10 @@ class DefinitionBuilder {
 
   constructor(mapping: ComponentMapping) {
     this.mapping = mapping
+  }
+
+  public setDocLanguage(language: DocLanguage) {
+    this.language = language
   }
 
   public async buildComponentDefinition(): Promise<ComponentsDoc> {
@@ -39,7 +50,9 @@ class DefinitionBuilder {
       const anchor = this.findAnchorNode(mdAst, anchorProps[0])
       const table = this.findFirstTableAfterAnchor(mdAst, anchor) as Parent
       if (table === null) {
-        console.error(`❌ failed to find table after ${componentName} - ${anchorProps[0]}`)
+        console.error(
+          `😭 failed to find table after ${anchorProps[0]} for component ${componentName}`
+        )
         return
       }
 
@@ -88,11 +101,9 @@ class DefinitionBuilder {
   }
 
   private findComponentMd(componentName: string, loc: ComponentDocLocation) {
+    const mdName = this.langToMdName[this.language]
     const docFolderName = decamelize(loc.docAlias || componentName, '-')
-    const docContentPath = path.resolve(
-      __dirname,
-      `${STORAGE.mdPath}/${docFolderName}/${ANTD_GITHUB.ZH_MD_NAME}`
-    )
+    const docContentPath = path.resolve(__dirname, `${STORAGE.mdPath}/${docFolderName}/${mdName}`)
 
     return promisify(fs.readFile)(docContentPath, { encoding: 'utf-8' })
   }
@@ -119,6 +130,9 @@ class DefinitionBuilder {
   }
 
   private findFirstTableAfterAnchor = (parent: Parent, anchor: Node): Node | null => {
+    const anchorPosition = anchor?.position
+    if (!anchorPosition) return null
+
     let hasReachAnchor = false
     let hasFindTable = false
     let siblingTable: null | Node = null
@@ -126,7 +140,7 @@ class DefinitionBuilder {
     parent.children.forEach(child => {
       if (hasFindTable) return
 
-      if (this.isSamePosition(child.position!, anchor.position!)) {
+      if (this.isSamePosition(child.position!, anchorPosition)) {
         hasReachAnchor = true
       }
 
@@ -140,14 +154,17 @@ class DefinitionBuilder {
 
     return siblingTable
   }
-}
 
-export const buildComponentsJson = async () => {
-  const builder = new DefinitionBuilder(antdComponentMap)
-  const json = await builder.buildComponentDefinition()
-  // TODO: antd tag as its filename
-  const writeFileP = promisify(fs.writeFile)
-  writeFileP(path.resolve(__dirname, `${STORAGE.definitionPath}`), JSON.stringify(json, null, 2), {
-    encoding: 'utf8',
-  })
+  public async emitJson() {
+    const language = this.language
+    const json = await this.buildComponentDefinition()
+    const writeFileP = promisify(fs.writeFile)
+    writeFileP(
+      path.resolve(__dirname, `${STORAGE.definitionPath}-${language}.json`),
+      JSON.stringify(json, null, 2),
+      {
+        encoding: 'utf8',
+      }
+    )
+  }
 }
