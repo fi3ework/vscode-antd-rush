@@ -2,17 +2,16 @@ import decamelize from 'decamelize'
 import fs from 'fs'
 import path from 'path'
 import markdown from 'remark-parse'
-import unified from 'unified'
 import stringify from 'remark-stringify'
+import unified from 'unified'
 import { Node, Parent, Position } from 'unist'
 // @ts-ignore
 import find from 'unist-util-find'
-
 import { promisify } from 'util'
 
 import { ComponentDocLocation, ComponentMapping } from './componentMap'
 import { ANTD_GITHUB, STORAGE } from './constant'
-import { ComponentsDoc, Props, Prop } from './type'
+import { ComponentsDoc, ComponentsRawDoc, Prop, Props } from './type'
 
 type DocLanguage = 'en' | 'zh'
 
@@ -37,8 +36,12 @@ export class DefinitionBuilder {
     this.language = language
   }
 
-  public async buildComponentDefinition(): Promise<ComponentsDoc> {
-    const defJson: ComponentsDoc = {}
+  public async buildComponentDefinition(): Promise<{
+    propDefJson: ComponentsDoc
+    rawTableJson: ComponentsRawDoc
+  }> {
+    const propDefJson: ComponentsDoc = {}
+    const rawTableJson: ComponentsRawDoc = {}
 
     const promises = Object.entries(this.mapping).map(async ([componentName, loc]) => {
       const rawMd = await this.findComponentMd(componentName, loc)
@@ -56,12 +59,13 @@ export class DefinitionBuilder {
         return
       }
 
-      const componentDoc = this.extractDocFromTable(table)
-      defJson[componentName] = componentDoc
+      const componentDoc: Props = this.extractPropsFromTable(table)
+      propDefJson[componentName] = componentDoc
+      rawTableJson[componentName] = this.stringifier.stringify(table)
     })
 
     await Promise.all(promises)
-    return defJson
+    return { propDefJson, rawTableJson }
   }
 
   private composeProp(tableRow: Parent): Prop {
@@ -88,7 +92,7 @@ export class DefinitionBuilder {
     return prop
   }
 
-  private extractDocFromTable(table: Parent) {
+  private extractPropsFromTable(table: Parent) {
     const prosDoc: Props = {}
     // TODO: adapt dynamic table head, bad case: https://ant.design/components/breadcrumb-cn/
     const [tableHead, ...propRows] = table.children

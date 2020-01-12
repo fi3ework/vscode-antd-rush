@@ -10,7 +10,12 @@ export const ANTD_GITHUB = {
   ZH_MD_NAME: 'index.zh-CN.md',
 }
 
-const I18N_TEXT = {
+export const INTL_TEXT: {
+  [k in 'description' | 'type' | 'default' | 'version' | 'componentHint']: {
+    zh: string
+    en: string
+  }
+} = {
   description: {
     zh: '描述',
     en: 'Description',
@@ -33,10 +38,10 @@ const I18N_TEXT = {
   },
 } as const
 
-export type LabelType = keyof typeof I18N_TEXT
+export type LabelType = keyof typeof INTL_TEXT
 
-export const getPropsLabel = (label: LabelType, language: DocLanguage) => {
-  return I18N_TEXT[label][language]
+export const __intl = (label: LabelType, language: DocLanguage) => {
+  return INTL_TEXT[label][language]
 }
 
 export const STORAGE = {
@@ -44,10 +49,16 @@ export const STORAGE = {
   get mdPath() {
     return STORAGE.distPath + '/md'
   },
+  get srcDefinitionPath() {
+    return path.resolve(__dirname, `../definition.json`)
+  },
+  get srcRawPath() {
+    return path.resolve(__dirname, `../raw-table.json`)
+  },
   getDefinitionPath(language: DocLanguage) {
     return path.resolve(__dirname, `${STORAGE.distPath}/definition-${language}.json`)
   },
-  get srcDefinitionPath() {
-    return path.resolve(__dirname, `../definition.json`)
+  getRawDefinitionPath(language: DocLanguage) {
+    return path.resolve(__dirname, `${STORAGE.distPath}/raw-table-${language}.json`)
   },
 }

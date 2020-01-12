@@ -13,3 +13,7 @@ export interface Props {
 export interface ComponentsDoc {
   [k: string]: Props
 }
+
+export interface ComponentsRawDoc {
+  [k: string]: string
+}

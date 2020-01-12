@@ -1,4 +1,4 @@
-import { DocLanguage, getPropsLabel, LabelType } from './buildResource/constant'
+import { DocLanguage, __intl, LabelType } from './buildResource/constant'
 import { MarkdownString } from 'vscode'
 
 /**
@@ -58,7 +58,7 @@ export const composeCardMessage = (
       const _type = { display: item.display ?? ('inline' as const), value: item.value }
       appendMarkdown(md, _type, language)
     } else {
-      md.appendMarkdown(`**${getPropsLabel(item.label, language)}**: ${item.value}  \n`)
+      md.appendMarkdown(`**${__intl(item.label, language)}**: ${item.value}  \n`)
     }
   })
 
@@ -76,7 +76,7 @@ const appendMarkdown = (mdToAppend: MarkdownString, type: TypeMdType, language: 
 
   if (display === 'inline') {
     const typeStrings = value.split('\\|')
-    mdToAppend.appendMarkdown(`**${getPropsLabel('type', language)}**: `)
+    mdToAppend.appendMarkdown(`**${__intl('type', language)}**: `)
     typeStrings.forEach((type, index) => {
       mdToAppend.appendMarkdown(`\`${type}\``)
       if (index !== typeStrings.length - 1) {

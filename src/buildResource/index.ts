@@ -19,26 +19,49 @@ async function buildResource() {
     const enEmit = builder.emitJson()
     builder.setDocLanguage('zh')
     const zhEmit = builder.emitJson()
-    const [enJson, zhJson] = await Promise.all([enEmit, zhEmit])
+    const [
+      { propDefJson: enPropDefJson, rawTableJson: enRawTableJson },
+      { propDefJson: zhPropDefJson, rawTableJson: zhRawTableJson },
+    ] = await Promise.all([enEmit, zhEmit])
     const pWriteFile = promisify(fs.writeFile)
     pWriteFile(
       path.resolve(__dirname, STORAGE.getDefinitionPath('zh')),
-      JSON.stringify(zhJson, null, 2),
-      {
-        encoding: 'utf8',
-      }
+      JSON.stringify(zhPropDefJson, null, 2),
+      'utf8'
     )
     pWriteFile(
       path.resolve(__dirname, STORAGE.getDefinitionPath('en')),
-      JSON.stringify(enJson, null, 2),
+      JSON.stringify(enPropDefJson, null, 2),
+      'utf8'
+    )
+    pWriteFile(
+      path.resolve(__dirname, STORAGE.getRawDefinitionPath('zh')),
+      JSON.stringify(zhRawTableJson, null, 2),
+      'utf8'
+    )
+    pWriteFile(
+      path.resolve(__dirname, STORAGE.getRawDefinitionPath('en')),
+      JSON.stringify(enRawTableJson, null, 2),
       'utf8'
     )
     pWriteFile(
       STORAGE.srcDefinitionPath,
       JSON.stringify(
         {
-          zh: zhJson,
-          en: enJson,
+          zh: zhPropDefJson,
+          en: enPropDefJson,
+        },
+        null,
+        2
+      ),
+      'utf8'
+    )
+    pWriteFile(
+      STORAGE.srcRawPath,
+      JSON.stringify(
+        {
+          zh: zhRawTableJson,
+          en: enRawTableJson,
         },
         null,
         2

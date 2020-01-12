@@ -11,9 +11,10 @@ import {
 } from 'vscode'
 
 import { antdComponentMap } from './buildResource/componentMap'
-import { DocLanguage, getPropsLabel } from './buildResource/constant'
-import { ComponentsDoc } from './buildResource/type'
+import { DocLanguage, __intl } from './buildResource/constant'
+import { ComponentsDoc, ComponentsRawDoc } from './buildResource/type'
 import _antdDocJson from './definition.json'
+import _rawTableJson from './raw-table.json'
 import { composeCardMessage } from './utils'
 import {
   composeDocLink,
@@ -23,6 +24,7 @@ import {
 } from './utils'
 
 const antdDocJson: { [k in DocLanguage]: ComponentsDoc } = _antdDocJson
+const rawTableJson: { [k in DocLanguage]: ComponentsRawDoc } = _rawTableJson
 
 export class HoverProvider {
   private document!: TextDocument
@@ -61,7 +63,9 @@ export class HoverProvider {
     const nodeName = this.getAstNodeName(propsInteraceName)
     if (nodeName === null) return
 
-    // prop provider
+    /**
+     * prop hover card
+     */
     if (nodeName.type === 'props') {
       const matchedComponent = antdDocJson[this.language][nodeName.name]
       if (!matchedComponent) throw antdHeroErrorMsg(`did not match component for ${nodeName.name}`)
@@ -84,7 +88,9 @@ export class HoverProvider {
       return new Hover(md)
     }
 
-    // component provider
+    /**
+     * component hover card
+     */
     if (nodeName.type === 'component') {
       const matchedComponent = antdComponentMap[nodeName.name]
 
@@ -96,11 +102,13 @@ export class HoverProvider {
       const docLinks =
         this.language === 'en' ? `${enDocLink} | ${zhDocLink}` : `${zhDocLink} | ${enDocLink}`
 
-      const md = new MarkdownString(
-        `**${nodeName.name}** ${getPropsLabel('componentHint', this.language)} \[ ${docLinks} \]`
+      const headMd = new MarkdownString(
+        `**${nodeName.name}** ${__intl('componentHint', this.language)} \[ ${docLinks} \]`
       )
 
-      return new Hover(md)
+      const tableMd = new MarkdownString(rawTableJson[this.language][nodeName.name])
+
+      return new Hover([headMd, tableMd])
     }
 
     return
