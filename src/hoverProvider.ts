@@ -91,12 +91,13 @@ export class HoverProvider {
         throw throwAntdHeroError(`did not match component for ${nodeName.name}`)
 
       const aliasName = componentFolder
+      const zhDocLink = `[en](${composeDocLink(aliasName, 'en')})`
+      const enDocLink = `[中文](${composeDocLink(aliasName, 'zh')})`
+      const docLinks =
+        this.language === 'en' ? `${enDocLink} | ${zhDocLink}` : `${zhDocLink} | ${enDocLink}`
+
       const md = new MarkdownString(
-        // TODO: dynamic component name
-        `**Alert** ${getPropsLabel('componentHint', this.language)} \[ [en](${composeDocLink(
-          aliasName,
-          'en'
-        )}) | [中文](${composeDocLink(aliasName, this.language)}) \]`
+        `**${nodeName.name}** ${getPropsLabel('componentHint', this.language)} \[ ${docLinks} \]`
       )
 
       return new Hover(md)

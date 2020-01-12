@@ -90,7 +90,7 @@ export class DefinitionBuilder {
 
   private extractDocFromTable(table: Parent) {
     const prosDoc: Props = {}
-    // TODO: adapt dynamic table head
+    // TODO: adapt dynamic table head, bad case: https://ant.design/components/breadcrumb-cn/
     const [tableHead, ...propRows] = table.children
     propRows.forEach(tableRow => {
       const prop = this.composeProp(tableRow as Parent)
