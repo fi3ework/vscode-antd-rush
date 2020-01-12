@@ -8,6 +8,8 @@ import ts, {
   isPropertySignature,
   Node,
   SourceFile,
+  FunctionDeclaration,
+  isFunctionDeclaration,
 } from 'typescript'
 import { commands, Location, Position, TextDocument, window, TextEditor } from 'vscode'
 
@@ -52,12 +54,13 @@ export const getClosetElementNode = (document: TextDocument, position: Position)
 }
 
 /**
- * Return nearest userland class component
+ * Return nearest userland component with condition
  */
-export const getClosetClassComponentElement = async (
+export const getClosetComponentElement = async <T extends Node>(
   document: TextDocument,
-  position: Position
-): Promise<ClassDeclaration | null> => {
+  position: Position,
+  condition: (parent: Node, document: TextDocument) => Promise<boolean>
+): Promise<T | null> => {
   const sFile = ts.createSourceFile(
     document.uri.toString(),
     document.getText(),
@@ -68,13 +71,13 @@ export const getClosetClassComponentElement = async (
   // parents should starts from the closest
   const parents: Node[] = getNodeWithParentsAt(sFile, offset).reverse()
 
-  const classComponentNodePromises = parents.map(parent => {
-    return isClassExtendsReactComponent(parent, document)
+  const typeComponentNodePromises = parents.map(parent => {
+    return condition(parent, document)
   })
 
-  const classJudgementResult = await Promise.all(classComponentNodePromises)
-  const classComponentNode = parents[classJudgementResult.findIndex(Boolean)] as ClassDeclaration
-  return classComponentNode
+  const typeJudgementResult = await Promise.all(typeComponentNodePromises)
+  const typeComponentNode = parents[typeJudgementResult.findIndex(Boolean)] as T
+  return typeComponentNode
 }
 
 /**
@@ -138,7 +141,7 @@ export const composeHandlerString = (
 /**
  * Get ast node at postion, return with it's parent nodes
  */
-const isClassExtendsReactComponent = async (
+export const isClassExtendsReactComponent = async (
   node: Node,
   document: TextDocument
 ): Promise<boolean> => {

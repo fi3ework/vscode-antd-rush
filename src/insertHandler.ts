@@ -1,20 +1,21 @@
+import { ClassDeclaration, isClassDeclaration, isFunctionDeclaration } from 'typescript'
 import {
-  TextDocument,
-  Position,
   commands,
   Location,
-  workspace,
-  TextEditorEdit,
   Range,
+  TextDocument,
   TextEditor,
+  TextEditorEdit,
+  workspace,
 } from 'vscode'
+
 import {
-  getClosetClassComponentElement,
-  insertStringToClassComponent,
   buildTsFromDts,
   FunctionParam,
+  getClosetComponentElement,
+  insertStringToClassComponent,
+  isClassExtendsReactComponent,
 } from './ast'
-import { isClassDeclaration, ClassDeclaration } from 'typescript'
 import { matchAntdModule } from './utils'
 
 export class HandlerInsert {
@@ -42,7 +43,12 @@ export class HandlerInsert {
     const { document, sharpSymbolRange } = this
     const position = sharpSymbolRange.end
     // 1. Get closet outer class component
-    const classComponent = await getClosetClassComponentElement(document, position)
+    // const classComponent = await getClosetClassComponentElement(document, position)
+    const classComponent = await getClosetComponentElement<ClassDeclaration>(
+      document,
+      position,
+      isClassExtendsReactComponent
+    )
 
     if (classComponent) {
       // 2. insert class component handler
@@ -59,7 +65,11 @@ export class HandlerInsert {
     } else {
       // 2. if not found outer class component, it should be functional component
       // TODO: getClosetFunction in top scope
-      // const functionalComponent = await ...
+      const functionalComponent = await getClosetComponentElement<ClassDeclaration>(
+        document,
+        position,
+        async node => isFunctionDeclaration(node)
+      )
     }
   }
 
