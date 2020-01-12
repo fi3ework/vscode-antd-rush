@@ -14,10 +14,11 @@ import { antdComponentMap } from './buildResource/componentMap'
 import { DocLanguage, getPropsLabel } from './buildResource/constant'
 import { ComponentsDoc } from './buildResource/type'
 import _antdDocJson from './definition.json'
+import { composeCardMessage } from './utils'
 import {
   composeDocLink,
   matchAntdModule,
-  throwAntdHeroError,
+  antdHeroErrorMsg,
   transformConfigurationLanguage,
 } from './utils'
 
@@ -63,22 +64,22 @@ export class HoverProvider {
     // prop provider
     if (nodeName.type === 'props') {
       const matchedComponent = antdDocJson[this.language][nodeName.name]
-      if (!matchedComponent)
-        throw throwAntdHeroError(`did not match component for ${nodeName.name}`)
+      if (!matchedComponent) throw antdHeroErrorMsg(`did not match component for ${nodeName.name}`)
 
       const desc = matchedComponent[propText].description
       const type = matchedComponent[propText].type
       const version = matchedComponent[propText].version
       const defaultValue = matchedComponent[propText].default
-      const md = new MarkdownString(
-        `**${getPropsLabel('description', this.language)}**: ${desc}  \n`
+
+      const md = composeCardMessage(
+        [
+          { label: 'description', value: desc },
+          { label: 'type', value: type },
+          { label: 'default', value: defaultValue },
+          { label: 'version', value: version },
+        ],
+        this.language
       )
-      this.appendType(md, type)
-      md.appendMarkdown(`**${getPropsLabel('default', this.language)}**: ${defaultValue}  \n`)
-      if (version) {
-        md.appendMarkdown(`**${getPropsLabel('version', this.language)}**: ${version}  \n`)
-      }
-      md.isTrusted = true
 
       return new Hover(md)
     }
@@ -87,8 +88,7 @@ export class HoverProvider {
     if (nodeName.type === 'component') {
       const matchedComponent = antdComponentMap[nodeName.name]
 
-      if (!matchedComponent)
-        throw throwAntdHeroError(`did not match component for ${nodeName.name}`)
+      if (!matchedComponent) throw antdHeroErrorMsg(`did not match component for ${nodeName.name}`)
 
       const aliasName = componentFolder
       const zhDocLink = `[en](${composeDocLink(aliasName, 'en')})`
@@ -133,19 +133,6 @@ export class HoverProvider {
     // TODO: difference between definition and type definition
     const definition = typeDefinitionsUnderAntd.concat(definitionsUnderAntd)[0] || null
     return definition
-  }
-
-  private appendType = (md: MarkdownString, typeStr: string) => {
-    const types = typeStr.split('\\|')
-    md.appendMarkdown(`**${getPropsLabel('type', this.language)}**: `)
-    types.forEach((type, index) => {
-      md.appendMarkdown(`\`${type}\``)
-      if (index !== types.length - 1) {
-        md.appendMarkdown(' | ')
-      }
-    })
-    md.appendMarkdown('  \n')
-    return md
   }
 
   private getProps = (symbols: SymbolInformation[] | undefined, loc: Location) => {

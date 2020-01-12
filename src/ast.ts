@@ -13,7 +13,7 @@ import ts, {
 } from 'typescript'
 import { commands, Location, Position, TextDocument, window } from 'vscode'
 
-import { antdHeroErrorMsg, isFromReactNodeModules, throwAntdHeroError } from './utils'
+import { antdHeroErrorMsg, isFromReactNodeModules } from './utils'
 
 /**
  * NOTE: https://github.com/microsoft/TypeScript/blob/master/lib/typescript.d.ts
@@ -216,7 +216,7 @@ export const buildTsFromDts = (dtsStr: string): string | null => {
   return `
 
   ${handlerName} = (${paramTexts.join(', ')}) => {
-    
+
   }`
 }
 

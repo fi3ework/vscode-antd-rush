@@ -1,5 +1,5 @@
-import { URI } from 'vscode-uri'
-import { DocLanguage } from './buildResource/constant'
+import { DocLanguage, getPropsLabel, LabelType } from './buildResource/constant'
+import { MarkdownString } from 'vscode'
 
 /**
  * try to match ant-design node_modules import path
@@ -24,12 +24,6 @@ export const isFromReactNodeModules = (path: string) => {
   return !!regMatched
 }
 
-// TODO: deprecate, TS can't recognize throw in function
-// provide an error message template is just enough
-export const throwAntdHeroError = (message: string) => {
-  throw Error(`[antd-hero] ${message}`)
-}
-
 export const antdHeroErrorMsg = (message: string) => `[antd-hero] ${message}`
 
 export const composeDocLink = (folder: string, lang: 'en' | 'zh') => {
@@ -40,4 +34,56 @@ export const composeDocLink = (folder: string, lang: 'en' | 'zh') => {
 export const transformConfigurationLanguage = (enumLabel: string | undefined): DocLanguage => {
   // default return EN
   return enumLabel === '中文' ? 'zh' : 'en'
+}
+
+/**
+ * compose hover/completion item card message
+ */
+type TypeMdType = { value: string; display: 'inline' | 'blockCode' }
+
+export const composeCardMessage = (
+  items: {
+    label: LabelType
+    value: string
+    display?: 'inline' | 'blockCode'
+  }[],
+  language: DocLanguage
+) => {
+  const md = new MarkdownString()
+
+  items.forEach(item => {
+    if (!item.value) return
+
+    if (item.label === 'type') {
+      const _type = { display: item.display ?? ('inline' as const), value: item.value }
+      appendMarkdown(md, _type, language)
+    } else {
+      md.appendMarkdown(`**${getPropsLabel(item.label, language)}**: ${item.value}  \n`)
+    }
+  })
+
+  md.isTrusted = true
+  return md
+}
+
+const appendMarkdown = (mdToAppend: MarkdownString, type: TypeMdType, language: DocLanguage) => {
+  const { value, display } = type
+
+  if (display === 'blockCode') {
+    mdToAppend.appendCodeblock(value)
+    return
+  }
+
+  if (display === 'inline') {
+    const typeStrings = value.split('\\|')
+    mdToAppend.appendMarkdown(`**${getPropsLabel('type', language)}**: `)
+    typeStrings.forEach((type, index) => {
+      mdToAppend.appendMarkdown(`\`${type}\``)
+      if (index !== typeStrings.length - 1) {
+        mdToAppend.appendMarkdown(' | ')
+      }
+    })
+    mdToAppend.appendMarkdown('  \n')
+    return
+  }
 }

@@ -33,7 +33,9 @@ const I18N_TEXT = {
   },
 } as const
 
-export const getPropsLabel = (label: keyof typeof I18N_TEXT, language: DocLanguage) => {
+export type LabelType = keyof typeof I18N_TEXT
+
+export const getPropsLabel = (label: LabelType, language: DocLanguage) => {
   return I18N_TEXT[label][language]
 }
 

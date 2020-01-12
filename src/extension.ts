@@ -1,6 +1,11 @@
 import { commands, ExtensionContext, languages, Range, TextDocument } from 'vscode'
 
-import { cleanCompletion, provideCompletionItems, resolveCompletionItem } from './completionItem'
+import {
+  cleanCompletion,
+  // provideCompletionItems,
+  AntdCompletionItem,
+  resolveCompletionItem,
+} from './completionItem'
 import { HoverProvider } from './hoverProvider'
 import { insertHandler } from './insertHandler'
 
@@ -26,7 +31,10 @@ export function activate(context: ExtensionContext) {
     // TODO: JSX | TS? | TSX
     [{ language: 'javascript', scheme: 'file' }],
     {
-      provideCompletionItems,
+      provideCompletionItems(document, postion, token, context) {
+        const item = new AntdCompletionItem(document, postion)
+        return item.provideCompletionItems()
+      },
       resolveCompletionItem,
     },
     '#'
