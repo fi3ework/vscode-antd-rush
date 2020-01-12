@@ -6,23 +6,32 @@ import {
   workspace,
   TextEditorEdit,
   Range,
+  TextEditor,
 } from 'vscode'
-import { getClosetClassComponentElement, insertStringToClassComponent, buildTsFromDts } from './ast'
+import {
+  getClosetClassComponentElement,
+  insertStringToClassComponent,
+  buildTsFromDts,
+  FunctionParam,
+} from './ast'
 import { isClassDeclaration, ClassDeclaration } from 'typescript'
 import { matchAntdModule } from './utils'
 
 export class HandlerInsert {
+  private editor: TextEditor
   private edit: TextEditorEdit
   private document: TextDocument
   private sharpSymbolRange: Range
   private handlerName: string
 
   constructor(
+    editor: TextEditor,
     edit: TextEditorEdit,
     sharpSymbolRange: Range,
     document: TextDocument,
     handlerName: string
   ) {
+    this.editor = editor
     this.document = document
     this.sharpSymbolRange = sharpSymbolRange
     this.edit = edit
@@ -37,9 +46,16 @@ export class HandlerInsert {
 
     if (classComponent) {
       // 2. insert class component handler
-      const stringToInsert = await this.getHandlerDefinition()
-      if (stringToInsert === null) return
-      insertStringToClassComponent(document, classComponent, position, stringToInsert)
+      const functionParams = await this.getHandlerParams()
+      if (functionParams === null) return
+      insertStringToClassComponent(
+        this.editor,
+        document,
+        classComponent,
+        position,
+        this.handlerName,
+        functionParams
+      )
     } else {
       // 2. if not found outer class component, it should be functional component
       // TODO: getClosetFunction in top scope
@@ -47,7 +63,7 @@ export class HandlerInsert {
     }
   }
 
-  private getHandlerDefinition = async (): Promise<string | null> => {
+  private getHandlerParams = async (): Promise<FunctionParam[] | null> => {
     const { document, sharpSymbolRange } = this
     const position = sharpSymbolRange.end
 
@@ -68,8 +84,8 @@ export class HandlerInsert {
         dtsDocument.offsetAt(antdDefinition.range.end)
       )
 
-    const stringToInsert = buildTsFromDts(definitionString)
-    return stringToInsert
+    const functionParams = buildTsFromDts(definitionString)
+    return functionParams
   }
 
   public cleanCompletionPrefix = () => {

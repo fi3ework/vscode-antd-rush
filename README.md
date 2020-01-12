@@ -10,6 +10,7 @@
 
 - [x] Show all available props of current component
 - [x] ~~Split a webview of component's document via context menu (VSCode do not support open external URL)~~
+- [ ] Add quick rename handler name dialog
 - [x] Automatic generate handler for functional or class component
   - [x] Starts with `#`
   - [x] Class component handler

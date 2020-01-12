@@ -55,8 +55,12 @@ export class AntdCompletionItem {
     const doc = this.getHandlerDocument(componentName, handlerName)
     if (doc) item.documentation = doc
 
-    // FIXME: hard coded for class component
-    item.insertText = `${handlerName}={this.${addHandlerPrefix(handlerName)}} `
+    const isInClassComponent = !!getClosetElementNode(this.document, this.position)
+
+    item.insertText = `${handlerName}={${isInClassComponent ? 'this.' : ''}${addHandlerPrefix(
+      handlerName
+    )}} `
+
     const sharpSymbolRange = new Range(
       new Position(position.line, position.character - 1),
       new Position(position.line, position.character)

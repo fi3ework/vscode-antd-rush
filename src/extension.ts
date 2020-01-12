@@ -10,7 +10,7 @@ export function activate(context: ExtensionContext) {
   const cmdAfterCompletion = commands.registerTextEditorCommand(
     'antdHero.afterCompletion',
     (editor, edit, rangeToDelete: Range, document: TextDocument, handlerName: string) => {
-      const handlerInsert = new HandlerInsert(edit, rangeToDelete, document, handlerName)
+      const handlerInsert = new HandlerInsert(editor, edit, rangeToDelete, document, handlerName)
       handlerInsert.cleanCompletionPrefix()
       handlerInsert.insertHandler()
     }

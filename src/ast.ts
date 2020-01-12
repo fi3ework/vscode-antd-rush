@@ -9,9 +9,9 @@ import ts, {
   Node,
   SourceFile,
 } from 'typescript'
-import { commands, Location, Position, TextDocument, window } from 'vscode'
+import { commands, Location, Position, TextDocument, window, TextEditor } from 'vscode'
 
-import { addHandlerPrefix, isFromReactNodeModules } from './utils'
+import { addHandlerPrefix, isFromReactNodeModules, antdHeroErrorMsg } from './utils'
 
 /**
  * NOTE: https://github.com/microsoft/TypeScript/blob/master/lib/typescript.d.ts
@@ -78,13 +78,16 @@ export const getClosetClassComponentElement = async (
 }
 
 /**
- *
+ * Insert string to class component
+ * This function adapt indent and fill in handler template
  */
 export const insertStringToClassComponent = async (
+  editor: TextEditor,
   document: TextDocument,
   classNode: ClassDeclaration,
   position: Position,
-  insertion: string
+  handlerName: string,
+  params: FunctionParam[]
 ) => {
   const offset = document.offsetAt(position)
 
@@ -94,16 +97,43 @@ export const insertStringToClassComponent = async (
 
   const insertAt = document.positionAt(classNode.members[memberIndex].pos)
 
-  let editor = window.activeTextEditor
-  editor?.edit(builder => {
-    builder.insert(insertAt, insertion)
+  editor.edit(builder => {
+    builder.insert(insertAt, composeHandlerString(handlerName, params, 'class'))
   })
 }
 
 /**
- *
+ * Fill handler template with parameters and its type
  */
-export const composeHandlerAst = (handlerName: string, ...args: string[]) => {}
+export const composeHandlerString = (
+  handlerName: string,
+  params: FunctionParam[],
+  type: 'class' | 'functional'
+) => {
+  const paramsText = params.map(p => p.text).join(', ')
+
+  // TODO: ts param type
+  // TODO: indent
+  if (type === 'class') {
+    return `
+
+    ${addHandlerPrefix(handlerName)} = (${paramsText}) => {
+
+  }`
+  }
+
+  if (type === 'functional') {
+    return `
+
+    const ${addHandlerPrefix(handlerName)} = useCallback((${paramsText}) => {
+
+    })
+
+  `
+  }
+
+  throw Error(antdHeroErrorMsg(`should not accept component type of ${type}`))
+}
 
 /**
  * Get ast node at postion, return with it's parent nodes
@@ -176,7 +206,13 @@ const offsetContains = (offset: number, startOrEnd: number, endOrStart: number) 
 /**
  * Create empty function from function dts
  */
-export const buildTsFromDts = (dtsString: string): string | null => {
+
+export interface FunctionParam {
+  type: string
+  text: string
+}
+
+export const buildTsFromDts = (dtsString: string): FunctionParam[] | null => {
   // NOTE: definition is a property, it should be wrapped in type
   const dtsTypeString = `type DUMMY = {
   ${dtsString}
@@ -191,8 +227,8 @@ export const buildTsFromDts = (dtsString: string): string | null => {
       if (!node.type) return
       handlerName = node.name.getText(sCode as SourceFile)
       if (isFunctionTypeNode(node.type)) {
-        // TODO: lacks ts type, only satisfied JS
         const typeParamsText = node.type.parameters.map(p => {
+          // TODO: lacks ts type, only satisfied JS
           return p.name.getText(sCode as SourceFile)
         })
         paramTexts.push(...typeParamsText)
@@ -200,12 +236,7 @@ export const buildTsFromDts = (dtsString: string): string | null => {
     }
   })
 
-  // TODO: indent
-  return `
-
-  ${addHandlerPrefix(handlerName)} = (${paramTexts.join(', ')}) => {
-
-  }`
+  return paramTexts.map(param => ({ type: '', text: param }))
 }
 
 /**
