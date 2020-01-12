@@ -10,6 +10,8 @@ export const ANTD_GITHUB = {
   ZH_MD_NAME: 'index.zh-CN.md',
 }
 
+export const HANDLER_PREFIX = 'handle'
+
 export const INTL_TEXT: {
   [k in 'description' | 'type' | 'default' | 'version' | 'componentHint']: {
     zh: string

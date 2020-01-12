@@ -1,5 +1,6 @@
-import { DocLanguage, __intl, LabelType } from './buildResource/constant'
 import { MarkdownString } from 'vscode'
+
+import { __intl, DocLanguage, HANDLER_PREFIX, LabelType } from './buildResource/constant'
 
 /**
  * try to match ant-design node_modules import path
@@ -86,4 +87,10 @@ const appendMarkdown = (mdToAppend: MarkdownString, type: TypeMdType, language: 
     mdToAppend.appendMarkdown('  \n')
     return
   }
+}
+
+export const addHandlerPrefix = (handlerName: string): string => {
+  // handler name can be 'onChange', 'OnChange'
+  const camelizedHandlerName = handlerName.slice(0, 1).toUpperCase() + handlerName.slice(1)
+  return `${HANDLER_PREFIX}${camelizedHandlerName}`
 }

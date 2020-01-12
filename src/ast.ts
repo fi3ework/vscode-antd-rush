@@ -1,19 +1,17 @@
-import { ClassMethod, isClass } from 'babel-types'
 import ts, {
   ClassDeclaration,
-  createProgram,
   isClassDeclaration,
+  isFunctionTypeNode,
   isJsxOpeningElement,
-  isPropertySignature,
   isJsxSelfClosingElement,
   isJsxText,
+  isPropertySignature,
   Node,
-  isFunctionTypeNode,
   SourceFile,
 } from 'typescript'
 import { commands, Location, Position, TextDocument, window } from 'vscode'
 
-import { antdHeroErrorMsg, isFromReactNodeModules } from './utils'
+import { addHandlerPrefix, isFromReactNodeModules } from './utils'
 
 /**
  * NOTE: https://github.com/microsoft/TypeScript/blob/master/lib/typescript.d.ts
@@ -54,9 +52,9 @@ export const getClosetElementNode = (document: TextDocument, position: Position)
 }
 
 /**
- * Return nearest userland class component or functional component
+ * Return nearest userland class component
  */
-export const getClosetComponentNode = async (
+export const getClosetClassComponentElement = async (
   document: TextDocument,
   position: Position
 ): Promise<ClassDeclaration | null> => {
@@ -67,7 +65,7 @@ export const getClosetComponentNode = async (
   )
 
   const offset = document.offsetAt(position)
-  // parents starts from closest
+  // parents should starts from the closest
   const parents: Node[] = getNodeWithParentsAt(sFile, offset).reverse()
 
   const classComponentNodePromises = parents.map(parent => {
@@ -75,16 +73,8 @@ export const getClosetComponentNode = async (
   })
 
   const classJudgementResult = await Promise.all(classComponentNodePromises)
-  const classComponentNode = parents[classJudgementResult.findIndex(Boolean)]
-
-  // TODO: functional component
-
-  // TODO: type guard should has narrowed #ype in above context
-  if (!isClassDeclaration(classComponentNode)) {
-    throw Error(antdHeroErrorMsg('should return classComponentNode node'))
-  } else {
-    return classComponentNode
-  }
+  const classComponentNode = parents[classJudgementResult.findIndex(Boolean)] as ClassDeclaration
+  return classComponentNode
 }
 
 /**
@@ -99,7 +89,7 @@ export const insertStringToClassComponent = async (
   const offset = document.offsetAt(position)
 
   const memberIndex = classNode.members.findIndex(member => {
-    return offSetContains(offset, member.pos, member.end)
+    return offsetContains(offset, member.pos, member.end)
   })
 
   const insertAt = document.positionAt(classNode.members[memberIndex].pos)
@@ -161,7 +151,7 @@ const getNodeWithParentsAt = (node: Node, offset: number, initialParents?: Node[
   node.forEachChild(child => {
     const start = child.pos
     const end = child.end
-    if (offSetContains(offset, start, end)) {
+    if (offsetContains(offset, start, end)) {
       parents.push(child)
       hasFind = true
     }
@@ -178,7 +168,7 @@ const getNodeWithParentsAt = (node: Node, offset: number, initialParents?: Node[
 /**
  * Whether offset between start and end
  */
-const offSetContains = (offset: number, startOrEnd: number, endOrStart: number) => {
+const offsetContains = (offset: number, startOrEnd: number, endOrStart: number) => {
   const [start, end] = startOrEnd > endOrStart ? [endOrStart, startOrEnd] : [startOrEnd, endOrStart]
   return start <= offset && end >= offset
 }
@@ -186,15 +176,13 @@ const offSetContains = (offset: number, startOrEnd: number, endOrStart: number) 
 /**
  * Create empty function from function dts
  */
-export const buildTsFromDts = (dtsStr: string): string | null => {
-  // FIXME: only a simple workaround
-  // TODO: rebuild from AST
-  // NOTE: definition is a property, should be wrapped in type
-  const dtsInTypeStr = `type DUMMY = {
-  ${dtsStr}
-  }`
+export const buildTsFromDts = (dtsString: string): string | null => {
+  // NOTE: definition is a property, it should be wrapped in type
+  const dtsTypeString = `type DUMMY = {
+  ${dtsString}
+}`
 
-  const sCode: Node = ts.createSourceFile('', dtsInTypeStr, ts.ScriptTarget.Latest)
+  const sCode: Node = ts.createSourceFile('', dtsTypeString, ts.ScriptTarget.Latest)
   let handlerName: string = ''
   const paramTexts: string[] = []
 
@@ -203,7 +191,7 @@ export const buildTsFromDts = (dtsStr: string): string | null => {
       if (!node.type) return
       handlerName = node.name.getText(sCode as SourceFile)
       if (isFunctionTypeNode(node.type)) {
-        // TODO: lack ts type, only satisfied JS
+        // TODO: lacks ts type, only satisfied JS
         const typeParamsText = node.type.parameters.map(p => {
           return p.name.getText(sCode as SourceFile)
         })
@@ -215,7 +203,7 @@ export const buildTsFromDts = (dtsStr: string): string | null => {
   // TODO: indent
   return `
 
-  ${handlerName} = (${paramTexts.join(', ')}) => {
+  ${addHandlerPrefix(handlerName)} = (${paramTexts.join(', ')}) => {
 
   }`
 }

@@ -30,7 +30,7 @@
     },
     "commands": [
       {
-        "command": "editor.antdHeroAfterCompletion",
+        "command": "antdHero.afterCompletion",
         "title": "[antd hero internal] replace string"
       }
     ],

@@ -16,7 +16,7 @@ import { antdComponentMap } from './buildResource/componentMap'
 import { DocLanguage } from './buildResource/constant'
 import { ComponentsDoc } from './buildResource/type'
 import _antdDocJson from './definition.json'
-import { transformConfigurationLanguage, composeCardMessage } from './utils'
+import { transformConfigurationLanguage, composeCardMessage, addHandlerPrefix } from './utils'
 
 const antdDocJson: { [k in DocLanguage]: ComponentsDoc } = _antdDocJson
 
@@ -56,17 +56,16 @@ export class AntdCompletionItem {
     if (doc) item.documentation = doc
 
     // FIXME: hard coded for class component
-    const camelizedHandlerName = handlerName.slice(0, 1).toUpperCase() + handlerName.slice(1)
-    item.insertText = `${handlerName}={handle${camelizedHandlerName}}`
-    const rangeOfSharp = new Range(
+    item.insertText = `${handlerName}={this.${addHandlerPrefix(handlerName)}} `
+    const sharpSymbolRange = new Range(
       new Position(position.line, position.character - 1),
       new Position(position.line, position.character)
     )
 
     const cmd: Command = {
       title: 'delete #',
-      command: 'editor.antdHeroAfterCompletion',
-      arguments: [rangeOfSharp, document],
+      command: 'antdHero.afterCompletion',
+      arguments: [sharpSymbolRange, document, handlerName],
     }
 
     item.command = cmd
@@ -85,20 +84,8 @@ export class AntdCompletionItem {
 
     return items
   }
-
-  // public resolveCompletionItem = (item: CompletionItem, token: CancellationToken) => {
-  //   return item
-  // }
-
-  // public cleanCompletion = (edit: TextEditorEdit, rangeToDelete: Range) => {
-  //   edit.delete(rangeToDelete)
-  // }
 }
 
 export const resolveCompletionItem = (item: CompletionItem, token: CancellationToken) => {
   return item
-}
-
-export const cleanCompletion = (edit: TextEditorEdit, rangeToDelete: Range) => {
-  edit.delete(rangeToDelete)
 }

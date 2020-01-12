@@ -15,7 +15,8 @@
   - [x] Class component handler
   - [ ] Functional component handler 🔵
     - [ ] Handler wrapped by useCallback 🔵
-- [x] Support i18n settings (en/zh) 🔵
+- [x] Support i18n configuration (en/zh) 🔵
+- [ ] Support handler generator prefix configuration 🔵
 - [ ] Add parameter types of handler in TS/TSX 🔵
   - [ ] Deep import types from `"antd/lib/{com}/{path}"` 🔵
   - [ ] Generic (auto detect from component) ⚪️
@@ -23,6 +24,7 @@
 - [ ] Hint user if version is not compatible ⚪️
   - [ ] Recursive find antd in node_modules ⚪️
 - [ ] Antd component playground ⚪️
+
 ## TODO
 
 - [ ] Finish all components mapping
