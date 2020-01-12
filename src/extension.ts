@@ -1,7 +1,7 @@
 import { commands, ExtensionContext, languages, Range, TextDocument } from 'vscode'
 
 import { cleanCompletion, provideCompletionItems, resolveCompletionItem } from './completionItem'
-import { provideHover } from './hoverProvider'
+import { HoverProvider } from './hoverProvider'
 import { insertHandler } from './insertHandler'
 
 export function activate(context: ExtensionContext) {
@@ -17,7 +17,8 @@ export function activate(context: ExtensionContext) {
 
   const hoverRegistration = languages.registerHoverProvider('javascript', {
     provideHover(document, position, token) {
-      return provideHover(document, position, token)
+      const hoverProvider = new HoverProvider(document, position, token)
+      return hoverProvider.provideHover()
     },
   })
 

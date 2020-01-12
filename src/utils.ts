@@ -1,4 +1,5 @@
 import { URI } from 'vscode-uri'
+import { DocLanguage } from './buildResource/constant'
 
 /**
  * try to match ant-design node_modules import path
@@ -34,4 +35,9 @@ export const antdHeroErrorMsg = (message: string) => `[antd-hero] ${message}`
 export const composeDocLink = (folder: string, lang: 'en' | 'zh') => {
   const suffix = lang === 'en' ? '' : '-cn'
   return `https://ant.design/components/${folder}${suffix}/`
+}
+
+export const transformConfigurationLanguage = (enumLabel: string | undefined): DocLanguage => {
+  // default return EN
+  return enumLabel === '中文' ? 'zh' : 'en'
 }
