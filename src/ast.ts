@@ -60,10 +60,11 @@ export const getClosetElementNode = (document: TextDocument, position: Position)
 /**
  * Return nearest userland component with condition
  */
-export const getClosetComponentElement = async <T extends Node>(
+export const getComponentElement = async <T extends Node>(
   document: TextDocument,
   position: Position,
-  condition: (parent: Node, document: TextDocument) => Promise<boolean>
+  condition: (parent: Node, document: TextDocument) => Promise<boolean>,
+  direction: 'inward' | 'outward'
 ): Promise<T | null> => {
   const sFile = ts.createSourceFile(
     document.uri.toString(),
@@ -73,7 +74,8 @@ export const getClosetComponentElement = async <T extends Node>(
 
   const offset = document.offsetAt(position)
   // parents should starts from the closest
-  const parents: Node[] = getNodeWithParentsAt(sFile, offset).reverse()
+  let parents: Node[] = getNodeWithParentsAt(sFile, offset)
+  if (direction === 'outward') parents = parents.reverse()
 
   const typeComponentNodePromises = parents.map(parent => {
     return condition(parent, document)
@@ -167,9 +169,9 @@ export const composeHandlerString = (
   if (type === 'functional') {
     return `
 
-    const ${addHandlerPrefix(handlerName)} = useCallback((${paramsText}) => {
+const ${addHandlerPrefix(handlerName)} = useCallback((${paramsText}) => {
 
-    })
+})
 
   `
   }

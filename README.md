@@ -29,7 +29,7 @@
 ## TODO
 
 - [ ] Finish all components mapping
-- [ ] Cache JSON in memory
+- [x] Cache JSON in memory
 - [x] Contributing guide
 - [ ] PR/Issue template
 - [ ] Test case
