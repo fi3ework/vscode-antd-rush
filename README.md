@@ -30,7 +30,7 @@
 
 - [ ] Finish all components mapping
 - [ ] Cache JSON in memory
-- [ ] Contribution guide
+- [x] Contributing guide
 - [ ] PR/Issue template
 - [ ] Test case
 - [ ] Circle CI

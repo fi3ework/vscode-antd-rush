@@ -65,7 +65,7 @@
     "compile": "tsc -p ./",
     "lint": "tslint -p ./",
     "watch": "tsc -watch -p ./",
-    "build-json": "ts-node ./src/composeDoc.ts"
+    "build-doc": "ts-node ./src/buildResource/index.ts"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.0.1",
