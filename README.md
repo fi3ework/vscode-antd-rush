@@ -7,17 +7,17 @@
 - [x] Show props description and default value
 - [x] Nested deconstruction type definition
 - [x] Go to type definition
-
 - [x] Show all available props of current component
 - [x] ~~Split a webview of component's document via context menu (VSCode do not support open external URL)~~
-- [ ] Add quick rename handler name dialog
 - [x] Automatic generate handler for functional or class component
   - [x] Starts with `#`
   - [x] Class component handler
-  - [ ] Functional component handler 🔵
-    - [ ] Handler wrapped by useCallback 🔵
+  - [x] Functional component handler 🔵
+    - [x] Handler wrapped by useCallback 🔵
 - [x] Support i18n configuration (en/zh) 🔵
+- [ ] Add quick rename handler name dialog
 - [ ] Support handler generator prefix configuration 🔵
+- [ ] Use `#` to assist handler insert location 🔵
 - [ ] Add parameter types of handler in TS/TSX 🔵
   - [ ] Deep import types from `"antd/lib/{com}/{path}"` 🔵
   - [ ] Generic (auto detect from component) ⚪️

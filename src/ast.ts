@@ -9,7 +9,11 @@ import ts, {
   Node,
   SourceFile,
   FunctionDeclaration,
-  isFunctionDeclaration,
+  isVariableStatement,
+  isJsxAttribute,
+  isJsxAttributes,
+  VariableStatement,
+  isReturnStatement,
 } from 'typescript'
 import { commands, Location, Position, TextDocument, window, TextEditor } from 'vscode'
 
@@ -43,10 +47,10 @@ export const getClosetElementNode = (document: TextDocument, position: Position)
 
   if (
     (isJsxOpeningElement(jsxElement) || isJsxSelfClosingElement(jsxElement)) &&
-    isJsxText(jsxText)
+    (isJsxText(jsxText) || isJsxAttribute(jsxText) || isJsxAttributes(jsxText))
   ) {
     const componentName = jsxElement.tagName.getText(sFile)
-    // TODO: rename import
+    // TODO: not right for rename import
     return componentName
   }
 
@@ -76,7 +80,9 @@ export const getClosetComponentElement = async <T extends Node>(
   })
 
   const typeJudgementResult = await Promise.all(typeComponentNodePromises)
-  const typeComponentNode = parents[typeJudgementResult.findIndex(Boolean)] as T
+  const targetNodeIndex = typeJudgementResult.findIndex(Boolean)
+  if (targetNodeIndex === -1) return null
+  const typeComponentNode = parents[targetNodeIndex] as T
   return typeComponentNode
 }
 
@@ -102,6 +108,39 @@ export const insertStringToClassComponent = async (
 
   editor.edit(builder => {
     builder.insert(insertAt, composeHandlerString(handlerName, params, 'class'))
+  })
+}
+
+/**
+ * Insert string to functional component
+ * This function adapt indent and fill in handler template
+ */
+export const insertStringToFunctionalComponent = async (
+  editor: TextEditor,
+  document: TextDocument,
+  functionNode: FunctionDeclaration | VariableStatement,
+  position: Position,
+  handlerName: string,
+  params: FunctionParam[]
+) => {
+  const sFile = ts.createSourceFile(
+    document.uri.toString(),
+    document.getText(),
+    ts.ScriptTarget.Latest
+  )
+
+  // find outermost statement
+  const parents = getNodeWithParentsAt(sFile, document.offsetAt(position))
+  // exclude outermost component, cause we should insert handler in it
+  // TODO: simple workaround
+  const closetStatement = parents.slice(1).find(parent => {
+    return isVariableStatement(parent) || isReturnStatement(parent)
+  })
+
+  if (!closetStatement) return
+  const insertAt = document.positionAt(closetStatement.pos)
+  editor.edit(builder => {
+    builder.insert(insertAt, composeHandlerString(handlerName, params, 'functional'))
   })
 }
 

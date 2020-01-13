@@ -79,9 +79,11 @@ export class AntdCompletionItem {
   public provideCompletionItems = (): CompletionItem[] => {
     const { document, position } = this
     const componentName = getClosetElementNode(document, position)
+    // not in a JSX element
     if (componentName === null) return []
 
     const availableHandler = antdComponentMap[componentName].methods
+    // element not from antd
     if (!availableHandler) return []
 
     const items = availableHandler.map(h => this.transformHandlerToItem(componentName, h))

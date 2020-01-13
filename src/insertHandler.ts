@@ -1,4 +1,11 @@
-import { ClassDeclaration, isClassDeclaration, isFunctionDeclaration } from 'typescript'
+import {
+  ClassDeclaration,
+  isClassDeclaration,
+  isFunctionDeclaration,
+  isVariableStatement,
+  FunctionDeclaration,
+  VariableStatement,
+} from 'typescript'
 import {
   commands,
   Location,
@@ -17,6 +24,7 @@ import {
   isClassExtendsReactComponent,
 } from './ast'
 import { matchAntdModule } from './utils'
+import { insertStringToFunctionalComponent } from './ast'
 
 export class HandlerInsert {
   private editor: TextEditor
@@ -54,6 +62,7 @@ export class HandlerInsert {
       // 2. insert class component handler
       const functionParams = await this.getHandlerParams()
       if (functionParams === null) return
+
       insertStringToClassComponent(
         this.editor,
         document,
@@ -64,11 +73,21 @@ export class HandlerInsert {
       )
     } else {
       // 2. if not found outer class component, it should be functional component
-      // TODO: getClosetFunction in top scope
-      const functionalComponent = await getClosetComponentElement<ClassDeclaration>(
+      const functionalComponent = await getClosetComponentElement<
+        FunctionDeclaration | VariableStatement
+      >(document, position, async node => {
+        return isFunctionDeclaration(node) || isVariableStatement(node)
+      })
+      const functionParams = await this.getHandlerParams()
+      if (functionalComponent === null || functionParams === null) return
+
+      insertStringToFunctionalComponent(
+        this.editor,
         document,
+        functionalComponent,
         position,
-        async node => isFunctionDeclaration(node)
+        this.handlerName,
+        functionParams
       )
     }
   }
