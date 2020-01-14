@@ -18,7 +18,6 @@ import {
   TextEditor,
   TextEditorEdit,
   workspace,
-  window,
 } from 'vscode'
 
 import {
@@ -56,12 +55,12 @@ export class HandlerInsert {
 
   public insertHandler = async () => {
     const { document, sharpSymbolRange } = this
-    const position = sharpSymbolRange.end
+    const symbolPosition = sharpSymbolRange.end
     // 1. Get closet outer class component
     // const classComponent = await getClosetClassComponentElement(document, position)
     const classComponent = await getComponentElement<ClassDeclaration>(
       document,
-      position,
+      symbolPosition,
       isClassExtendsReactComponent,
       'outward'
     )
@@ -70,42 +69,43 @@ export class HandlerInsert {
       // 2. insert class component handler
       const functionParams = await this.getHandlerParams()
       const indent = this.countIndentsInNode(classComponent)
-      // TODO:
       if (functionParams === null) return
 
-      const memberNode = insertStringToClassComponent(
-        this.editor,
+      const memberNode = insertStringToClassComponent({
+        editor: this.editor,
         document,
-        classComponent,
-        position,
-        this.handlerName,
-        functionParams
-      )
+        indent,
+        classNode: classComponent,
+        symbolPosition,
+        handlerName: this.handlerName,
+        handlerParams: functionParams,
+      })
     } else {
       // 2. if not found outer class component, it should be functional component
       const functionalComponent = await getComponentElement<
         FunctionDeclaration | VariableStatement
       >(
         document,
-        position,
+        symbolPosition,
         async node => {
           return isFunctionDeclaration(node) || isVariableStatement(node)
         },
         'inward'
       )
-      const functionParams = await this.getHandlerParams()
-      if (functionalComponent === null || functionParams === null) return
+      const handlerParams = await this.getHandlerParams()
+      if (functionalComponent === null || handlerParams === null) return
       // TODO:
       const indent = this.countIndentsInNode(functionalComponent)
 
-      insertStringToFunctionalComponent(
-        this.editor,
+      insertStringToFunctionalComponent({
+        editor: this.editor,
         document,
-        functionalComponent,
-        position,
-        this.handlerName,
-        functionParams
-      )
+        indent,
+        functionalNode: functionalComponent,
+        symbolPosition,
+        handlerName: this.handlerName,
+        handlerParams,
+      })
     }
   }
 

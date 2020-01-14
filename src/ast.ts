@@ -17,7 +17,8 @@ import ts, {
 } from 'typescript'
 import { commands, Location, Position, TextDocument, window, TextEditor } from 'vscode'
 
-import { addHandlerPrefix, isFromReactNodeModules, antdHeroErrorMsg } from './utils'
+import { isFromReactNodeModules } from './utils'
+import { composeHandlerString } from './insertion'
 
 /**
  * NOTE: https://github.com/microsoft/TypeScript/blob/master/lib/typescript.d.ts
@@ -92,24 +93,29 @@ export const getComponentElement = async <T extends Node>(
  * Insert string to class component
  * This function adapt indent and fill in handler template
  */
-export const insertStringToClassComponent = async (
-  editor: TextEditor,
-  document: TextDocument,
-  classNode: ClassDeclaration,
-  position: Position,
-  handlerName: string,
-  params: FunctionParam[]
-) => {
-  const offset = document.offsetAt(position)
+export const insertStringToClassComponent = async (args: {
+  editor: TextEditor
+  document: TextDocument
+  classNode: ClassDeclaration
+  symbolPosition: Position
+  handlerName: string
+  indent: number
+  handlerParams: FunctionParam[]
+}) => {
+  const { editor, document, indent, classNode, symbolPosition, handlerName, handlerParams } = args
+  const offset = document.offsetAt(symbolPosition)
 
-  const memberIndex = classNode.members.findIndex(member => {
+  const memberContainsSymbol = classNode.members.find(member => {
     return offsetContains(offset, member.pos, member.end)
   })
 
-  const insertAt = document.positionAt(classNode.members[memberIndex].pos)
+  if (!memberContainsSymbol) return
+
+  // memberContainsSymbol.pos point to the previous member ending position
+  const insertAt = document.positionAt(memberContainsSymbol.pos)
 
   editor.edit(builder => {
-    builder.insert(insertAt, composeHandlerString(handlerName, params, 'class'))
+    builder.insert(insertAt, composeHandlerString(handlerName, handlerParams, indent, 'class'))
   })
 }
 
@@ -117,14 +123,25 @@ export const insertStringToClassComponent = async (
  * Insert string to functional component
  * This function adapt indent and fill in handler template
  */
-export const insertStringToFunctionalComponent = async (
-  editor: TextEditor,
-  document: TextDocument,
-  functionNode: FunctionDeclaration | VariableStatement,
-  position: Position,
-  handlerName: string,
-  params: FunctionParam[]
-) => {
+export const insertStringToFunctionalComponent = async (args: {
+  editor: TextEditor
+  document: TextDocument
+  indent: number
+  functionalNode: FunctionDeclaration | VariableStatement
+  symbolPosition: Position
+  handlerName: string
+  handlerParams: FunctionParam[]
+}) => {
+  const {
+    editor,
+    document,
+    indent,
+    functionalNode,
+    symbolPosition,
+    handlerName,
+    handlerParams,
+  } = args
+
   const sFile = ts.createSourceFile(
     document.uri.toString(),
     document.getText(),
@@ -132,7 +149,7 @@ export const insertStringToFunctionalComponent = async (
   )
 
   // find outermost statement
-  const parents = getNodeWithParentsAt(sFile, document.offsetAt(position))
+  const parents = getNodeWithParentsAt(sFile, document.offsetAt(symbolPosition))
   // exclude outermost component, cause we should insert handler in it
   // TODO: simple workaround
   const closetStatement = parents.slice(1).find(parent => {
@@ -142,41 +159,8 @@ export const insertStringToFunctionalComponent = async (
   if (!closetStatement) return
   const insertAt = document.positionAt(closetStatement.pos)
   editor.edit(builder => {
-    builder.insert(insertAt, composeHandlerString(handlerName, params, 'functional'))
+    builder.insert(insertAt, composeHandlerString(handlerName, handlerParams, indent, 'functional'))
   })
-}
-
-/**
- * Fill handler template with parameters and its type
- */
-export const composeHandlerString = (
-  handlerName: string,
-  params: FunctionParam[],
-  type: 'class' | 'functional'
-) => {
-  const paramsText = params.map(p => p.text).join(', ')
-
-  // TODO: ts param type
-  // TODO: indent
-  if (type === 'class') {
-    return `
-
-    ${addHandlerPrefix(handlerName)} = (${paramsText}) => {
-
-  }`
-  }
-
-  if (type === 'functional') {
-    return `
-
-const ${addHandlerPrefix(handlerName)} = useCallback((${paramsText}) => {
-
-})
-
-  `
-  }
-
-  throw Error(antdHeroErrorMsg(`should not accept component type of ${type}`))
 }
 
 /**
