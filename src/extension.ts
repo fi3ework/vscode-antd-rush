@@ -1,8 +1,8 @@
 import { commands, ExtensionContext, languages, Range, TextDocument } from 'vscode'
 
 import { AntdCompletionItem, resolveCompletionItem } from './completionItem'
-import { HoverProvider } from './hoverProvider'
-import { HandlerInsert } from './insertHandler'
+import { HoverProvider } from './hoverProvider_'
+import { HandlerInsert } from './HandlerInsert'
 
 export function activate(context: ExtensionContext) {
   console.log('✨ ANTD HERO STARTED')
