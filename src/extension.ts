@@ -1,7 +1,7 @@
 import { commands, ExtensionContext, languages, Range, TextDocument } from 'vscode'
 
-import { AntdCompletionItem, resolveCompletionItem } from './completionItem'
-import { HoverProvider } from './hoverProvider_'
+import { AntdCompletionItem, resolveCompletionItem } from './CompletionItem'
+import { HoverProvider } from './HoverProvider'
 import { HandlerInsert } from './HandlerInsert'
 
 export function activate(context: ExtensionContext) {

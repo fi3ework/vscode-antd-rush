@@ -66,7 +66,7 @@ export class HandlerInsert {
     )
 
     if (classComponent) {
-      // 2. insert class component handler
+      // 2-1. insert class component handler
       const functionParams = await this.getHandlerParams()
       const indent = this.countIndentsInNode(classComponent)
       if (functionParams === null) return
@@ -81,7 +81,7 @@ export class HandlerInsert {
         handlerParams: functionParams,
       })
     } else {
-      // 2. if not found outer class component, it should be functional component
+      // 2-2. if not found outer class component, it should be functional component
       const functionalComponent = await getComponentElement<
         FunctionDeclaration | VariableStatement
       >(
@@ -94,7 +94,6 @@ export class HandlerInsert {
       )
       const handlerParams = await this.getHandlerParams()
       if (functionalComponent === null || handlerParams === null) return
-      // TODO:
       const indent = this.countIndentsInNode(functionalComponent)
 
       insertStringToFunctionalComponent({

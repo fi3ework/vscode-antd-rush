@@ -17,7 +17,7 @@
 - [x] Support i18n configuration (en/zh) 🔵
 - [ ] Add quick rename handler name dialog
 - [ ] Support handler generator prefix configuration 🔵
-- [ ] Use `#` to assist handler insert location 🔵
+- [ ] Type `#` again to assist handler insert location 🔵
 - [ ] Add parameter types of handler in TS/TSX 🔵
   - [ ] Deep import types from `"antd/lib/{com}/{path}"` 🔵
   - [ ] Generic (auto detect from component) ⚪️
