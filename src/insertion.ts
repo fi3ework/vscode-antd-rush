@@ -7,7 +7,7 @@ import { workspace } from 'vscode'
  * Fill handler template with parameters and its type
  */
 export const composeHandlerString = (
-  handlerName: string,
+  fullHandlerName: string,
   params: FunctionParam[],
   indent: number,
   type: 'class' | 'functional'
@@ -18,7 +18,7 @@ export const composeHandlerString = (
     return (
       '\n\n' +
       withIndent(
-        `${addHandlerPrefix(handlerName)} = (${paramsText}) => {
+        `${fullHandlerName} = (${paramsText}) => {
 
 }`,
         indent
@@ -28,7 +28,7 @@ export const composeHandlerString = (
   if (type === 'functional') {
     return withIndent(
       '\n\n' +
-        `const ${addHandlerPrefix(handlerName)} = useCallback((${paramsText}) => {
+        `const ${fullHandlerName} = useCallback((${paramsText}) => {
 
 })`,
       indent

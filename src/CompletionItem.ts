@@ -7,6 +7,8 @@ import {
   Range,
   TextDocument,
   workspace,
+  CompletionItemProvider,
+  CompletionContext,
 } from 'vscode'
 
 import { getClosetElementNode } from './ast'
@@ -19,16 +21,31 @@ import { addHandlerPrefix } from './insertion'
 
 const antdDocJson: { [k in DocLanguage]: ComponentsDoc } = _antdDocJson
 
-export class AntdCompletionItem {
+export type InsertKind = 'direct' | 'inquiry'
+
+export class AntdProvideCompletionItem implements CompletionItemProvider {
+  static insertKindMapping: { [k: string]: InsertKind } = {
+    '!': 'direct',
+    '#': 'inquiry',
+  }
   private document: TextDocument
   private position: Position
+  private token: CancellationToken
+  private context: CompletionContext
   private language: DocLanguage = transformConfigurationLanguage(
     workspace.getConfiguration().get('antdHero.language')
   )
 
-  public constructor(document: TextDocument, position: Position) {
+  public constructor(
+    document: TextDocument,
+    position: Position,
+    token: CancellationToken,
+    context: CompletionContext
+  ) {
     this.document = document
     this.position = position
+    this.token = token
+    this.context = context
   }
 
   private getHandlerDocument = (componentName: string, handlerName: string) => {
@@ -56,19 +73,30 @@ export class AntdCompletionItem {
 
     const isInClassComponent = !!getClosetElementNode(this.document, this.position)
 
-    item.insertText = `${handlerName}={${isInClassComponent ? 'this.' : ''}${addHandlerPrefix(
-      handlerName
-    )}} `
-
     const sharpSymbolRange = new Range(
       new Position(position.line, position.character - 1),
       new Position(position.line, position.character)
     )
 
+    const triggerChar = this.context.triggerCharacter
+    const insertKind = AntdProvideCompletionItem.insertKindMapping[triggerChar || '#']
+
+    if (insertKind === 'direct') {
+      item.insertText = `${handlerName}={${isInClassComponent ? 'this.' : ''}${addHandlerPrefix(
+        handlerName
+      )}} `
+    }
+
+    if (insertKind === 'inquiry') {
+      item.insertText = handlerName
+    }
+
+    const handlerBindObject = isInClassComponent ? 'this.' : ''
+
     const cmd: Command = {
-      title: 'delete #',
+      title: 'afterCompletion',
       command: 'antdHero.afterCompletion',
-      arguments: [sharpSymbolRange, document, handlerName],
+      arguments: [sharpSymbolRange, document, handlerName, insertKind, handlerBindObject],
     }
 
     item.command = cmd
@@ -89,8 +117,8 @@ export class AntdCompletionItem {
 
     return items
   }
-}
 
-export const resolveCompletionItem = (item: CompletionItem, token: CancellationToken) => {
-  return item
+  public resolveCompletionItem = async (item: any) => {
+    return item
+  }
 }

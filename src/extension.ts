@@ -1,6 +1,6 @@
 import { commands, ExtensionContext, languages, Range, TextDocument } from 'vscode'
 
-import { AntdCompletionItem, resolveCompletionItem } from './CompletionItem'
+import { AntdProvideCompletionItem, InsertKind } from './CompletionItem'
 import { HoverProvider } from './HoverProvider'
 import { HandlerInsert } from './HandlerInsert'
 
@@ -9,9 +9,27 @@ export function activate(context: ExtensionContext) {
 
   const cmdAfterCompletion = commands.registerTextEditorCommand(
     'antdHero.afterCompletion',
-    (editor, edit, rangeToDelete: Range, document: TextDocument, handlerName: string) => {
-      const handlerInsert = new HandlerInsert(editor, edit, rangeToDelete, document, handlerName)
+    async (
+      editor,
+      edit,
+      rangeToDelete: Range,
+      document: TextDocument,
+      handlerName: string,
+      insertKind: InsertKind,
+      handlerBindObject: string
+    ) => {
+      const handlerInsert = new HandlerInsert(
+        editor,
+        edit,
+        rangeToDelete,
+        document,
+        handlerName,
+        insertKind,
+        handlerBindObject
+      )
       handlerInsert.cleanCompletionPrefix()
+      await handlerInsert.tryRiseInputBox()
+      handlerInsert.tryFillCompletionBind()
       handlerInsert.insertHandler()
     }
   )
@@ -27,12 +45,12 @@ export function activate(context: ExtensionContext) {
     ['javascript', 'javascriptreact', 'typescriptreact'],
     {
       provideCompletionItems(document, postion, token, context) {
-        const item = new AntdCompletionItem(document, postion)
-        return item.provideCompletionItems()
+        const provider = new AntdProvideCompletionItem(document, postion, token, context)
+        return provider.provideCompletionItems()
       },
-      resolveCompletionItem,
     },
-    '#'
+    '!', // ! - insert handler with prefix in configuration
+    '#' // # - insert handler name with user input
   )
 
   context.subscriptions.push(hoverRegistration, completionItemRegistration, cmdAfterCompletion)

@@ -18,6 +18,7 @@ import {
   TextEditor,
   TextEditorEdit,
   workspace,
+  window,
 } from 'vscode'
 
 import {
@@ -29,32 +30,42 @@ import {
   isClassExtendsReactComponent,
 } from './ast'
 import { matchAntdModule } from './utils'
+import { addHandlerPrefix } from './insertion'
+import { InsertKind } from './CompletionItem'
 
 export class HandlerInsert {
   private document: TextDocument
   private sFile: SourceFile
   private editor: TextEditor
   private edit: TextEditorEdit
-  private sharpSymbolRange: Range
-  private handlerName: string
+  private triggerCharRange: Range
+  private handlerName: string // onChange, onSelect ...
+  private fullHandlerName: string // handleOnChange, myOnSelect ...
+  private insertKind: InsertKind // handleOnChange, myOnSelect ...
+  private handlerBindObject: string
 
   constructor(
     editor: TextEditor,
     edit: TextEditorEdit,
     sharpSymbolRange: Range,
     document: TextDocument,
-    handlerName: string
+    handlerName: string,
+    insertKind: InsertKind,
+    handlerObject: string
   ) {
     this.editor = editor
     this.document = document
     this.sFile = createSourceFile(document.uri.toString(), document.getText(), ScriptTarget.Latest)
-    this.sharpSymbolRange = sharpSymbolRange
+    this.triggerCharRange = sharpSymbolRange
     this.edit = edit
     this.handlerName = handlerName
+    this.fullHandlerName = addHandlerPrefix(handlerName)
+    this.insertKind = insertKind // handleOnChange, myOnSelect ...
+    this.handlerBindObject = handlerObject // `this.`handleOnChange or ``handlerOnChange
   }
 
   public insertHandler = async () => {
-    const { document, sharpSymbolRange } = this
+    const { document, triggerCharRange: sharpSymbolRange } = this
     const symbolPosition = sharpSymbolRange.end
     // 1. Get closet outer class component
     // const classComponent = await getClosetClassComponentElement(document, position)
@@ -71,13 +82,13 @@ export class HandlerInsert {
       const indent = this.countIndentsInNode(classComponent)
       if (functionParams === null) return
 
-      const memberNode = insertStringToClassComponent({
+      insertStringToClassComponent({
         editor: this.editor,
         document,
         indent,
         classNode: classComponent,
         symbolPosition,
-        handlerName: this.handlerName,
+        fullHandlerName: this.fullHandlerName,
         handlerParams: functionParams,
       })
     } else {
@@ -102,14 +113,31 @@ export class HandlerInsert {
         indent,
         functionalNode: functionalComponent,
         symbolPosition,
-        handlerName: this.handlerName,
+        fullHandlerName: this.fullHandlerName,
         handlerParams,
       })
     }
   }
 
+  public tryRiseInputBox = async (): Promise<void> => {
+    if (this.insertKind === 'direct') return Promise.resolve()
+
+    const fullHandlerNameInput = await window.showInputBox({
+      value: '',
+      ignoreFocusOut: true,
+      placeHolder: 'Input handler name. e.g. `handleOnChange`',
+      validateInput: text => {
+        return text === '' ? 'Please input handler name' : null
+      },
+    })
+
+    const fullHandlerName = fullHandlerNameInput || addHandlerPrefix(this.handlerName)
+    this.fullHandlerName = fullHandlerName
+    return
+  }
+
   private getHandlerParams = async (): Promise<FunctionParam[] | null> => {
-    const { document, sharpSymbolRange } = this
+    const { document, triggerCharRange: sharpSymbolRange } = this
     const position = sharpSymbolRange.end
 
     const definitions = await commands.executeCommand<Location[]>(
@@ -134,8 +162,21 @@ export class HandlerInsert {
   }
 
   public cleanCompletionPrefix = () => {
-    const { edit, sharpSymbolRange } = this
-    edit.delete(sharpSymbolRange)
+    const { edit, triggerCharRange } = this
+    edit.delete(triggerCharRange)
+  }
+
+  public tryFillCompletionBind = () => {
+    const { insertKind } = this
+    // `direct` mode has been insesrted by `completionItem`
+    if (insertKind === 'direct') return
+
+    const cursor = this.editor.selection.active
+    const suffix = `={${this.handlerBindObject}${this.fullHandlerName}}`
+    this.editor.edit(build => {
+      // NOTE: can not use edit.insert, as it only can be called synchronously
+      build.insert(cursor, suffix)
+    })
   }
 
   private countIndentsInNode = (node: Node): number => {

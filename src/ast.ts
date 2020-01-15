@@ -98,11 +98,19 @@ export const insertStringToClassComponent = async (args: {
   document: TextDocument
   classNode: ClassDeclaration
   symbolPosition: Position
-  handlerName: string
+  fullHandlerName: string
   indent: number
   handlerParams: FunctionParam[]
 }) => {
-  const { editor, document, indent, classNode, symbolPosition, handlerName, handlerParams } = args
+  const {
+    editor,
+    document,
+    indent,
+    classNode,
+    symbolPosition,
+    fullHandlerName,
+    handlerParams,
+  } = args
   const offset = document.offsetAt(symbolPosition)
 
   const memberContainsSymbol = classNode.members.find(member => {
@@ -115,7 +123,7 @@ export const insertStringToClassComponent = async (args: {
   const insertAt = document.positionAt(memberContainsSymbol.pos)
 
   editor.edit(builder => {
-    builder.insert(insertAt, composeHandlerString(handlerName, handlerParams, indent, 'class'))
+    builder.insert(insertAt, composeHandlerString(fullHandlerName, handlerParams, indent, 'class'))
   })
 }
 
@@ -129,7 +137,7 @@ export const insertStringToFunctionalComponent = async (args: {
   indent: number
   functionalNode: FunctionDeclaration | VariableStatement
   symbolPosition: Position
-  handlerName: string
+  fullHandlerName: string
   handlerParams: FunctionParam[]
 }) => {
   const {
@@ -138,7 +146,7 @@ export const insertStringToFunctionalComponent = async (args: {
     indent,
     functionalNode,
     symbolPosition,
-    handlerName,
+    fullHandlerName,
     handlerParams,
   } = args
 
@@ -159,7 +167,10 @@ export const insertStringToFunctionalComponent = async (args: {
   if (!closetStatement) return
   const insertAt = document.positionAt(closetStatement.pos)
   editor.edit(builder => {
-    builder.insert(insertAt, composeHandlerString(handlerName, handlerParams, indent, 'functional'))
+    builder.insert(
+      insertAt,
+      composeHandlerString(fullHandlerName, handlerParams, indent, 'functional')
+    )
   })
 }
 

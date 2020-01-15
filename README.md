@@ -10,13 +10,13 @@
 - [x] Show all available props of current component
 - [x] ~~Split a webview of component's document via context menu (VSCode do not support open external URL)~~
 - [x] Automatic generate handler for functional or class component
-  - [x] Starts with `#`
+  - [x] Directly insert starts with `!`
   - [x] Class component handler
   - [x] Functional component handler 🔵
     - [x] Handler wrapped by useCallback 🔵
 - [x] Support i18n configuration (en/zh) 🔵
 - [x] Support handler generator prefix configuration 🔵
-- [ ] Add quick rename handler name dialog, starts with `!` 🔵
+- [x] Add quick rename handler name dialog, starts with `#` 🔵
 - [ ] Type `#` again to assist handler insert location 🔵
 - [ ] Add parameter types of handler in TS/TSX 🔵
   - [ ] Deep import types from `"antd/lib/{com}/{path}"` 🔵
