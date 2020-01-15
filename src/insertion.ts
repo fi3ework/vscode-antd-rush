@@ -1,5 +1,7 @@
-import { addHandlerPrefix, antdHeroErrorMsg } from './utils'
+import { antdHeroErrorMsg } from './utils'
 import { FunctionParam } from './ast'
+import { __intl, DocLanguage, LabelType } from './buildResource/constant'
+import { workspace } from 'vscode'
 
 /**
  * Fill handler template with parameters and its type
@@ -43,4 +45,10 @@ export const withIndent = (raw: string, indent: number): string => {
     .split('\n')
     .map(line => ' '.repeat(indent) + line)
     .join('\n')
+}
+
+export const addHandlerPrefix = (handlerName: string): string => {
+  const handlerPrefix = workspace.getConfiguration().get('antdHero.handlerPrefix')
+  const camelizedHandlerName = handlerName.slice(0, 1).toUpperCase() + handlerName.slice(1)
+  return `${handlerPrefix}${camelizedHandlerName}`
 }

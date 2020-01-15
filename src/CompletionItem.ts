@@ -3,11 +3,9 @@ import {
   Command,
   CompletionItem,
   CompletionItemKind,
-  MarkdownString,
   Position,
   Range,
   TextDocument,
-  TextEditorEdit,
   workspace,
 } from 'vscode'
 
@@ -16,7 +14,8 @@ import { antdComponentMap } from './buildResource/componentMap'
 import { DocLanguage } from './buildResource/constant'
 import { ComponentsDoc } from './buildResource/type'
 import _antdDocJson from './definition.json'
-import { transformConfigurationLanguage, composeCardMessage, addHandlerPrefix } from './utils'
+import { composeCardMessage, transformConfigurationLanguage } from './utils'
+import { addHandlerPrefix } from './insertion'
 
 const antdDocJson: { [k in DocLanguage]: ComponentsDoc } = _antdDocJson
 

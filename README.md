@@ -15,8 +15,8 @@
   - [x] Functional component handler 🔵
     - [x] Handler wrapped by useCallback 🔵
 - [x] Support i18n configuration (en/zh) 🔵
-- [ ] Add quick rename handler name dialog
-- [ ] Support handler generator prefix configuration 🔵
+- [x] Support handler generator prefix configuration 🔵
+- [ ] Add quick rename handler name dialog, starts with `!` 🔵
 - [ ] Type `#` again to assist handler insert location 🔵
 - [ ] Add parameter types of handler in TS/TSX 🔵
   - [ ] Deep import types from `"antd/lib/{com}/{path}"` 🔵

@@ -55,7 +55,13 @@
             "English",
             "中文"
           ],
-          "description": "Language of Ant Design documentation"
+          "description": "Language of Ant Design documentation."
+        },
+        "antdHero.handlerPrefix": {
+          "type": "string",
+          "default": "handle",
+          "minLength": 1,
+          "description": "Prefix of automatically generated handler."
         }
       }
     }
