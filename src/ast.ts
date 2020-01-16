@@ -14,11 +14,15 @@ import ts, {
   isJsxAttributes,
   VariableStatement,
   isReturnStatement,
+  isIdentifier,
+  isJsxClosingFragment,
+  isJsxOpeningFragment,
+  isJsxElement,
 } from 'typescript'
 import { commands, Location, Position, TextDocument, window, TextEditor } from 'vscode'
 
 import { isFromReactNodeModules } from './utils'
-import { composeHandlerString } from './insertion'
+import { composeHandlerString, addHandlerPrefix } from './insertion'
 
 /**
  * NOTE: https://github.com/microsoft/TypeScript/blob/master/lib/typescript.d.ts
@@ -34,22 +38,24 @@ import { composeHandlerString } from './insertion'
  * Return nearest JsxElement at position, return null if not found.
  */
 export const getClosetElementNode = (document: TextDocument, position: Position): string | null => {
-  const sFile = ts.createSourceFile(
-    document.uri.toString(),
-    document.getText(),
-    ts.ScriptTarget.Latest
-  )
-
   const offset = document.offsetAt(position)
 
-  const parents: Node[] = getNodeWithParentsAt(sFile, offset)
+  // NOTE: change symbol to `x` as a legal JSX attribute for AST right paring
+  const firstHalf = document.getText().slice(0, offset - 1)
+  const secondHalf = document.getText().slice(offset)
+  const source = firstHalf + 'x' + secondHalf
+  const sFile = ts.createSourceFile(document.uri.toString(), source, ts.ScriptTarget.Latest)
 
+  const parents: Node[] = getNodeWithParentsAt(sFile, offset - 1)
   if (!parents.length) return null
-  const [jsxElement, jsxText] = parents.slice(-2) // TS do not support array deconstruction operator?
+
+  const [jsxElement, jsxAttributes, jsxAttribute, identifier] = parents.slice(-4)
 
   if (
-    (isJsxOpeningElement(jsxElement) || isJsxSelfClosingElement(jsxElement)) &&
-    (isJsxText(jsxText) || isJsxAttribute(jsxText) || isJsxAttributes(jsxText))
+    (isJsxSelfClosingElement(jsxElement) || isJsxOpeningElement(jsxElement)) &&
+    isJsxAttributes(jsxAttributes) &&
+    isJsxAttribute(jsxAttribute) &&
+    isIdentifier(identifier)
   ) {
     const componentName = jsxElement.tagName.getText(sFile)
     // TODO: not right for rename import
