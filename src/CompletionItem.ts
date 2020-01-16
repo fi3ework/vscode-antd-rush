@@ -25,7 +25,7 @@ export type InsertKind = 'direct' | 'inquiry'
 
 export class AntdProvideCompletionItem implements CompletionItemProvider {
   static insertKindMapping: { [k: string]: InsertKind } = {
-    '!': 'direct',
+    ':': 'direct',
     '#': 'inquiry',
   }
   private document: TextDocument

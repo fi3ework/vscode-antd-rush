@@ -49,7 +49,7 @@ export function activate(context: ExtensionContext) {
         return provider.provideCompletionItems()
       },
     },
-    '!', // ! - insert handler with prefix in configuration
+    ':', // ! - insert handler with prefix in configuration
     '#' // # - insert handler name with user input
   )
 

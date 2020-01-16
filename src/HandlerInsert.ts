@@ -19,6 +19,8 @@ import {
   TextEditorEdit,
   workspace,
   window,
+  Selection,
+  TextEditorRevealType,
 } from 'vscode'
 
 import {
@@ -32,6 +34,7 @@ import {
 import { matchAntdModule } from './utils'
 import { addHandlerPrefix } from './insertion'
 import { InsertKind } from './CompletionItem'
+import { Position } from 'vscode'
 
 export class HandlerInsert {
   private document: TextDocument
@@ -77,12 +80,12 @@ export class HandlerInsert {
     )
 
     if (classComponent) {
-      // 2-1. insert class component handler
+      // 2-a. insert class component handler
       const functionParams = await this.getHandlerParams()
       const indent = this.countIndentsInNode(classComponent)
       if (functionParams === null) return
 
-      insertStringToClassComponent({
+      const insertAt = await insertStringToClassComponent({
         editor: this.editor,
         document,
         indent,
@@ -91,8 +94,10 @@ export class HandlerInsert {
         fullHandlerName: this.fullHandlerName,
         handlerParams: functionParams,
       })
+
+      this.moveCursor(insertAt)
     } else {
-      // 2-2. if not found outer class component, it should be functional component
+      // 2-b. if not found outer class component, it should be functional component
       const functionalComponent = await getComponentElement<
         FunctionDeclaration | VariableStatement
       >(
@@ -107,7 +112,7 @@ export class HandlerInsert {
       if (functionalComponent === null || handlerParams === null) return
       const indent = this.countIndentsInNode(functionalComponent)
 
-      insertStringToFunctionalComponent({
+      const insertAt = await insertStringToFunctionalComponent({
         editor: this.editor,
         document,
         indent,
@@ -116,7 +121,20 @@ export class HandlerInsert {
         fullHandlerName: this.fullHandlerName,
         handlerParams,
       })
+
+      this.moveCursor(insertAt)
     }
+  }
+
+  private moveCursor = (insertAt: Position | null) => {
+    if (!insertAt) return
+
+    // TODO: hard coded 3
+    // TODO: should indent a level more
+    const deltaPosition = insertAt.translate(3)
+    const cursorTarget = new Selection(deltaPosition, deltaPosition)
+    this.editor.selection = cursorTarget
+    this.editor.revealRange(cursorTarget, TextEditorRevealType.InCenterIfOutsideViewport)
   }
 
   public tryRiseInputBox = async (): Promise<void> => {
@@ -168,7 +186,7 @@ export class HandlerInsert {
 
   public tryFillCompletionBind = () => {
     const { insertKind } = this
-    // `direct` mode has been insesrted by `completionItem`
+    // `direct` mode has been filled by `completionItem`
     if (insertKind === 'direct') return
 
     const cursor = this.editor.selection.active
