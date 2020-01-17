@@ -43,7 +43,7 @@ export const getClosetElementNode = (document: TextDocument, position: Position)
   // NOTE: change symbol to `x` as a legal JSX attribute for AST right paring
   const firstHalf = document.getText().slice(0, offset - 1)
   const secondHalf = document.getText().slice(offset)
-  const source = firstHalf + 'x' + secondHalf
+  const source = firstHalf + 'Q' + secondHalf // 'Q' could be any character
   const sFile = ts.createSourceFile(document.uri.toString(), source, ts.ScriptTarget.Latest)
 
   const parents: Node[] = getNodeWithParentsAt(sFile, offset - 1)

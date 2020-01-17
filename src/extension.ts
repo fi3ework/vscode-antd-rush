@@ -50,8 +50,7 @@ export function activate(context: ExtensionContext) {
         return provider.provideCompletionItems()
       },
     },
-    ':', // ! - insert handler with prefix in configuration
-    '#' // # - insert handler name with user input
+    ...Object.keys(AntdProvideCompletionItem.insertKindMapping)
   )
 
   context.subscriptions.push(hoverRegistration, completionItemRegistration, cmdAfterCompletion)

@@ -30,7 +30,7 @@ export const composeHandlerString = (
       '\n\n' +
         `const ${fullHandlerName} = useCallback((${paramsText}) => {
 
-})`,
+}, [])`,
       indent
     )
   }
