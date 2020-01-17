@@ -11,13 +11,14 @@ import {
   CompletionContext,
 } from 'vscode'
 
-import { getClosetElementNode } from './ast'
+import { getClosetElementNode, getParentsWhen, isClassExtendsReactComponent } from './ast'
 import { antdComponentMap } from './buildResource/componentMap'
 import { DocLanguage } from './buildResource/constant'
 import { ComponentsDoc } from './buildResource/type'
 import _antdDocJson from './definition.json'
 import { composeCardMessage, transformConfigurationLanguage } from './utils'
 import { addHandlerPrefix } from './insertion'
+import { ClassDeclaration } from 'typescript'
 
 const antdDocJson: { [k in DocLanguage]: ComponentsDoc } = _antdDocJson
 
@@ -65,13 +66,16 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
     )
   }
 
-  private transformHandlerToItem = (componentName: string, handlerName: string): CompletionItem => {
+  private transformHandlerToItem = (
+    componentName: string,
+    handlerName: string,
+    classComponentParent: ClassDeclaration | null
+  ): CompletionItem => {
     const { document, position } = this
+    const isInClassComponent = !!classComponentParent
     const item = new CompletionItem(handlerName, CompletionItemKind.Method)
     const doc = this.getHandlerDocument(componentName, handlerName)
     if (doc) item.documentation = doc
-
-    const isInClassComponent = !!getClosetElementNode(this.document, this.position)
 
     const sharpSymbolRange = new Range(
       new Position(position.line, position.character - 1),
@@ -91,19 +95,17 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
       item.insertText = handlerName
     }
 
-    const handlerBindObject = isInClassComponent ? 'this.' : ''
-
     const cmd: Command = {
       title: 'afterCompletion',
       command: 'antdHero.afterCompletion',
-      arguments: [sharpSymbolRange, document, handlerName, insertKind, handlerBindObject],
+      arguments: [sharpSymbolRange, document, handlerName, insertKind, classComponentParent],
     }
 
     item.command = cmd
     return item
   }
 
-  public provideCompletionItems = (): CompletionItem[] => {
+  public provideCompletionItems = async (): Promise<CompletionItem[]> => {
     const { document, position } = this
     const componentName = getClosetElementNode(document, position)
     // not in a JSX element
@@ -112,8 +114,16 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
     const availableHandler = antdComponentMap[componentName].methods
     // element not from antd
     if (!availableHandler) return []
+    const classComponentParent = await getParentsWhen<ClassDeclaration>(
+      document,
+      position,
+      isClassExtendsReactComponent,
+      'outward'
+    )
 
-    const items = availableHandler.map(h => this.transformHandlerToItem(componentName, h))
+    const items = availableHandler.map(handlerName =>
+      this.transformHandlerToItem(componentName, handlerName, classComponentParent)
+    )
 
     return items
   }

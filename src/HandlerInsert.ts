@@ -2,7 +2,6 @@ import {
   ClassDeclaration,
   createSourceFile,
   FunctionDeclaration,
-  isClassDeclaration,
   isFunctionDeclaration,
   isVariableStatement,
   VariableStatement,
@@ -26,7 +25,7 @@ import {
 import {
   buildTsFromDts,
   FunctionParam,
-  getComponentElement,
+  getParentsWhen,
   insertStringToClassComponent,
   insertStringToFunctionalComponent,
   isClassExtendsReactComponent,
@@ -45,7 +44,7 @@ export class HandlerInsert {
   private handlerName: string // onChange, onSelect ...
   private fullHandlerName: string // handleOnChange, myOnSelect ...
   private insertKind: InsertKind // handleOnChange, myOnSelect ...
-  private handlerBindObject: string
+  private classComponentParent: ClassDeclaration | null
 
   constructor(
     editor: TextEditor,
@@ -54,7 +53,7 @@ export class HandlerInsert {
     document: TextDocument,
     handlerName: string,
     insertKind: InsertKind,
-    handlerObject: string
+    classComponentParent: ClassDeclaration | null
   ) {
     this.editor = editor
     this.document = document
@@ -64,32 +63,25 @@ export class HandlerInsert {
     this.handlerName = handlerName
     this.fullHandlerName = addHandlerPrefix(handlerName)
     this.insertKind = insertKind // handleOnChange, myOnSelect ...
-    this.handlerBindObject = handlerObject // `this.`handleOnChange or ``handlerOnChange
+    this.classComponentParent = classComponentParent // `is JSX in class component
   }
 
   public insertHandler = async () => {
-    const { document, triggerCharRange: sharpSymbolRange } = this
+    const { document, triggerCharRange: sharpSymbolRange, classComponentParent } = this
     const symbolPosition = sharpSymbolRange.end
     // 1. Get closet outer class component
-    // const classComponent = await getClosetClassComponentElement(document, position)
-    const classComponent = await getComponentElement<ClassDeclaration>(
-      document,
-      symbolPosition,
-      isClassExtendsReactComponent,
-      'outward'
-    )
 
-    if (classComponent) {
+    if (classComponentParent) {
       // 2-a. insert class component handler
       const functionParams = await this.getHandlerParams()
-      const indent = this.countIndentsInNode(classComponent)
+      const indent = this.countIndentsInNode(classComponentParent)
       if (functionParams === null) return
 
       const insertAt = await insertStringToClassComponent({
         editor: this.editor,
         document,
         indent,
-        classNode: classComponent,
+        classNode: classComponentParent,
         symbolPosition,
         fullHandlerName: this.fullHandlerName,
         handlerParams: functionParams,
@@ -98,9 +90,7 @@ export class HandlerInsert {
       this.moveCursor(insertAt)
     } else {
       // 2-b. if not found outer class component, it should be functional component
-      const functionalComponent = await getComponentElement<
-        FunctionDeclaration | VariableStatement
-      >(
+      const functionalComponent = await getParentsWhen<FunctionDeclaration | VariableStatement>(
         document,
         symbolPosition,
         async node => {
@@ -189,8 +179,9 @@ export class HandlerInsert {
     // `direct` mode has been filled by `completionItem`
     if (insertKind === 'direct') return
 
+    const handlerBindObject = this.classComponentParent ? 'this' : ''
     const cursor = this.editor.selection.active
-    const suffix = `={${this.handlerBindObject}${this.fullHandlerName}}`
+    const suffix = `={${handlerBindObject}${this.fullHandlerName}}`
     this.editor.edit(build => {
       // NOTE: can not use edit.insert, as it only can be called synchronously
       build.insert(cursor, suffix)

@@ -3,6 +3,7 @@ import { commands, ExtensionContext, languages, Range, TextDocument } from 'vsco
 import { AntdProvideCompletionItem, InsertKind } from './CompletionItem'
 import { HoverProvider } from './HoverProvider'
 import { HandlerInsert } from './HandlerInsert'
+import { ClassDeclaration } from 'typescript'
 
 export function activate(context: ExtensionContext) {
   console.log('✨ ANTD HERO STARTED')
@@ -16,7 +17,7 @@ export function activate(context: ExtensionContext) {
       document: TextDocument,
       handlerName: string,
       insertKind: InsertKind,
-      handlerBindObject: string
+      classComponentParent: ClassDeclaration | null
     ) => {
       const handlerInsert = new HandlerInsert(
         editor,
@@ -25,7 +26,7 @@ export function activate(context: ExtensionContext) {
         document,
         handlerName,
         insertKind,
-        handlerBindObject
+        classComponentParent
       )
       handlerInsert.cleanCompletionPrefix()
       await handlerInsert.tryRiseInputBox()

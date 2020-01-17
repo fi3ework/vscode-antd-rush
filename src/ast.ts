@@ -66,9 +66,9 @@ export const getClosetElementNode = (document: TextDocument, position: Position)
 }
 
 /**
- * Return nearest userland component with condition
+ * Return nearest userland component (class component / functional component) with condition
  */
-export const getComponentElement = async <T extends Node>(
+export const getParentsWhen = async <T extends Node>(
   document: TextDocument,
   position: Position,
   condition: (parent: Node, document: TextDocument) => Promise<boolean>,
