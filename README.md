@@ -32,7 +32,7 @@
 - [ ] Finish all components mapping
 - [x] Cache JSON in memory
 - [x] Contributing guide
-- [ ] PR/Issue template
+- [x] PR/Issue template
 - [ ] Test case
 - [ ] Circle CI
 - [ ] Demo Gif
