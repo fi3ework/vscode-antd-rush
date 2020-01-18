@@ -168,7 +168,6 @@ export const insertStringToFunctionalComponent = async (args: {
   // find outermost statement
   const parents = getNodeWithParentsAt(sFile, document.offsetAt(symbolPosition))
   // exclude outermost component, cause we should insert handler in it
-  // TODO: simple workaround
   const closetStatement = parents.slice(1).find(parent => {
     return isVariableStatement(parent) || isReturnStatement(parent)
   })
@@ -222,30 +221,6 @@ export const isClassExtendsReactComponent = async (
 }
 
 /**
- * Get ast node at postion, return with it's parent nodes
- */
-// TODO: implement by traverseTsAst
-const getNodeWithParentsAt = (node: Node, offset: number, initialParents?: Node[]) => {
-  const parents: Node[] = initialParents || []
-  let hasFind = false
-  node.forEachChild(child => {
-    const start = child.pos
-    const end = child.end
-    if (offsetContains(offset, start, end)) {
-      parents.push(child)
-      hasFind = true
-    }
-    return
-  })
-
-  if (hasFind) {
-    getNodeWithParentsAt(parents[parents.length - 1], offset, parents)
-  }
-
-  return parents
-}
-
-/**
  * Whether offset between start and end
  */
 const offsetContains = (offset: number, startOrEnd: number, endOrStart: number) => {
@@ -278,7 +253,6 @@ export const buildTsFromDts = (dtsString: string): FunctionParam[] | null => {
       handlerName = node.name.getText(sCode as SourceFile)
       if (isFunctionTypeNode(node.type)) {
         const typeParamsText = node.type.parameters.map(p => {
-          // TODO: lacks ts type, only satisfied JS
           return p.name.getText(sCode as SourceFile)
         })
         paramTexts.push(...typeParamsText)
@@ -293,11 +267,11 @@ export const buildTsFromDts = (dtsString: string): FunctionParam[] | null => {
  * Traverse ts ast
  */
 interface TraverseActions {
-  enter?: Function
+  enter?: (node: Node) => boolean
   leave?: Function
 }
 
-const noop = () => {}
+const noop = () => true
 
 export const traverseTsAst = (entryNode: Node, traverseActions: TraverseActions) => {
   const { enter: _enter, leave: _leave } = traverseActions
@@ -305,8 +279,10 @@ export const traverseTsAst = (entryNode: Node, traverseActions: TraverseActions)
   const leave = typeof _leave === 'function' ? _leave : noop
 
   const traverseNode = (node: Node) => {
-    enter(node)
-    node.forEachChild(traverseNode)
+    const shouldVisitChildren = enter(node)
+    if (shouldVisitChildren) {
+      node.forEachChild(traverseNode)
+    }
     leave(node)
   }
 
@@ -320,19 +296,41 @@ export const traverseWithParents = (
   entryNode: Node,
   visitor: (node: Node, stack: Node[]) => boolean | void
 ) => {
-  const nodeStack: Node[] = []
+  const parentStack: Node[] = []
 
   const enter = (node: Node) => {
-    nodeStack.push(node)
-    visitor(node, nodeStack)
-  }
-
-  const leave = (node: Node) => {
-    const topNode = nodeStack.pop()
+    parentStack.push(node)
+    visitor(node, parentStack)
+    return true
   }
 
   traverseTsAst(entryNode, {
     enter: enter,
-    leave: leave,
   })
+}
+
+/**
+ * Get ast node at postion, return with it's parent nodes
+ */
+const getNodeWithParentsAt = (entryNode: Node, offset: number) => {
+  const parentStack: Node[] = []
+
+  const enter = (node: Node) => {
+    const start = node.pos
+    const end = node.end
+    const hasFind = offsetContains(offset, start, end)
+
+    if (hasFind) {
+      parentStack.push(node)
+      return true
+    } else {
+      return false
+    }
+  }
+
+  traverseTsAst(entryNode, {
+    enter: enter,
+  })
+
+  return parentStack
 }

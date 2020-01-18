@@ -13,7 +13,7 @@ export const composeHandlerString = (
   type: 'class' | 'functional'
 ) => {
   const paramsText = params.map(p => p.text).join(', ')
-  // TODO: ts param type
+  // TODO: inset param types in ts
   if (type === 'class') {
     return (
       '\n\n' +
