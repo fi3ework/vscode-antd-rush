@@ -19,7 +19,7 @@ export const composeHandlerString = (
       '\n\n' +
       withIndent(
         `${fullHandlerName} = (${paramsText}) => {
-
+${' '.repeat(indent)}
 }`,
         indent
       )

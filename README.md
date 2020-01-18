@@ -18,14 +18,14 @@
 - [x] Support handler generator prefix configuration 🔵
 - [x] Add quick rename handler name dialog, starts with `#` 🔵
 - [x] Move cursor to handler body after insertion 🔵
-- [ ] Type `#` again to assist handler insert location 🔵
 - [ ] Add parameter types of handler in TS/TSX 🔵
   - [ ] Deep import types from `"antd/lib/{com}/{path}"` 🔵
   - [ ] Generic (auto detect from component) ⚪️
-- [ ] Preview for `<Icon />` ⚪️
+- [ ] Type `#` again to assist handler insert location ⚪️
 - [ ] Hint user if version is not compatible ⚪️
   - [ ] Recursive find antd in node_modules ⚪️
 - [ ] Antd component playground ⚪️
+- [ ] Preview for `<Icon />` ⚪️
 
 ## TODO
 

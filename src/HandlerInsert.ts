@@ -87,7 +87,7 @@ export class HandlerInsert {
         handlerParams: functionParams,
       })
 
-      this.moveCursor(insertAt)
+      this.moveCursor(insertAt, indent * 2)
     } else {
       // 2-b. if not found outer class component, it should be functional component
       const functionalComponent = await getParentsWhen<FunctionDeclaration | VariableStatement>(
@@ -112,16 +112,14 @@ export class HandlerInsert {
         handlerParams,
       })
 
-      this.moveCursor(insertAt)
+      this.moveCursor(insertAt, indent * 2)
     }
   }
 
-  private moveCursor = (insertAt: Position | null) => {
+  private moveCursor = (insertAt: Position | null, xDelta: number) => {
     if (!insertAt) return
-
-    // TODO: hard coded 3
-    // TODO: should indent a level more
-    const deltaPosition = insertAt.translate(3)
+    const DELTA_TO_TRAIL_OF_INSERTION = 3
+    const deltaPosition = insertAt.translate(DELTA_TO_TRAIL_OF_INSERTION, xDelta)
     const cursorTarget = new Selection(deltaPosition, deltaPosition)
     this.editor.selection = cursorTarget
     this.editor.revealRange(cursorTarget, TextEditorRevealType.InCenterIfOutsideViewport)
@@ -179,7 +177,7 @@ export class HandlerInsert {
     // `direct` mode has been filled by `completionItem`
     if (insertKind === 'direct') return
 
-    const handlerBindObject = this.classComponentParent ? 'this' : ''
+    const handlerBindObject = this.classComponentParent ? 'this.' : ''
     const cursor = this.editor.selection.active
     const suffix = `={${handlerBindObject}${this.fullHandlerName}}`
     this.editor.edit(build => {
@@ -195,7 +193,7 @@ export class HandlerInsert {
 
     for (let line = startLine; line <= endLine; line++) {
       const lineText = this.editor.document.lineAt(line).text
-      const indentCount = this.countIndentsOfLine(lineText)
+      const indentCount = this.countMinIndentsOfText(lineText)
 
       if (nodeBodyIndent === 0 && indentCount > 0) {
         nodeBodyIndent = indentCount
@@ -208,7 +206,7 @@ export class HandlerInsert {
   }
 
   // forked from https://github.com/rubymaniac/vscode-paste-and-indent/blob/master/src/extension.ts#L30-L45
-  private countIndentsOfLine = (line: string) => {
+  private countMinIndentsOfText = (line: string) => {
     // TODO: indent by space or tab?
     let indentCount = line.search(/\S/) // -1 means the line is blank (full of space characters)
     if (indentCount !== -1) {
