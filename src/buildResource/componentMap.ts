@@ -200,16 +200,16 @@ export const antdComponentMap: ComponentMapping = {
   },
   Descriptions: {
     anchorBeforeProps: '### Descriptions',
-    methods: [''],
+    methods: [],
   },
   'Description.Item': {
     anchorBeforeProps: '### DescriptionItem',
     docAlias: 'descriptions',
-    methods: [''],
+    methods: [],
   },
   Divider: {
     anchorBeforeProps: '## API',
-    methods: [''],
+    methods: [],
   },
   Drawer: {
     anchorBeforeProps: '## API',
@@ -226,7 +226,7 @@ export const antdComponentMap: ComponentMapping = {
   },
   Empty: {
     anchorBeforeProps: '## API',
-    methods: [''],
+    methods: [],
   },
   Form: {
     anchorBeforeProps: '## API',
@@ -245,11 +245,11 @@ export const antdComponentMap: ComponentMapping = {
   Col: {
     docAlias: 'grid',
     anchorBeforeProps: '### Col',
-    methods: [''],
+    methods: [],
   },
   Icon: {
     anchorBeforeProps: '## API',
-    methods: [''],
+    methods: [],
   },
   Input: {
     anchorBeforeProps: '### Input',
@@ -274,5 +274,35 @@ export const antdComponentMap: ComponentMapping = {
     docAlias: 'input',
     anchorBeforeProps: '#### Input.Password.+',
     methods: [],
+  },
+  InputNumber: {
+    anchorBeforeProps: '## API',
+    methods: ['formatter', 'parser', 'onChange', 'onPressEnter'],
+  },
+  'Layout.Sider': {
+    docAlias: 'layout',
+    anchorBeforeProps: '### Layout.Sider',
+    methods: ['onCollapse', 'onBreakpoint'],
+  },
+  List: {
+    anchorBeforeProps: '## API',
+    methods: ['renderItem'],
+  },
+  Mention: {
+    anchorBeforeProps: '### Mention',
+    methods: ['getSuggestionContainer'],
+  },
+  Mentions: {
+    anchorBeforeProps: '### Mentions',
+    methods: [
+      'filterOption',
+      'validateSearch',
+      'onChange',
+      'onSelect',
+      'onSearch',
+      'onFocus',
+      'onBlur',
+      'getPopupContainer',
+    ],
   },
 }
