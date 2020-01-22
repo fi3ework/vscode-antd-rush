@@ -19,7 +19,16 @@ import ts, {
   isJsxOpeningFragment,
   isJsxElement,
 } from 'typescript'
-import { commands, Location, Position, TextDocument, window, TextEditor } from 'vscode'
+import {
+  commands,
+  Location,
+  Position,
+  TextDocument,
+  window,
+  TextEditor,
+  SymbolInformation,
+  Uri,
+} from 'vscode'
 
 import { isFromReactNodeModules } from './utils'
 import { composeHandlerString, addHandlerPrefix } from './insertion'
@@ -37,10 +46,13 @@ import { composeHandlerString, addHandlerPrefix } from './insertion'
 /**
  * Return nearest JsxElement at position, return null if not found.
  */
-export const getClosetElementNode = (document: TextDocument, position: Position): string | null => {
+export const getClosetElementAntNode = async (
+  document: TextDocument,
+  position: Position
+): Promise<string | null> => {
   const offset = document.offsetAt(position)
 
-  // NOTE: change symbol to `x` as a legal JSX attribute for AST right paring
+  // NOTE: change symbol to common letter as a legal JSX attribute for AST right paring
   const firstHalf = document.getText().slice(0, offset - 1)
   const secondHalf = document.getText().slice(offset)
   const source = firstHalf + 'Q' + secondHalf // 'Q' could be any character
@@ -57,12 +69,54 @@ export const getClosetElementNode = (document: TextDocument, position: Position)
     isJsxAttribute(jsxAttribute) &&
     isIdentifier(identifier)
   ) {
-    const componentName = jsxElement.tagName.getText(sFile)
-    // TODO: not right for rename import
+    const componentName = await getContainerSymbolAtPosition(
+      document,
+      document.positionAt(jsxElement.tagName.pos)
+    )
     return componentName
   }
 
   return null
+}
+
+/**
+ * Get symbol name in given Document at given position
+ */
+export const getContainerSymbolAtPosition = async (
+  document: TextDocument,
+  position: Position
+): Promise<string | null> => {
+  const typeDefinition = await commands.executeCommand<Location[]>(
+    'vscode.executeDefinitionProvider',
+    document.uri,
+    position
+  )
+
+  if (!typeDefinition) return null
+
+  // TODO: only consider first one
+  return getContainerSymbolAtLocation(typeDefinition[0])
+}
+
+/**
+ * Get symbol name of given VSCode location
+ */
+export const getContainerSymbolAtLocation = async (loc: Location) => {
+  const uri = loc.uri
+  const symbols = await commands.executeCommand<SymbolInformation[]>(
+    'vscode.executeDocumentSymbolProvider',
+    uri
+  )
+
+  if (!symbols) return null
+  const container = symbols.find(symbol => {
+    // NOTE: symbol tree is not from line start and line end
+    return (
+      symbol.location.range.start.line <= loc.range.start.line &&
+      symbol.location.range.end.line >= loc.range.end.line
+    )
+  })
+  return container ? container.name : null
 }
 
 /**
@@ -231,7 +285,6 @@ const offsetContains = (offset: number, startOrEnd: number, endOrStart: number) 
 /**
  * Create empty function from function dts
  */
-
 export interface FunctionParam {
   type: string
   text: string

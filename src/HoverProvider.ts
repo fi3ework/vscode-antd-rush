@@ -10,16 +10,18 @@ import {
   workspace,
 } from 'vscode'
 
+import { getContainerSymbolAtLocation } from './ast'
 import { antdComponentMap } from './buildResource/componentMap'
-import { DocLanguage, __intl } from './buildResource/constant'
+import { __intl, DocLanguage } from './buildResource/constant'
 import { ComponentsDoc, ComponentsRawDoc } from './buildResource/type'
 import _antdDocJson from './definition.json'
 import _rawTableJson from './raw-table.json'
-import { composeCardMessage } from './utils'
+import { matchNodeModules } from './utils'
 import {
+  antdHeroErrorMsg,
+  composeCardMessage,
   composeDocLink,
   matchAntdModule,
-  antdHeroErrorMsg,
   transformConfigurationLanguage,
 } from './utils'
 
@@ -55,13 +57,7 @@ export class HoverProvider {
     if (antdMatched === null) return // if not from antd, return
     const { componentFolder, filePath } = antdMatched
 
-    // TODO: should just use go to type definition
-    const symbolTree = await commands.executeCommand<SymbolInformation[]>(
-      'vscode.executeDocumentSymbolProvider',
-      definitionLoc.uri
-    )
-
-    const interaceName = this.getInterfaceNameInSymbolTree(symbolTree, definitionLoc)
+    const interaceName = await getContainerSymbolAtLocation(definitionLoc)
     if (interaceName === null) return
     const nodeType = this.getAstNodeType(interaceName)
 
@@ -151,9 +147,9 @@ export class HoverProvider {
       ),
     ])
 
-    const definitionsUnderAntd = (definitions || []).filter(d => matchAntdModule(d.uri.path))
+    const definitionsUnderAntd = (definitions || []).filter(d => matchNodeModules(d.uri.path))
     const typeDefinitionsUnderAntd = (typeDefinitions || []).filter(d =>
-      matchAntdModule(d.uri.path)
+      matchNodeModules(d.uri.path)
     )
 
     if (typeDefinitionsUnderAntd.length > 1)
@@ -171,21 +167,6 @@ export class HoverProvider {
     }
 
     return null
-  }
-
-  private getInterfaceNameInSymbolTree = (
-    symbols: SymbolInformation[] | undefined,
-    loc: Location
-  ) => {
-    if (!symbols) return null
-    const outerContainer = symbols.find(symbol => {
-      // NOTE: symbol tree is not from line start and line end
-      return (
-        symbol.location.range.start.line <= loc.range.start.line &&
-        symbol.location.range.end.line >= loc.range.end.line
-      )
-    })
-    return outerContainer ? outerContainer.name : null
   }
 
   private getAstNodeType = (name: string): { type: 'component' | 'props' } => {

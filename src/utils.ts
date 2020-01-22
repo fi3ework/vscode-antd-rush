@@ -3,6 +3,16 @@ import { MarkdownString } from 'vscode'
 import { __intl, DocLanguage, LabelType } from './buildResource/constant'
 
 /**
+ * try to match  node_modules import path
+ */
+export const matchNodeModules = (path: string): string | null => {
+  const regMatched = path.match(/(.*)\/node_modules\/(.*)/)
+  if (!regMatched) return null
+  const [, importPath] = regMatched
+  return importPath
+}
+
+/**
  * try to match ant-design node_modules import path
  */
 export const matchAntdModule = (path: string) => {
