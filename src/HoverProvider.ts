@@ -5,7 +5,6 @@ import {
   Location,
   MarkdownString,
   Position,
-  SymbolInformation,
   TextDocument,
   workspace,
 } from 'vscode'
@@ -18,7 +17,7 @@ import _antdDocJson from './definition.json'
 import _rawTableJson from './raw-table.json'
 import { matchNodeModules } from './utils'
 import {
-  antdHeroErrorMsg,
+  antdRushErrorMsg,
   composeCardMessage,
   composeDocLink,
   matchAntdModule,
@@ -33,7 +32,7 @@ export class HoverProvider {
   private position!: Position
   private token!: CancellationToken
   private language: DocLanguage = transformConfigurationLanguage(
-    workspace.getConfiguration().get('antdHero.language')
+    workspace.getConfiguration().get('antdRush.language')
   )
 
   public constructor(document: TextDocument, position: Position, token: CancellationToken) {
@@ -55,7 +54,7 @@ export class HoverProvider {
     const antdMatched = matchAntdModule(definitionPath)
 
     if (antdMatched === null) return // if not from antd, return
-    const { componentFolder, filePath } = antdMatched
+    const { componentFolder } = antdMatched
 
     const interaceName = await getContainerSymbolAtLocation(definitionLoc)
     if (interaceName === null) return
@@ -69,7 +68,7 @@ export class HoverProvider {
       const propName = this.fuzzySearchComponentMapping(interaceName.slice(0, -'Props'.length))
       if (!propName) return
       const matchedComponent = antdDocJson[this.language][propName]
-      if (!matchedComponent) throw antdHeroErrorMsg(`did not match component for ${propName}`)
+      if (!matchedComponent) throw antdRushErrorMsg(`did not match component for ${propName}`)
 
       const desc = matchedComponent[propText].description
       const type = matchedComponent[propText].type
@@ -98,7 +97,7 @@ export class HoverProvider {
 
       const matchedComponent = antdComponentMap[comName]
 
-      if (!matchedComponent) throw antdHeroErrorMsg(`did not match component for ${comName}`)
+      if (!matchedComponent) throw antdRushErrorMsg(`did not match component for ${comName}`)
 
       const aliasName = componentFolder
       const enDocLink = `[EN](${composeDocLink(aliasName, 'en')})`
@@ -153,10 +152,10 @@ export class HoverProvider {
     )
 
     if (typeDefinitionsUnderAntd.length > 1)
-      console.info('[antd-hero]: get more than one type definition')
+      console.info('[antd-rush]: get more than one type definition')
 
     // TODO: difference between definition and type definition
-    if (definitionsUnderAntd.length > 1) console.info('[antd-hero]: get more than one definition')
+    if (definitionsUnderAntd.length > 1) console.info('[antd-rush]: get more than one definition')
 
     if (typeDefinitionsUnderAntd.length) {
       return typeDefinitionsUnderAntd[0]

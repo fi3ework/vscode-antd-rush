@@ -1,4 +1,4 @@
-import { antdHeroErrorMsg } from './utils'
+import { antdRushErrorMsg } from './utils'
 import { FunctionParam } from './ast'
 import { __intl, DocLanguage, LabelType } from './buildResource/constant'
 import { workspace } from 'vscode'
@@ -34,7 +34,7 @@ ${' '.repeat(indent)}
       indent
     )
   }
-  throw Error(antdHeroErrorMsg(`should not accept component type of ${type}`))
+  throw Error(antdRushErrorMsg(`should not accept component type of ${type}`))
 }
 
 /**
@@ -48,7 +48,7 @@ export const withIndent = (raw: string, indent: number): string => {
 }
 
 export const addHandlerPrefix = (handlerName: string): string => {
-  const handlerPrefix = workspace.getConfiguration().get('antdHero.handlerPrefix')
+  const handlerPrefix = workspace.getConfiguration().get('antdRush.handlerPrefix')
   const camelizedHandlerName = handlerName.slice(0, 1).toUpperCase() + handlerName.slice(1)
   return `${handlerPrefix}${camelizedHandlerName}`
 }

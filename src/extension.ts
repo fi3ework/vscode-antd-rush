@@ -6,10 +6,10 @@ import { HandlerInsert } from './HandlerInsert'
 import { ClassDeclaration } from 'typescript'
 
 export function activate(context: ExtensionContext) {
-  console.log('✨ ANTD HERO STARTED')
+  console.log('⚡️ ANTD RUSH STARTED')
 
   const cmdAfterCompletion = commands.registerTextEditorCommand(
-    'antdHero.afterCompletion',
+    'antdRush.afterCompletion',
     async (
       editor,
       edit,

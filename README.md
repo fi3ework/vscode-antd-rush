@@ -1,6 +1,6 @@
-# vscode-antd-hero
+# vscode-antd-rush
 
-♟ Your And-Design Hero.
+♟ Your And-Design Rush.
 
 ## ROADMAP
 
@@ -22,7 +22,7 @@
 - [ ] Add parameter types of handler in TS/TSX 🔵
   - [ ] Deep import types from `"antd/lib/{com}/{path}"` 🔵
   - [ ] Generic (auto detect from component) ⚪️
-- [ ] Type `#` again to assist handler insert location ⚪️
+- [x] ~~Type `#` again to assist handler insert location ⚪️~~
 - [ ] Hint user if version is not compatible ⚪️
   - [ ] Recursive find antd in node_modules ⚪️
 - [ ] Antd component playground ⚪️
@@ -30,7 +30,7 @@
 
 ## TODO
 
-- [ ] Finish all components mapping
+- [x] Finish all components mapping
 - [x] Cache JSON in memory
 - [x] Contributing guide
 - [x] PR/Issue template

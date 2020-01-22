@@ -1,15 +1,15 @@
 {
-  "name": "vscode-antd-hero",
-  "displayName": "Ant-Design hero",
-  "description": "Your Ant-Design hero",
+  "name": "vscode-antd-rush",
+  "displayName": "Antd Rush",
+  "description": "Rush to Ant Design",
   "version": "0.0.1",
   "publisher": "fi3ework",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fi3ework/vscode-antd-hero"
+    "url": "https://github.com/fi3ework/vscode-antd-rush"
   },
   "bugs": {
-    "url": "https://github.com/fi3ework/vscode-antd-hero/issues"
+    "url": "https://github.com/fi3ework/vscode-antd-rush/issues"
   },
   "engines": {
     "vscode": "^1.39.0"
@@ -17,6 +17,7 @@
   "categories": [
     "Other"
   ],
+  "icon": "assets/icon.png",
   "activationEvents": [
     "onLanguage:javascript",
     "onLanguage:javascriptreact",
@@ -30,8 +31,8 @@
     },
     "commands": [
       {
-        "command": "antdHero.afterCompletion",
-        "title": "[antd hero internal] replace string"
+        "command": "antdRush.afterCompletion",
+        "title": "[antd rush internal] replace string"
       }
     ],
     "languages": [
@@ -46,18 +47,18 @@
       }
     ],
     "configuration": {
-      "title": "Antd Hero",
+      "title": "Antd Rush",
       "properties": {
-        "antdHero.language": {
+        "antdRush.language": {
           "type": "string",
-          "default": "English",
+          "default": "中文",
           "enum": [
             "English",
             "中文"
           ],
           "description": "Language of Ant Design documentation."
         },
-        "antdHero.handlerPrefix": {
+        "antdRush.handlerPrefix": {
           "type": "string",
           "default": "handle",
           "minLength": 1,

@@ -34,7 +34,7 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
   private token: CancellationToken
   private context: CompletionContext
   private language: DocLanguage = transformConfigurationLanguage(
-    workspace.getConfiguration().get('antdHero.language')
+    workspace.getConfiguration().get('antdRush.language')
   )
 
   public constructor(
@@ -97,7 +97,7 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
 
     const cmd: Command = {
       title: 'afterCompletion',
-      command: 'antdHero.afterCompletion',
+      command: 'antdRush.afterCompletion',
       arguments: [sharpSymbolRange, document, handlerName, insertKind, classComponentParent],
     }
 

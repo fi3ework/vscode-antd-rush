@@ -35,7 +35,7 @@ export const isFromReactNodeModules = (path: string) => {
   return !!regMatched
 }
 
-export const antdHeroErrorMsg = (message: string) => `[antd-hero] ${message}`
+export const antdRushErrorMsg = (message: string) => `[antd-rush] ${message}`
 
 export const composeDocLink = (folder: string, lang: 'en' | 'zh') => {
   const suffix = lang === 'en' ? '' : '-cn'
