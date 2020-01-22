@@ -69,7 +69,8 @@ export class HoverProvider {
      * props hover card
      */
     if (nodeType.type === 'props') {
-      const propName = this.fuzzySearchComponentMapping(interaceName)
+      // TODO: not ok for Carousel.props.erase
+      const propName = this.fuzzySearchComponentMapping(interaceName.slice(0, -'Props'.length))
       if (!propName) return
       const matchedComponent = antdDocJson[this.language][propName]
       if (!matchedComponent) throw antdHeroErrorMsg(`did not match component for ${propName}`)

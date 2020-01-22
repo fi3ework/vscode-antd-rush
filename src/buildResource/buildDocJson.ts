@@ -31,7 +31,7 @@ export class DefinitionBuilder {
   private stringifier = unified()
     .use(markdown)
     .use(stringify)
-    .data('settings', { looseTable: true })
+    .data('settings', { looseTable: false })
 
   private async buildComponentDefinition(
     language: DocLanguage
