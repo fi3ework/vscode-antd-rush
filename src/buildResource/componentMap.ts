@@ -115,7 +115,7 @@ export const antdComponentMap: ComponentMapping = {
     ],
   },
   Checkbox: {
-    anchorBeforeProps: '#### Checkbox',
+    anchorBeforeProps: '## API',
     methods: ['onChange'],
   },
   'Checkbox.Group': {
@@ -383,7 +383,7 @@ export const antdComponentMap: ComponentMapping = {
     methods: ['format'],
   },
   Radio: {
-    anchorBeforeProps: '### Radio',
+    anchorBeforeProps: '## API',
     methods: [],
   },
   'Radio.Group': {
@@ -540,7 +540,7 @@ export const antdComponentMap: ComponentMapping = {
     methods: [],
   },
   Tooltip: {
-    anchorBeforeProps: ['### Common API', '### 共同的 API'],
+    anchorBeforeProps: ['### Common API', '### 共同的 API', '## API'],
     methods: ['title', 'getPopupContainer', 'onVisibleChange'],
   },
   Transfer: {

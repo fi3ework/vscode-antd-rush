@@ -15,5 +15,5 @@ export interface ComponentsDoc {
 }
 
 export interface ComponentsRawDoc {
-  [k: string]: string
+  [k: string]: string[]
 }

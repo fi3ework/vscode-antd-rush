@@ -49,18 +49,22 @@ export class DefinitionBuilder {
       const anchorProps = Array.isArray(loc.anchorBeforeProps)
         ? loc.anchorBeforeProps
         : [loc.anchorBeforeProps]
-      const anchor = this.findAnchorNode(mdAst, anchorProps)
-      const table = this.findFirstTableAfterAnchor(mdAst, anchor) as Parent
-      if (table === null) {
+
+      const anchors = this.findAnchorNode(mdAst, anchorProps)
+      const tables: Parent[] = anchors
+        .map(anchor => this.findFirstTableAfterAnchor(mdAst, anchor) as Parent)
+        .filter(Boolean)
+
+      if (!tables.length) {
         console.error(
           `😭 failed to find table after ${anchorProps[0]} for component ${componentName}(${language})`
         )
         return
       }
 
-      const componentDoc: Props = this.extractPropsFromTable(table)
+      const componentDoc: Props = this.extractPropsFromTables(tables)
       propDefJson[componentName] = componentDoc
-      rawTableJson[componentName] = this.stringifier.stringify(table)
+      rawTableJson[componentName] = tables.map(table => this.stringifier.stringify(table))
     })
 
     await Promise.all(promises)
@@ -91,13 +95,18 @@ export class DefinitionBuilder {
     return prop
   }
 
-  private extractPropsFromTable(table: Parent) {
+  private extractPropsFromTables(tables: Parent[]) {
     const prosDoc: Props = {}
     // TODO: adapt dynamic table head, bad case: https://ant.design/components/breadcrumb-cn/
-    const [tableHead, ...propRows] = table.children
-    propRows.forEach(tableRow => {
-      const prop = this.composeProp(tableRow as Parent)
-      prosDoc[prop.property] = prop
+    tables.forEach(table => {
+      const [tableHead, ...propRows] = table.children
+      // check is valid table
+      // if ((tableHead as Parent).children.length <= 3) return
+
+      propRows.forEach(tableRow => {
+        const prop = this.composeProp(tableRow as Parent)
+        prosDoc[prop.property] = prop
+      })
     })
 
     return prosDoc
@@ -111,17 +120,19 @@ export class DefinitionBuilder {
     return promisify(fs.readFile)(docContentPath, { encoding: 'utf-8' })
   }
 
-  private findAnchorNode(mdAst: Node, anchors: string[]) {
-    return find(mdAst, (node: Node) => {
+  private findAnchorNode(mdAst: Node, anchors: string[]): Node[] {
+    const anchorNodes: Node[] = []
+    find(mdAst, (node: Node) => {
       // anchor's type will not be `tableRow`
       if (node.type === 'tableRow') return false
       const stringifiedNode = this.stringifier.stringify(node)
-      const isMatch = anchors.some(anchor => {
+      const isMatch = anchors.forEach(anchor => {
         const anchorReg = new RegExp('^' + anchor + '$')
-        return !!stringifiedNode.match(anchorReg)
+        if (!!stringifiedNode.match(anchorReg)) anchorNodes.push(node)
       })
       return isMatch
     })
+    return anchorNodes
   }
 
   private isSamePosition = (pos1: Position, pos2: Position) => {

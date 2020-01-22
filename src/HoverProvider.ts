@@ -54,6 +54,7 @@ export class HoverProvider {
     if (interaceName === null) return
 
     const nodeType = this.getAstNodeType(interaceName)
+    // const node = getNodeAtPostion(document, position)
 
     /**
      * props hover card
@@ -110,9 +111,11 @@ export class HoverProvider {
         `**${comName}** ${__intl('componentHint', this.language)} \[ ${docLinks} \]`
       )
 
-      const tableMd = new MarkdownString(rawTableJson[this.language][comName])
+      const tablesMd = rawTableJson[this.language][comName].map(table => {
+        return new MarkdownString(table)
+      })
 
-      return new Hover([headMd, tableMd])
+      return new Hover([headMd, ...tablesMd])
     }
 
     return
@@ -171,7 +174,7 @@ export class HoverProvider {
 
   private getAstNodeType = (name: string): { type: 'component' | 'props' } => {
     return {
-      type: name.endsWith('Props') ? 'props' : 'component',
+      type: this.fuzzySearchComponentMapping(name) ? 'component' : 'props',
     }
   }
 }

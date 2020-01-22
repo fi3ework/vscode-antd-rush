@@ -21,6 +21,7 @@ async function buildResource() {
       { propDefJson: enPropDefJson, rawTableJson: enRawTableJson },
       { propDefJson: zhPropDefJson, rawTableJson: zhRawTableJson },
     ] = await Promise.all([enEmit, zhEmit])
+
     const pWriteFile = promisify(fs.writeFile)
     pWriteFile(
       path.resolve(__dirname, STORAGE.getDefinitionPath('zh')),
