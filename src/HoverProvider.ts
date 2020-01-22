@@ -60,12 +60,13 @@ export class HoverProvider {
      * props hover card
      */
     if (nodeType.type === 'props') {
-      // TODO: not ok for Carousel.props.erase
       const antdComponentName = await getClosetAntdJsxElementNode(document, position)
       if (!antdComponentName) return
-      const matchedComponent = antdDocJson[this.language][antdComponentName]
+      const fuzzyComponentName = this.fuzzySearchComponentMapping(antdComponentName)
+      if (!fuzzyComponentName) return
+      const matchedComponent = antdDocJson[this.language][fuzzyComponentName]
       if (!matchedComponent)
-        throw antdRushErrorMsg(`did not match component for ${antdComponentName}`)
+        throw antdRushErrorMsg(`did not match component for ${fuzzyComponentName}`)
 
       const desc = matchedComponent[propText].description
       const type = matchedComponent[propText].type

@@ -97,7 +97,6 @@ export class DefinitionBuilder {
 
   private extractPropsFromTables(tables: Parent[]) {
     const prosDoc: Props = {}
-    // TODO: adapt dynamic table head, bad case: https://ant.design/components/breadcrumb-cn/
     tables.forEach(table => {
       const [tableHead, ...propRows] = table.children
       // check is valid table

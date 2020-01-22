@@ -71,7 +71,8 @@ export const getClosetAntdJsxElementNode = async (
   ) {
     const componentName = await getContainerSymbolAtPosition(
       document,
-      document.positionAt(jsxElement.tagName.pos)
+      // use `end`, cause `Breadcrumb.Item` must get definition for .Item
+      document.positionAt(jsxElement.tagName.end)
     )
     return componentName
   }
@@ -87,7 +88,7 @@ export const getContainerSymbolAtPosition = async (
   position: Position
 ): Promise<string | null> => {
   const typeDefinition = await commands.executeCommand<Location[]>(
-    'vscode.executeDefinitionProvider',
+    'vscode.executeTypeDefinitionProvider',
     document.uri,
     position
   )
