@@ -47,28 +47,32 @@ export class HoverProvider {
     const propText = document.getText(range)
 
     const definitionLoc = await this.getDefinitionUnderAntdModule()
+    if (!definitionLoc) return
+
     const definitionPath = definitionLoc.uri.path
     const antdMatched = matchAntdModule(definitionPath)
-    // not from antd
-    if (antdMatched === null) return
+
+    if (antdMatched === null) return // if not from antd, return
     const { componentFolder, filePath } = antdMatched
 
+    // TODO: should just use go to type definition
     const symbolTree = await commands.executeCommand<SymbolInformation[]>(
       'vscode.executeDocumentSymbolProvider',
       definitionLoc.uri
     )
 
-    const propsInteraceName = this.getProps(symbolTree, definitionLoc)
-    if (propsInteraceName === null) return
-    const nodeName = this.getAstNodeName(propsInteraceName)
-    if (nodeName === null) return
+    const interaceName = this.getInterfaceNameInSymbolTree(symbolTree, definitionLoc)
+    if (interaceName === null) return
+    const nodeType = this.getAstNodeType(interaceName)
 
     /**
-     * prop hover card
+     * props hover card
      */
-    if (nodeName.type === 'props') {
-      const matchedComponent = antdDocJson[this.language][nodeName.name]
-      if (!matchedComponent) throw antdHeroErrorMsg(`did not match component for ${nodeName.name}`)
+    if (nodeType.type === 'props') {
+      const propName = this.fuzzySearchComponentMapping(interaceName)
+      if (!propName) return
+      const matchedComponent = antdDocJson[this.language][propName]
+      if (!matchedComponent) throw antdHeroErrorMsg(`did not match component for ${propName}`)
 
       const desc = matchedComponent[propText].description
       const type = matchedComponent[propText].type
@@ -91,27 +95,44 @@ export class HoverProvider {
     /**
      * component hover card
      */
-    if (nodeName.type === 'component') {
-      const matchedComponent = antdComponentMap[nodeName.name]
+    if (nodeType.type === 'component') {
+      const comName = this.fuzzySearchComponentMapping(interaceName)
+      if (!comName) return
 
-      if (!matchedComponent) throw antdHeroErrorMsg(`did not match component for ${nodeName.name}`)
+      const matchedComponent = antdComponentMap[comName]
+
+      if (!matchedComponent) throw antdHeroErrorMsg(`did not match component for ${comName}`)
 
       const aliasName = componentFolder
-      const zhDocLink = `[en](${composeDocLink(aliasName, 'en')})`
-      const enDocLink = `[中文](${composeDocLink(aliasName, 'zh')})`
+      const enDocLink = `[EN](${composeDocLink(aliasName, 'en')})`
+      const zhDocLink = `[中文](${composeDocLink(aliasName, 'zh')})`
       const docLinks =
         this.language === 'en' ? `${enDocLink} | ${zhDocLink}` : `${zhDocLink} | ${enDocLink}`
 
       const headMd = new MarkdownString(
-        `**${nodeName.name}** ${__intl('componentHint', this.language)} \[ ${docLinks} \]`
+        `**${comName}** ${__intl('componentHint', this.language)} \[ ${docLinks} \]`
       )
 
-      const tableMd = new MarkdownString(rawTableJson[this.language][nodeName.name])
+      const tableMd = new MarkdownString(rawTableJson[this.language][comName])
 
       return new Hover([headMd, tableMd])
     }
 
     return
+  }
+
+  private normalizeName = (raw: string): string =>
+    raw
+      .split('.')
+      .join('')
+      .toLowerCase()
+
+  private fuzzySearchComponentMapping = (fuzzyName: string): string | null => {
+    const exactKey = Object.keys(antdComponentMap).find(
+      com => this.normalizeName(com) === this.normalizeName(fuzzyName)
+    )
+    if (!exactKey) return null
+    return exactKey
   }
 
   private getDefinitionUnderAntdModule = async () => {
@@ -136,36 +157,39 @@ export class HoverProvider {
 
     if (typeDefinitionsUnderAntd.length > 1)
       console.info('[antd-hero]: get more than one type definition')
-    if (definitionsUnderAntd.length > 1) console.info('[antd-hero]: get more than one definition')
 
     // TODO: difference between definition and type definition
-    const definition = typeDefinitionsUnderAntd.concat(definitionsUnderAntd)[0] || null
-    return definition
+    if (definitionsUnderAntd.length > 1) console.info('[antd-hero]: get more than one definition')
+
+    if (typeDefinitionsUnderAntd.length) {
+      return typeDefinitionsUnderAntd[0]
+    }
+
+    if (definitionsUnderAntd.length) {
+      return definitionsUnderAntd[0]
+    }
+
+    return null
   }
 
-  private getProps = (symbols: SymbolInformation[] | undefined, loc: Location) => {
+  private getInterfaceNameInSymbolTree = (
+    symbols: SymbolInformation[] | undefined,
+    loc: Location
+  ) => {
     if (!symbols) return null
     const outerContainer = symbols.find(symbol => {
-      return symbol.location.range.contains(loc.range)
+      // NOTE: symbol tree is not from line start and line end
+      return (
+        symbol.location.range.start.line <= loc.range.start.line &&
+        symbol.location.range.end.line >= loc.range.end.line
+      )
     })
     return outerContainer ? outerContainer.name : null
   }
 
-  private getAstNodeName = (name: string): null | { type: 'component' | 'props'; name: string } => {
-    let type: 'component' | 'props' = 'component'
-    let breadName = name.split(/(?=[A-Z])/).join('.')
-
-    if (name.endsWith('Props')) {
-      type = 'props'
-      breadName = name
-        .slice(0, name.length - 'Props'.length)
-        .split(/(?=[A-Z])/)
-        .join('.')
-    }
-
+  private getAstNodeType = (name: string): { type: 'component' | 'props' } => {
     return {
-      type,
-      name: breadName,
+      type: name.endsWith('Props') ? 'props' : 'component',
     }
   }
 }

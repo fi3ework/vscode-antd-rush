@@ -603,14 +603,17 @@ export const antdComponentMap: ComponentMapping = {
     methods: [],
   },
   'Typography.Text': {
+    docAlias: 'typography',
     anchorBeforeProps: '### Typography.Text',
     methods: [],
   },
   'Typography.Title': {
+    docAlias: 'typography',
     anchorBeforeProps: '### Typography.Title',
     methods: ['onChange'],
   },
   'Typography.Paragraph': {
+    docAlias: 'typography',
     anchorBeforeProps: '### Typography.Paragraph',
     methods: ['onChange'],
   },
