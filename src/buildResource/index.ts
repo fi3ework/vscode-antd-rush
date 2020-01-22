@@ -15,10 +15,10 @@ async function buildResource() {
     const shaMap = await buildShaMap(ANTD_GITHUB.TARGET_TAG)
     await Promise.all(downloadByShaMap(shaMap))
     const builder = new DefinitionBuilder(antdComponentMap)
-    builder.setDocLanguage('en')
-    const enEmit = builder.emitJson()
-    builder.setDocLanguage('zh')
-    const zhEmit = builder.emitJson()
+    // builder.setDocLanguage('en')
+    const enEmit = builder.emitJson('en')
+    // builder.setDocLanguage('zh')
+    const zhEmit = builder.emitJson('zh')
     const [
       { propDefJson: enPropDefJson, rawTableJson: enRawTableJson },
       { propDefJson: zhPropDefJson, rawTableJson: zhRawTableJson },

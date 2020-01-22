@@ -171,7 +171,7 @@ export const antdComponentMap: ComponentMapping = {
   },
   WeekPicker: {
     docAlias: 'date-picker',
-    anchorBeforeProps: ['## API', '### WeekPicker'],
+    anchorBeforeProps: ['### WeekPicker'],
     methods: [
       // Picker
       'dateRender',
@@ -456,7 +456,7 @@ export const antdComponentMap: ComponentMapping = {
   },
   'Steps.Step': {
     docAlias: 'steps',
-    anchorBeforeProps: '#### Steps.Step',
+    anchorBeforeProps: '### Steps.Step',
     methods: [],
   },
   Switch: {
@@ -544,7 +544,7 @@ export const antdComponentMap: ComponentMapping = {
     methods: ['title', 'getPopupContainer', 'onVisibleChange'],
   },
   Transfer: {
-    anchorBeforeProps: '### Transfer',
+    anchorBeforeProps: '## API',
     methods: [
       'filterOption',
       'footer',

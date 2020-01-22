@@ -10,13 +10,18 @@ import find from 'unist-util-find'
 import { promisify } from 'util'
 
 import { ComponentDocLocation, ComponentMapping } from './componentMap'
-import { ANTD_GITHUB, STORAGE } from './constant'
+import { ANTD_GITHUB, STORAGE, DocLanguage } from './constant'
 import { ComponentsDoc, ComponentsRawDoc, Prop, Props } from './type'
 
-type DocLanguage = 'en' | 'zh'
-
 export class DefinitionBuilder {
-  private language: DocLanguage = 'en'
+  public constructor(mapping: ComponentMapping) {
+    this.mapping = mapping
+  }
+
+  public async emitJson(language: DocLanguage) {
+    return await this.buildComponentDefinition(language)
+  }
+
   private langToMdName: { [k in DocLanguage]: string } = {
     en: ANTD_GITHUB.EN_MD_NAME,
     zh: ANTD_GITHUB.ZH_MD_NAME,
@@ -28,15 +33,9 @@ export class DefinitionBuilder {
     .use(stringify)
     .data('settings', { looseTable: true })
 
-  constructor(mapping: ComponentMapping) {
-    this.mapping = mapping
-  }
-
-  public setDocLanguage(language: DocLanguage) {
-    this.language = language
-  }
-
-  public async buildComponentDefinition(): Promise<{
+  private async buildComponentDefinition(
+    language: DocLanguage
+  ): Promise<{
     propDefJson: ComponentsDoc
     rawTableJson: ComponentsRawDoc
   }> {
@@ -44,17 +43,17 @@ export class DefinitionBuilder {
     const rawTableJson: ComponentsRawDoc = {}
 
     const promises = Object.entries(this.mapping).map(async ([componentName, loc]) => {
-      const rawMd = await this.findComponentMd(componentName, loc)
+      const rawMd = await this.findComponentMd(componentName, loc, language)
       const mdAst = this.processor.parse(rawMd) as Parent
-      // TODO: `loc.anchorBeforeProps` may be string[] and regexp
+      // `loc.anchorBeforeProps` can be string[], and string can be regexp
       const anchorProps = Array.isArray(loc.anchorBeforeProps)
         ? loc.anchorBeforeProps
         : [loc.anchorBeforeProps]
-      const anchor = this.findAnchorNode(mdAst, anchorProps[0])
+      const anchor = this.findAnchorNode(mdAst, anchorProps)
       const table = this.findFirstTableAfterAnchor(mdAst, anchor) as Parent
       if (table === null) {
         console.error(
-          `😭 failed to find table after ${anchorProps[0]} for component ${componentName}`
+          `😭 failed to find table after ${anchorProps[0]} for component ${componentName}(${language})`
         )
         return
       }
@@ -104,21 +103,24 @@ export class DefinitionBuilder {
     return prosDoc
   }
 
-  private findComponentMd(componentName: string, loc: ComponentDocLocation) {
-    const mdName = this.langToMdName[this.language]
+  private findComponentMd(componentName: string, loc: ComponentDocLocation, language: DocLanguage) {
+    const mdName = this.langToMdName[language]
     const docFolderName = decamelize(loc.docAlias || componentName, '-')
     const docContentPath = path.resolve(__dirname, `${STORAGE.mdPath}/${docFolderName}/${mdName}`)
 
     return promisify(fs.readFile)(docContentPath, { encoding: 'utf-8' })
   }
 
-  private findAnchorNode(mdAst: Node, anchor: string) {
+  private findAnchorNode(mdAst: Node, anchors: string[]) {
     return find(mdAst, (node: Node) => {
-      // anchor's type will not be `tableRow` :)
+      // anchor's type will not be `tableRow`
       if (node.type === 'tableRow') return false
       const stringifiedNode = this.stringifier.stringify(node)
-      const anchorReg = new RegExp('^' + anchor + '$')
-      return !!stringifiedNode.match(anchorReg)
+      const isMatch = anchors.some(anchor => {
+        const anchorReg = new RegExp('^' + anchor + '$')
+        return !!stringifiedNode.match(anchorReg)
+      })
+      return isMatch
     })
   }
 
@@ -157,9 +159,5 @@ export class DefinitionBuilder {
     })
 
     return siblingTable
-  }
-
-  public async emitJson() {
-    return await this.buildComponentDefinition()
   }
 }
