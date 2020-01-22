@@ -45,14 +45,14 @@ export const antdComponentMap: ComponentMapping = {
   },
   BackTop: {
     anchorBeforeProps: '## API',
-    methods: ['onError'],
+    methods: ['target', 'onClick'],
   },
   Badge: {
     anchorBeforeProps: '## API',
     methods: [],
   },
   Breadcrumb: {
-    anchorBeforeProps: '### Breadcrumb',
+    anchorBeforeProps: '## API',
     methods: ['itemRender'],
   },
   'Breadcrumb.Item': {
@@ -84,17 +84,17 @@ export const antdComponentMap: ComponentMapping = {
     ],
   },
   Card: {
-    anchorBeforeProps: '## API',
+    anchorBeforeProps: '### Card',
     methods: ['onTabChange'],
   },
   'Card.Grid': {
-    anchorBeforeProps: '### Card.Grid',
     docAlias: 'card',
+    anchorBeforeProps: '### Card.Grid',
     methods: [],
   },
   'Card.Meta': {
-    anchorBeforeProps: '### Card.Meta',
     docAlias: 'card',
+    anchorBeforeProps: '### Card.Meta',
     methods: [],
   },
   Carousel: {
@@ -119,20 +119,25 @@ export const antdComponentMap: ComponentMapping = {
     methods: ['onChange'],
   },
   'Checkbox.Group': {
-    anchorBeforeProps: '## API',
     docAlias: 'checkbox',
+    anchorBeforeProps: '#### Checkbox Group',
     methods: ['onChange'],
   },
   Collapse: {
-    anchorBeforeProps: '## API',
-    methods: ['expandIcon'],
+    anchorBeforeProps: '### Collapse',
+    methods: ['onChange', 'expandIcon'],
+  },
+  'Collapse.Panel': {
+    docAlias: 'collapse',
+    anchorBeforeProps: '### Collapse.Panel',
+    methods: [],
   },
   Comment: {
     anchorBeforeProps: '## API',
-    methods: [''],
+    methods: [],
   },
   DatePicker: {
-    anchorBeforeProps: ['## API', '### DatePicker'],
+    anchorBeforeProps: ['### DatePicker'],
     methods: [
       // Picker
       'dateRender',
@@ -150,7 +155,7 @@ export const antdComponentMap: ComponentMapping = {
   },
   MonthPicker: {
     docAlias: 'date-picker',
-    anchorBeforeProps: ['## API', '### MonthPicker'],
+    anchorBeforeProps: ['### MonthPicker'],
     methods: [
       // Picker
       'dateRender',
@@ -162,25 +167,6 @@ export const antdComponentMap: ComponentMapping = {
       'monthCellContentRender',
       'renderExtraFooter',
       'onChange',
-    ],
-  },
-  RangePicker: {
-    docAlias: 'date-picker',
-    anchorBeforeProps: ['## API', '### RangePicker'],
-    methods: [
-      // Picker
-      'dateRender',
-      'disabledDate',
-      'getCalendarContainer',
-      'onOpenChange',
-      'onPanelChange',
-      // RangePicker
-      'disabledTime',
-      'ranges',
-      'renderExtraFooter',
-      'onCalendarChange',
-      'onChange',
-      'onOk',
     ],
   },
   WeekPicker: {
@@ -198,13 +184,32 @@ export const antdComponentMap: ComponentMapping = {
       'renderExtraFooter',
     ],
   },
+  RangePicker: {
+    docAlias: 'date-picker',
+    anchorBeforeProps: ['### RangePicker'],
+    methods: [
+      // Picker
+      'dateRender',
+      'disabledDate',
+      'getCalendarContainer',
+      'onOpenChange',
+      'onPanelChange',
+      // RangePicker
+      'disabledTime',
+      'ranges',
+      'renderExtraFooter',
+      'onCalendarChange',
+      'onChange',
+      'onOk',
+    ],
+  },
   Descriptions: {
     anchorBeforeProps: '### Descriptions',
     methods: [],
   },
   'Description.Item': {
-    anchorBeforeProps: '### DescriptionItem',
     docAlias: 'descriptions',
+    anchorBeforeProps: '### DescriptionItem',
     methods: [],
   },
   Divider: {
@@ -229,7 +234,7 @@ export const antdComponentMap: ComponentMapping = {
     methods: [],
   },
   Form: {
-    anchorBeforeProps: '## API',
+    anchorBeforeProps: '### Form',
     methods: ['onSubmit'],
   },
   'Form.Item': {
@@ -262,7 +267,7 @@ export const antdComponentMap: ComponentMapping = {
   },
   'Input.Search': {
     docAlias: 'input',
-    anchorBeforeProps: ['### Input.TextArea', '#### Input.Search'],
+    anchorBeforeProps: ['#### Input.Search'],
     methods: ['onSearch', 'onChange', 'onPressEnter'],
   },
   'Input.Group': {
@@ -279,6 +284,10 @@ export const antdComponentMap: ComponentMapping = {
     anchorBeforeProps: '## API',
     methods: ['formatter', 'parser', 'onChange', 'onPressEnter'],
   },
+  Layout: {
+    anchorBeforeProps: '### Layout',
+    methods: [],
+  },
   'Layout.Sider': {
     docAlias: 'layout',
     anchorBeforeProps: '### Layout.Sider',
@@ -288,9 +297,26 @@ export const antdComponentMap: ComponentMapping = {
     anchorBeforeProps: '## API',
     methods: ['renderItem'],
   },
+  'List.Item': {
+    docAlias: 'list',
+    anchorBeforeProps: '### List.Item',
+    methods: [],
+  },
+  'List.Item.Meta': {
+    docAlias: 'list',
+    anchorBeforeProps: '### List.Item.Meta',
+    methods: [],
+  },
   Mention: {
     anchorBeforeProps: '### Mention',
-    methods: ['getSuggestionContainer'],
+    methods: [
+      'getSuggestionContainer',
+      'onBlur',
+      'onChange',
+      'onFocus',
+      'onSearchChange',
+      'onSelect',
+    ],
   },
   Mentions: {
     anchorBeforeProps: '### Mentions',
@@ -309,10 +335,20 @@ export const antdComponentMap: ComponentMapping = {
     anchorBeforeProps: '## API',
     methods: ['onClick', 'onDeselect', 'onOpenChange', 'onSelect'],
   },
+  'Menu.Item': {
+    docAlias: 'menu',
+    anchorBeforeProps: '### Menu.Item',
+    methods: [],
+  },
   'Menu.SubMenu': {
     docAlias: 'menu',
     anchorBeforeProps: '### Menu.SubMenu',
     methods: ['onTitleClick'],
+  },
+  'Menu.ItemGroup': {
+    docAlias: 'menu',
+    anchorBeforeProps: '### Menu.ItemGroup',
+    methods: [],
   },
   Message: {
     anchorBeforeProps: '## API',
@@ -320,7 +356,7 @@ export const antdComponentMap: ComponentMapping = {
   },
   Modal: {
     anchorBeforeProps: '## API',
-    methods: ['getContainer', 'onCancel', 'onOk'],
+    methods: ['afterClose', 'getContainer', 'onCancel', 'onOk'],
   },
   Notification: {
     anchorBeforeProps: '## API',
@@ -340,7 +376,7 @@ export const antdComponentMap: ComponentMapping = {
   },
   Popover: {
     anchorBeforeProps: '## API',
-    methods: ['onCancel', 'onConfirm', 'getPopupContainer', 'onVisibleChange'],
+    methods: ['getPopupContainer', 'onVisibleChange'],
   },
   Progress: {
     anchorBeforeProps: '## API',
@@ -348,15 +384,20 @@ export const antdComponentMap: ComponentMapping = {
   },
   Radio: {
     anchorBeforeProps: '### Radio',
-    methods: ['onCancel', 'onConfirm'],
+    methods: [],
   },
   'Radio.Group': {
+    docAlias: 'radio',
     anchorBeforeProps: '### RadioGroup',
     methods: ['onChange'],
   },
   Rate: {
     anchorBeforeProps: '## API',
     methods: ['onBlur', 'onChange', 'onFocus', 'onHoverChange', 'onKeyDown'],
+  },
+  Result: {
+    anchorBeforeProps: '## API',
+    methods: [],
   },
   Select: {
     anchorBeforeProps: '### Select props',
@@ -365,6 +406,7 @@ export const antdComponentMap: ComponentMapping = {
       'filterOption',
       'getPopupContainer',
       'maxTagPlaceholder',
+      'onBlur',
       'onChange',
       'onDeselect',
       'onFocus',
@@ -377,9 +419,27 @@ export const antdComponentMap: ComponentMapping = {
       'onDropdownVisibleChange',
     ],
   },
+  'Select.Option': {
+    docAlias: 'select',
+    anchorBeforeProps: '### Option props',
+    methods: [],
+  },
+  'Select.OptGroup': {
+    docAlias: 'select',
+    anchorBeforeProps: '### OptGroup props',
+    methods: [],
+  },
+  Skeleton: {
+    anchorBeforeProps: '### Skeleton',
+    methods: [],
+  },
   Slider: {
     anchorBeforeProps: '## API',
     methods: ['tipFormatter', 'onAfterChange', 'onChange', 'getTooltipPopupContainer'],
+  },
+  Spin: {
+    anchorBeforeProps: '## API',
+    methods: [],
   },
   Statistic: {
     anchorBeforeProps: '#### Statistic',
@@ -393,6 +453,11 @@ export const antdComponentMap: ComponentMapping = {
   Steps: {
     anchorBeforeProps: '### Steps',
     methods: ['progressDot', 'onChange'],
+  },
+  'Steps.Step': {
+    docAlias: 'steps',
+    anchorBeforeProps: '#### Steps.Step',
+    methods: [],
   },
   Switch: {
     anchorBeforeProps: '## API',
@@ -454,9 +519,9 @@ export const antdComponentMap: ComponentMapping = {
     methods: ['onChange'],
   },
   TimePicker: {
-    docAlias: 'tabs',
-    anchorBeforeProps: '### Tabs',
+    anchorBeforeProps: '## API',
     methods: [
+      'addon',
       'disabledHours',
       'disabledMinutes',
       'disabledSeconds',
@@ -475,12 +540,13 @@ export const antdComponentMap: ComponentMapping = {
     methods: [],
   },
   Tooltip: {
-    anchorBeforeProps: '### (.*)API',
+    anchorBeforeProps: ['### Common API', '### 共同的 API'],
     methods: ['title', 'getPopupContainer', 'onVisibleChange'],
   },
   Transfer: {
     anchorBeforeProps: '### Transfer',
     methods: [
+      'filterOption',
       'footer',
       'listStyle',
       'render',
@@ -512,6 +578,11 @@ export const antdComponentMap: ComponentMapping = {
     docAlias: 'tree',
     anchorBeforeProps: '### TreeNode props',
     methods: ['icon'],
+  },
+  'Tree.DirectoryTree': {
+    docAlias: 'tree',
+    anchorBeforeProps: '### DirectoryTree props',
+    methods: [],
   },
   TreeSelect: {
     anchorBeforeProps: '### Tree props',

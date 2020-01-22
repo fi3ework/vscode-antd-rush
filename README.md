@@ -18,6 +18,7 @@
 - [x] Support handler generator prefix configuration 🔵
 - [x] Add quick rename handler name dialog, starts with `#` 🔵
 - [x] Move cursor to handler body after insertion 🔵
+- [ ] Support Antd v4 🔵
 - [ ] Add parameter types of handler in TS/TSX 🔵
   - [ ] Deep import types from `"antd/lib/{com}/{path}"` 🔵
   - [ ] Generic (auto detect from component) ⚪️

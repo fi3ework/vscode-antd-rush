@@ -46,7 +46,7 @@ export class DefinitionBuilder {
     const promises = Object.entries(this.mapping).map(async ([componentName, loc]) => {
       const rawMd = await this.findComponentMd(componentName, loc)
       const mdAst = this.processor.parse(rawMd) as Parent
-      // TODO: `loc.anchorBeforeProps` may be string[]
+      // TODO: `loc.anchorBeforeProps` may be string[] and regexp
       const anchorProps = Array.isArray(loc.anchorBeforeProps)
         ? loc.anchorBeforeProps
         : [loc.anchorBeforeProps]
