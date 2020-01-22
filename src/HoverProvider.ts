@@ -9,7 +9,7 @@ import {
   workspace,
 } from 'vscode'
 
-import { getContainerSymbolAtLocation } from './ast'
+import { getContainerSymbolAtLocation, getClosetAntdJsxElementNode } from './ast'
 import { antdComponentMap } from './buildResource/componentMap'
 import { __intl, DocLanguage } from './buildResource/constant'
 import { ComponentsDoc, ComponentsRawDoc } from './buildResource/type'
@@ -47,17 +47,12 @@ export class HoverProvider {
     const range = document.getWordRangeAtPosition(position)
     const propText = document.getText(range)
 
-    const definitionLoc = await this.getDefinitionUnderAntdModule()
+    const definitionLoc = await this.getDefinitionInAntdModule()
     if (!definitionLoc) return
-
-    const definitionPath = definitionLoc.uri.path
-    const antdMatched = matchAntdModule(definitionPath)
-
-    if (antdMatched === null) return // if not from antd, return
-    const { componentFolder } = antdMatched
 
     const interaceName = await getContainerSymbolAtLocation(definitionLoc)
     if (interaceName === null) return
+
     const nodeType = this.getAstNodeType(interaceName)
 
     /**
@@ -65,10 +60,11 @@ export class HoverProvider {
      */
     if (nodeType.type === 'props') {
       // TODO: not ok for Carousel.props.erase
-      const propName = this.fuzzySearchComponentMapping(interaceName.slice(0, -'Props'.length))
-      if (!propName) return
-      const matchedComponent = antdDocJson[this.language][propName]
-      if (!matchedComponent) throw antdRushErrorMsg(`did not match component for ${propName}`)
+      const antdComponentName = await getClosetAntdJsxElementNode(document, position)
+      if (!antdComponentName) return
+      const matchedComponent = antdDocJson[this.language][antdComponentName]
+      if (!matchedComponent)
+        throw antdRushErrorMsg(`did not match component for ${antdComponentName}`)
 
       const desc = matchedComponent[propText].description
       const type = matchedComponent[propText].type
@@ -94,14 +90,19 @@ export class HoverProvider {
     if (nodeType.type === 'component') {
       const comName = this.fuzzySearchComponentMapping(interaceName)
       if (!comName) return
+      const definitionPath = definitionLoc.uri.path
+
+      const antdMatched = matchAntdModule(definitionPath)
+
+      if (antdMatched === null) return // return if not from antd
+      const { componentFolder } = antdMatched
 
       const matchedComponent = antdComponentMap[comName]
 
       if (!matchedComponent) throw antdRushErrorMsg(`did not match component for ${comName}`)
 
-      const aliasName = componentFolder
-      const enDocLink = `[EN](${composeDocLink(aliasName, 'en')})`
-      const zhDocLink = `[中文](${composeDocLink(aliasName, 'zh')})`
+      const enDocLink = `[EN](${composeDocLink(componentFolder, 'en')})`
+      const zhDocLink = `[中文](${composeDocLink(componentFolder, 'zh')})`
       const docLinks =
         this.language === 'en' ? `${enDocLink} | ${zhDocLink}` : `${zhDocLink} | ${enDocLink}`
 
@@ -131,7 +132,7 @@ export class HoverProvider {
     return exactKey
   }
 
-  private getDefinitionUnderAntdModule = async () => {
+  private getDefinitionInAntdModule = async () => {
     const { document, position } = this
     const [definitions, typeDefinitions] = await Promise.all([
       await commands.executeCommand<Location[]>(

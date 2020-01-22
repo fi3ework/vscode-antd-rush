@@ -46,7 +46,7 @@ import { composeHandlerString, addHandlerPrefix } from './insertion'
 /**
  * Return nearest JsxElement at position, return null if not found.
  */
-export const getClosetElementAntNode = async (
+export const getClosetAntdJsxElementNode = async (
   document: TextDocument,
   position: Position
 ): Promise<string | null> => {
