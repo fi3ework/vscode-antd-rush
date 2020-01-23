@@ -18,6 +18,11 @@ import ts, {
   isJsxClosingFragment,
   isJsxOpeningFragment,
   isJsxElement,
+  FunctionTypeNode,
+  PropertySignature,
+  isTypeLiteralNode,
+  isUnionTypeNode,
+  isParenthesizedTypeNode,
 } from 'typescript'
 import {
   commands,
@@ -284,37 +289,69 @@ const offsetContains = (offset: number, startOrEnd: number, endOrStart: number) 
 }
 
 /**
- * Create empty function from function dts
+ * Get function params from dts string
  */
 export interface FunctionParam {
   type: string
   text: string
 }
 
-export const buildTsFromDts = (dtsString: string): FunctionParam[] | null => {
+export const getFunctionParams = (dtsString: string): FunctionParam[] | null => {
   // NOTE: definition is a property, it should be wrapped in type
   const dtsTypeString = `type DUMMY = {
   ${dtsString}
 }`
 
-  const sCode: Node = ts.createSourceFile('', dtsTypeString, ts.ScriptTarget.Latest)
-  let handlerName: string = ''
-  const paramTexts: string[] = []
+  const sCode: SourceFile = ts.createSourceFile('', dtsTypeString, ts.ScriptTarget.Latest)
+  let paramTexts: string[] = []
 
   traverseWithParents(sCode, (node, stack) => {
     if (isPropertySignature(node)) {
-      if (!node.type) return
-      handlerName = node.name.getText(sCode as SourceFile)
-      if (isFunctionTypeNode(node.type)) {
-        const typeParamsText = node.type.parameters.map(p => {
-          return p.name.getText(sCode as SourceFile)
-        })
-        paramTexts.push(...typeParamsText)
-      }
+      paramTexts = extractParamsFromPropertySignature(node, sCode)
     }
   })
 
   return paramTexts.map(param => ({ type: '', text: param }))
+}
+
+/**
+ * Extract function params from property signature
+ */
+const extractParamsFromPropertySignature = (
+  signature: PropertySignature,
+  sCode: SourceFile
+): string[] => {
+  const paramTexts: string[] = []
+  const sigType = signature.type
+  if (!sigType) return paramTexts
+
+  // e.g. onChange?: (affixed?: boolean) => void;
+  if (isFunctionTypeNode(sigType)) {
+    paramTexts.push(...extractParamsFromFunctionType(sigType, sCode))
+  }
+
+  // e.g. tipFormatter?: null | ((value: number) => React.ReactNode);
+  if (isUnionTypeNode(sigType)) {
+    // should not can accept two function type
+    const functionType = sigType.types.filter(isParenthesizedTypeNode)[0].type
+    if (!functionType) return paramTexts
+    if (isFunctionTypeNode(functionType)) {
+      paramTexts.push(...extractParamsFromFunctionType(functionType, sCode))
+    }
+  }
+
+  return paramTexts
+}
+
+/**
+ * Extract parameter and its type from FunctionType node
+ */
+const extractParamsFromFunctionType = (node: FunctionTypeNode, sCode: SourceFile): string[] => {
+  const typeParamsText = node.parameters.map(p => {
+    return p.name.getText(sCode as SourceFile)
+  })
+
+  return typeParamsText
 }
 
 /**

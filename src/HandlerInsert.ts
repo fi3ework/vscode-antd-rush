@@ -23,7 +23,7 @@ import {
 } from 'vscode'
 
 import {
-  buildTsFromDts,
+  getFunctionParams,
   FunctionParam,
   getParentsWhen,
   insertStringToClassComponent,
@@ -163,7 +163,7 @@ export class HandlerInsert {
         dtsDocument.offsetAt(antdDefinition.range.end)
       )
 
-    const functionParams = buildTsFromDts(definitionString)
+    const functionParams = getFunctionParams(definitionString)
     return functionParams
   }
 
