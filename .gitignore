@@ -1,6 +1,9 @@
 out
+out-test
 node_modules
 src/buildResource/token.ts
 doc-resource
 src/definition.json
 src/raw-table.json
+.vscode-test
+

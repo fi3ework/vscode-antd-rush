@@ -153,7 +153,7 @@ export const antdComponentMap: ComponentMapping = {
       'onPanelChange',
     ],
   },
-  MonthPicker: {
+  'DatePicker.MonthPicker': {
     docAlias: 'date-picker',
     anchorBeforeProps: ['### MonthPicker'],
     methods: [
@@ -169,7 +169,7 @@ export const antdComponentMap: ComponentMapping = {
       'onChange',
     ],
   },
-  WeekPicker: {
+  'DatePicker.WeekPicker': {
     docAlias: 'date-picker',
     anchorBeforeProps: ['### WeekPicker'],
     methods: [
@@ -184,7 +184,7 @@ export const antdComponentMap: ComponentMapping = {
       'renderExtraFooter',
     ],
   },
-  RangePicker: {
+  'DatePicker.RangePicker': {
     docAlias: 'date-picker',
     anchorBeforeProps: ['### RangePicker'],
     methods: [
