@@ -90,14 +90,15 @@ export class HoverProvider {
      * component hover card
      */
     if (nodeType.type === 'component') {
-      const comName = this.fuzzySearchComponentMapping(interaceName)
-      if (!comName) return
       const definitionPath = definitionLoc.uri.path
 
       const antdMatched = matchAntdModule(definitionPath)
 
       if (antdMatched === null) return // return if not from antd
       const { componentFolder } = antdMatched
+
+      const comName = this.tryMatchComponentName(interaceName, componentFolder)
+      if (!comName) return
 
       const matchedComponent = antdComponentMap[comName]
 
@@ -134,6 +135,28 @@ export class HoverProvider {
     )
     if (!exactKey) return null
     return exactKey
+  }
+
+  private tryMatchComponentName = (symbolName: string, libName: string): string | null => {
+    // 1. try exact match
+    const exactKey = Object.keys(antdComponentMap).find(
+      com => this.normalizeName(com) === this.normalizeName(symbolName)
+    )
+    if (exactKey) return exactKey
+
+    // 2. try exact match folder name
+    const libKey = Object.keys(antdComponentMap).find(
+      com => this.normalizeName(com) === this.normalizeName(libName)
+    )
+    if (libKey) return libKey
+
+    // 3. try fuzzy match
+    const fuzzyKey = Object.keys(antdComponentMap).find(
+      com => this.normalizeName(com) === this.normalizeName(libName + symbolName)
+    )
+
+    if (!fuzzyKey) return null
+    return fuzzyKey
   }
 
   private getDefinitionInAntdModule = async () => {
@@ -175,7 +198,7 @@ export class HoverProvider {
 
   private getAstNodeType = (name: string): { type: 'component' | 'props' } => {
     return {
-      type: this.fuzzySearchComponentMapping(name) ? 'component' : 'props',
+      type: name[0].toUpperCase() !== name[0] ? 'props' : 'component',
     }
   }
 }

@@ -81,7 +81,7 @@ const appendMarkdown = (mdToAppend: MarkdownString, type: TypeMdType, language: 
   const { value, display } = type
 
   if (display === 'blockCode') {
-    mdToAppend.appendCodeblock(value)
+    mdToAppend.appendCodeblock(value, 'typescriptreact')
     return
   }
 
