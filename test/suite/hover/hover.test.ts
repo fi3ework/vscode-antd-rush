@@ -1,25 +1,34 @@
 import assert from 'assert'
 import fs from 'fs'
-import path from 'path'
 import vscode from 'vscode'
 
-import { getDocUri, position, buildJsxTemplate, sameLineRange } from '../utils'
-import { activateLS, showFile, FILE_LOAD_SLEEP_TIME, sleep } from '../helper'
+import { readComponentMapping, buildFixtures } from '../fixture'
+import { activateLS, FILE_LOAD_SLEEP_TIME, showFile, sleep } from '../helper'
+import { buildJsxTemplate, getDocUri, position, sameLineRange } from '../utils'
 
 describe('Should do hover', () => {
-  const docUri = getDocUri('app.jsx')
+  const fixturePaths = buildFixtures()
+  console.log(fixturePaths)
 
-  before('activate', async () => {
-    await activateLS()
-    await showFile(docUri)
-    await sleep(FILE_LOAD_SLEEP_TIME)
-  })
+  fixturePaths.forEach(p => {
+    // for (let index = 0; index < fixturePaths.length; index++) {
+    // const p = fixturePaths[index]
+    const docUri = vscode.Uri.file(p)
 
-  it('shows hover for <img> tag', async () => {
-    await testHover(docUri, position(67, 7), {
-      contents: ['An img element represents an image\\.'],
-      range: sameLineRange(67, 7, 10),
+    // before('activate', async () => {
+    // })
+
+    it('shows hover for component', async () => {
+      await activateLS()
+      await showFile(docUri)
+      await sleep(FILE_LOAD_SLEEP_TIME)
+      console.log('🐲')
+      await testHover(docUri, position(6, 3), {
+        contents: ['An img element represents an image\\.'],
+        range: sameLineRange(6, 3, 10),
+      })
     })
+    // }
   })
 })
 

@@ -56,7 +56,11 @@ export const getDocUri = (p: string) => {
   return vscode.Uri.file(getDocPath(p))
 }
 
-// export const getUriFromString = (p: string) => {
-//   return vscode.Uri.parse
-//   // return vscode.Uri.file(getDocPath(p))
-// }
+export const getDocUriAbsolute = (p: string) => {
+  return vscode.Uri.file(p)
+}
+
+export const buildFixtres = (componentName: string, props: { name: string; value: string }[]) => {
+  // return vscode.Uri.parse
+  // return vscode.Uri.file(getDocPath(p))
+}
