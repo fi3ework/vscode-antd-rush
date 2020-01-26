@@ -127,8 +127,4 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
 
     return items
   }
-
-  public resolveCompletionItem = async (item: any) => {
-    return item
-  }
 }
