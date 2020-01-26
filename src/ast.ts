@@ -108,7 +108,7 @@ export const getContainerSymbolAtPosition = async (
  * Get symbol name of given VSCode location
  */
 export const getContainerSymbolAtLocation = async (loc: Location) => {
-  const uri = loc.uri
+  const { uri, range } = loc
   const symbols = await commands.executeCommand<SymbolInformation[]>(
     'vscode.executeDocumentSymbolProvider',
     uri
@@ -118,8 +118,8 @@ export const getContainerSymbolAtLocation = async (loc: Location) => {
   const container = symbols.find(symbol => {
     // NOTE: symbol tree is not from line start and line end
     return (
-      symbol.location.range.start.line <= loc.range.start.line &&
-      symbol.location.range.end.line >= loc.range.end.line
+      symbol.location.range.start.line <= range.start.line &&
+      symbol.location.range.end.line >= range.end.line
     )
   })
   return container ? container.name : null

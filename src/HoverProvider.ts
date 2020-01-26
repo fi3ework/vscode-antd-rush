@@ -7,20 +7,22 @@ import {
   Position,
   TextDocument,
   workspace,
+  Uri,
+  window,
 } from 'vscode'
-
-import { getContainerSymbolAtLocation, getClosetAntdJsxElementNode } from './ast'
+import { getClosetAntdJsxElementNode, getContainerSymbolAtLocation } from './ast'
 import { antdComponentMap } from './buildResource/componentMap'
 import { __intl, DocLanguage } from './buildResource/constant'
 import { ComponentsDoc, ComponentsRawDoc } from './buildResource/type'
 import _antdDocJson from './definition.json'
 import _rawTableJson from './raw-table.json'
-import { matchNodeModules } from './utils'
+import * as vscode from 'vscode'
 import {
   antdRushErrorMsg,
   composeCardMessage,
   composeDocLink,
   matchAntdModule,
+  matchNodeModules,
   transformConfigurationLanguage,
 } from './utils'
 
@@ -50,11 +52,8 @@ export class HoverProvider {
     const definitionLoc = await this.getDefinitionInAntdModule()
     if (!definitionLoc) return
 
-    const interaceName = await getContainerSymbolAtLocation(definitionLoc)
-    if (interaceName === null) return
-
+    const interaceName = definitionLoc.text
     const nodeType = this.getAstNodeType(interaceName)
-    // const node = getNodeAtPostion(document, position)
 
     /**
      * props hover card
@@ -90,7 +89,7 @@ export class HoverProvider {
      * component hover card
      */
     if (nodeType.type === 'component') {
-      const definitionPath = definitionLoc.uri.path
+      const definitionPath = definitionLoc.location.uri.path
 
       const antdMatched = matchAntdModule(definitionPath)
 
@@ -125,8 +124,8 @@ export class HoverProvider {
 
   private normalizeName = (raw: string): string =>
     raw
-      .split('.')
-      .join('')
+      .replace(/\./g, '')
+      .replace(/\-/g, '')
       .toLowerCase()
 
   private fuzzySearchComponentMapping = (fuzzyName: string): string | null => {
@@ -161,39 +160,115 @@ export class HoverProvider {
 
   private getDefinitionInAntdModule = async () => {
     const { document, position } = this
-    const [definitions, typeDefinitions] = await Promise.all([
-      await commands.executeCommand<Location[]>(
-        'vscode.executeDefinitionProvider',
-        document.uri,
-        position
-      ),
-      await commands.executeCommand<Location[]>(
-        'vscode.executeTypeDefinitionProvider',
-        document.uri,
-        position
-      ),
+    const [definitionUnderAntd, typeDefinition] = await Promise.all([
+      await this.recursiveFindDefinition(document, position),
+      await this.findTypeDefinition(document, position),
     ])
 
-    const definitionsUnderAntd = (definitions || []).filter(d => matchNodeModules(d.uri.path))
-    const typeDefinitionsUnderAntd = (typeDefinitions || []).filter(d =>
-      matchNodeModules(d.uri.path)
-    )
-
-    if (typeDefinitionsUnderAntd.length > 1)
-      console.info('[antd-rush]: get more than one type definition')
-
     // TODO: difference between definition and type definition
-    if (definitionsUnderAntd.length > 1) console.info('[antd-rush]: get more than one definition')
+    if (!definitionUnderAntd) console.info('[antd-rush]: get more than one definition')
 
-    if (typeDefinitionsUnderAntd.length) {
-      return typeDefinitionsUnderAntd[0]
+    if (typeDefinition) {
+      return typeDefinition
     }
 
-    if (definitionsUnderAntd.length) {
-      return definitionsUnderAntd[0]
+    if (definitionUnderAntd) {
+      return definitionUnderAntd
     }
 
     return null
+  }
+
+  private findTypeDefinition = async (
+    document: TextDocument,
+    position: Position
+  ): Promise<{ text: string; location: Location } | null> => {
+    const typeDefinitions = await commands
+      .executeCommand<Location[]>('vscode.executeTypeDefinitionProvider', document.uri, position)
+      .then(refs => refs?.filter(ref => !!matchAntdModule(ref.uri.path)))
+
+    const refs = await commands.executeCommand<Location[]>(
+      'vscode.executeReferenceProvider',
+      document.uri,
+      position
+    )
+
+    if (!typeDefinitions?.length) return null
+
+    const typeDefinition = typeDefinitions[0]
+    return await this.extractTextFromDefinition(typeDefinition, refs)
+  }
+
+  private recursiveFindDefinition = async (
+    document: TextDocument,
+    position: Position
+  ): Promise<{ text: string; location: Location } | null> => {
+    const defPromise = commands.executeCommand<Location[]>(
+      'vscode.executeDefinitionProvider',
+      document.uri,
+      position
+    )
+
+    const refPromise = commands.executeCommand<Location[]>(
+      'vscode.executeReferenceProvider',
+      document.uri,
+      position
+    )
+
+    const [defs, refs] = await Promise.all([defPromise, refPromise])
+
+    const condition = (loc: Location) => {
+      return !!matchAntdModule(loc.uri.path)
+    }
+
+    if (!defs) return null
+
+    const antdDef = defs.filter(condition)[0]
+    const userlandLineDef = defs.filter(d => !matchNodeModules(d.uri.path))[0]
+
+    if (antdDef) {
+      if (antdDef.range.start.line === antdDef.range.end.line) {
+        const antdDefRangeLoc = refs?.find(ref => {
+          return antdDef.range.contains(ref.range)
+        })
+        if (!antdDefRangeLoc) return null
+        const _doc = await vscode.workspace.openTextDocument(antdDef.uri)
+        const text = _doc
+          .lineAt(antdDefRangeLoc.range.start.line)
+          .text.slice(antdDefRangeLoc.range.start.character, antdDefRangeLoc.range.end.character)
+
+        return { text, location: antdDefRangeLoc }
+      } else {
+        const interfaceName = await getContainerSymbolAtLocation(antdDef)
+        if (!interfaceName) return null
+        return { text: interfaceName, location: antdDef }
+      }
+    } else if (userlandLineDef) {
+      let doc = await vscode.workspace.openTextDocument(userlandLineDef.uri)
+      const userlandRangeDef = await this.extractTextFromDefinition(userlandLineDef, refs)
+      if (!userlandRangeDef) return null
+
+      const nextDef = await this.recursiveFindDefinition(doc, userlandRangeDef.location.range.end)
+      return nextDef
+    }
+    return null
+  }
+
+  private extractTextFromDefinition = async (
+    def: Location,
+    refs: Location[] | undefined
+  ): Promise<{ text: string; location: Location } | null> => {
+    let doc = await vscode.workspace.openTextDocument(def.uri)
+    const rangeInDef =
+      refs?.find(ref => {
+        return ref.uri.path === doc.uri.path && ref.range.contains(ref.range)
+      }) || def
+
+    const text = doc
+      .lineAt(rangeInDef.range.start.line)
+      .text.slice(rangeInDef.range.start.character, rangeInDef.range.end.character)
+
+    return { text, location: rangeInDef }
   }
 
   private getAstNodeType = (name: string): { type: 'component' | 'props' } => {
