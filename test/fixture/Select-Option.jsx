@@ -1,14 +1,15 @@
 import React from 'react'
-import {Select} from 'antd'
+import { Select } from 'antd'
 // component at Position(5, 3)
 // props at Position(6+, 5)
 const App = () => {
-  return
-  <Select.Option
-    disabled={}
-    key={}
-    title={}
-    value={}
-    className={}
-  />
+  return (
+    <Select.Option
+      disabled={}
+      key={}
+      title={}
+      value={}
+      className={}
+    />
+  )
 }

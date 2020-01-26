@@ -30,7 +30,7 @@ import {
   insertStringToFunctionalComponent,
   isClassExtendsReactComponent,
 } from './ast'
-import { matchAntdModule } from './utils'
+import { isInAntdModule } from './utils'
 import { addHandlerPrefix } from './insertion'
 import { InsertKind } from './CompletionItem'
 import { Position } from 'vscode'
@@ -153,7 +153,7 @@ export class HandlerInsert {
     )
 
     if (!definitions) return null
-    const antdDefinition = definitions.find(d => matchAntdModule(d.uri.path))
+    const antdDefinition = definitions.find(d => isInAntdModule(d.uri.path))
     if (!antdDefinition) return null
     const dtsDocument = await workspace.openTextDocument(antdDefinition.uri)
     const definitionString = dtsDocument

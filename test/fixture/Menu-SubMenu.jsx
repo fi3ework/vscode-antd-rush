@@ -1,15 +1,16 @@
 import React from 'react'
-import {Menu} from 'antd'
+import { Menu } from 'antd'
 // component at Position(5, 3)
 // props at Position(6+, 5)
 const App = () => {
-  return
-  <Menu.SubMenu
-    popupClassName={}
-    children={}
-    disabled={}
-    key={}
-    title={}
-    onTitleClick={}
-  />
+  return (
+    <Menu.SubMenu
+      popupClassName={}
+      children={}
+      disabled={}
+      key={}
+      title={}
+      onTitleClick={}
+    />
+  )
 }

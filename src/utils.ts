@@ -29,6 +29,14 @@ export const matchAntdModule = (path: string) => {
 /**
  * try to match ant-design node_modules import path
  */
+export const isInAntdModule = (path: string): boolean => {
+  const regMatched = path.match(/(.*)\/node_modules\/antd\/lib\/(.*)/)
+  return !!regMatched
+}
+
+/**
+ * try to match ant-design node_modules import path
+ */
 export const isFromReactNodeModules = (path: string) => {
   // TODO: match exact declartion node
   const regMatched = path.match(/(.*)\/node_modules\/@types\/react\/(.*)/)

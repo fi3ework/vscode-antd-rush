@@ -76,7 +76,7 @@
     "watch-test": "tsc -watch -p ./test",
     "build-doc": "ts-node ./src/buildResource/index.ts",
     "pretest": "npm run compile-test",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out-test/runTest.js"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.0.1",

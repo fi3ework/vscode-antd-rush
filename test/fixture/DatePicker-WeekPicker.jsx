@@ -1,17 +1,16 @@
 import React from 'react'
-import { Statistic } from 'antd'
+import { DatePicker } from 'antd'
 // component at Position(5, 3)
 // props at Position(6+, 5)
 const App = () => {
   return (
-    <Statistic.Countdown
+    <DatePicker.WeekPicker
+      defaultValue={}
+      defaultPickerValue={}
       format={}
-      onFinish={}
-      prefix={}
-      suffix={}
-      title={}
       value={}
-      valueStyle={}
+      onChange={}
+      renderExtraFooter={}
     />
   )
 }

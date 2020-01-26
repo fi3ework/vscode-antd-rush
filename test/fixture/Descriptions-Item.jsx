@@ -1,12 +1,12 @@
 import React from 'react'
-import { List } from 'antd'
+import { Descriptions } from 'antd'
 // component at Position(5, 3)
 // props at Position(6+, 5)
 const App = () => {
   return (
-    <List.Item
-      actions={}
-      extra={}
+    <Descriptions.Item
+      label={}
+      span={}
     />
   )
 }

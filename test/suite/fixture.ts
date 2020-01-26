@@ -9,33 +9,37 @@ export type ComponentMap = {
   [com in string]: PropsMap
 }
 
-export function buildFixtures(): string[] {
+export function buildFixtures(): { [k: string]: string } {
   if (!fs.existsSync(FIXTURE_DIR)) fs.mkdirSync(FIXTURE_DIR)
 
   const mapping = readComponentMapping()
+  const pathMapping: { [k: string]: string } = {}
 
   Object.entries(mapping).forEach(([componentName, componentData]) => {
     const importComponent = componentName.split('.')[0]
     const fixtureName = componentName.replace(/\./, '-')
     const componentStr = fixtureTemplate(importComponent, componentName, componentData)
-    fs.writeFileSync(path.resolve(FIXTURE_DIR, `${fixtureName}.jsx`), componentStr)
+    const fixturePath = path.resolve(FIXTURE_DIR, `${fixtureName}.jsx`)
+    fs.writeFileSync(fixturePath, componentStr)
+    pathMapping[componentName] = fixturePath
   })
 
-  return getFixtures()
+  return pathMapping
 }
 
 function fixtureTemplate(importComponent: string, component: string, props: PropsMap): string {
   const propsStr = Object.entries(props)
-    .map(([propName, propData]) => `\n    ${propName}={}`)
+    .map(([propName, propData]) => `\n      ${propName}={}`)
     .join('')
   return `import React from 'react'
-import {${importComponent}} from 'antd'
+import { ${importComponent} } from 'antd'
 // component at Position(5, 3)
 // props at Position(6+, 5)
 const App = () => {
-  return
-  <${component}${propsStr}
-  />
+  return (
+    <${component}${propsStr}
+    />
+  )
 }
 `
 }

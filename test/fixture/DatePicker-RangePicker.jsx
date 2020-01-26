@@ -4,19 +4,20 @@ import { DatePicker } from 'antd'
 // props at Position(6+, 5)
 const App = () => {
   return (
-    <DatePicker
+    <DatePicker.RangePicker
       defaultValue={}
       defaultPickerValue={}
       disabledTime={}
       format={}
+      ranges={}
       renderExtraFooter={}
+      separator={}
       showTime={}
       showTime.defaultValue={}
-      showToday={}
       value={}
+      onCalendarChange={}
       onChange={}
       onOk={}
-      onPanelChange={}
     />
   )
 }

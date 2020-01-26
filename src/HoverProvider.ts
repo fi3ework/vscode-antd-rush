@@ -7,7 +7,7 @@ import {
   Position,
   TextDocument,
   workspace,
-  Uri,
+  Range,
   window,
 } from 'vscode'
 import { getClosetAntdJsxElementNode, getContainerSymbolAtLocation } from './ast'
@@ -17,11 +17,12 @@ import { ComponentsDoc, ComponentsRawDoc } from './buildResource/type'
 import _antdDocJson from './definition.json'
 import _rawTableJson from './raw-table.json'
 import * as vscode from 'vscode'
+import { matchAntdModule } from './utils'
 import {
   antdRushErrorMsg,
   composeCardMessage,
   composeDocLink,
-  matchAntdModule,
+  isInAntdModule,
   matchNodeModules,
   transformConfigurationLanguage,
 } from './utils'
@@ -185,7 +186,7 @@ export class HoverProvider {
   ): Promise<{ text: string; location: Location } | null> => {
     const typeDefinitions = await commands
       .executeCommand<Location[]>('vscode.executeTypeDefinitionProvider', document.uri, position)
-      .then(refs => refs?.filter(ref => !!matchAntdModule(ref.uri.path)))
+      .then(refs => refs?.filter(ref => !!isInAntdModule(ref.uri.path)))
 
     const refs = await commands.executeCommand<Location[]>(
       'vscode.executeReferenceProvider',
@@ -217,17 +218,20 @@ export class HoverProvider {
 
     const [defs, refs] = await Promise.all([defPromise, refPromise])
 
-    const condition = (loc: Location) => {
-      return !!matchAntdModule(loc.uri.path)
+    const inAntdCondition = (loc: Location) => {
+      return !!isInAntdModule(loc.uri.path)
     }
 
     if (!defs) return null
 
-    const antdDef = defs.filter(condition)[0]
+    const antdDef = defs.filter(inAntdCondition)[0]
     const userlandLineDef = defs.filter(d => !matchNodeModules(d.uri.path))[0]
+    const isWholeLineRange = await this.isRangeEqualLine(antdDef)
 
+    // import from antd
     if (antdDef) {
-      if (antdDef.range.start.line === antdDef.range.end.line) {
+      // accurate definition range
+      if (!isWholeLineRange) {
         const antdDefRangeLoc = refs?.find(ref => {
           return antdDef.range.contains(ref.range)
         })
@@ -239,11 +243,13 @@ export class HoverProvider {
 
         return { text, location: antdDefRangeLoc }
       } else {
+        // inaccurate whole line definition range
         const interfaceName = await getContainerSymbolAtLocation(antdDef)
         if (!interfaceName) return null
         return { text: interfaceName, location: antdDef }
       }
     } else if (userlandLineDef) {
+      // alias import
       let doc = await vscode.workspace.openTextDocument(userlandLineDef.uri)
       const userlandRangeDef = await this.extractTextFromDefinition(userlandLineDef, refs)
       if (!userlandRangeDef) return null
@@ -252,6 +258,16 @@ export class HoverProvider {
       return nextDef
     }
     return null
+  }
+
+  private isRangeEqualLine = async (loc: Location | undefined): Promise<boolean> => {
+    if (!loc) return true
+    const _doc = await vscode.workspace.openTextDocument(loc.uri)
+    const startWord = _doc.getWordRangeAtPosition(loc.range.start)
+    const endWord = _doc.getWordRangeAtPosition(loc.range.end)
+    if (!startWord || !endWord) return true
+
+    return !startWord.isEqual(endWord)
   }
 
   private extractTextFromDefinition = async (

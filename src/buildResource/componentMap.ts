@@ -207,7 +207,7 @@ export const antdComponentMap: ComponentMapping = {
     anchorBeforeProps: '### Descriptions',
     methods: [],
   },
-  'Description.Item': {
+  'Descriptions.Item': {
     docAlias: 'descriptions',
     anchorBeforeProps: '### DescriptionItem',
     methods: [],
@@ -350,18 +350,18 @@ export const antdComponentMap: ComponentMapping = {
     anchorBeforeProps: '### Menu.ItemGroup',
     methods: [],
   },
-  Message: {
-    anchorBeforeProps: '## API',
-    methods: ['onClose'],
-  },
+  // Message: {
+  //   anchorBeforeProps: '## API',
+  //   methods: ['onClose'],
+  // },
   Modal: {
     anchorBeforeProps: '## API',
     methods: ['afterClose', 'getContainer', 'onCancel', 'onOk'],
   },
-  Notification: {
-    anchorBeforeProps: '## API',
-    methods: ['getContainer', 'onClose', 'onClick'],
-  },
+  // Notification: {
+  //   anchorBeforeProps: '## API',
+  //   methods: ['getContainer', 'onClose', 'onClick'],
+  // },
   PageHeader: {
     anchorBeforeProps: '## API',
     methods: ['onBack'],

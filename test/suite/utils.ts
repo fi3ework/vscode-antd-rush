@@ -60,7 +60,10 @@ export const getDocUriAbsolute = (p: string) => {
   return vscode.Uri.file(p)
 }
 
-export const buildFixtres = (componentName: string, props: { name: string; value: string }[]) => {
-  // return vscode.Uri.parse
-  // return vscode.Uri.file(getDocPath(p))
+export const findAllIndexInString = (raw: string, targetChar: string): number[] => {
+  const result: number[] = []
+  ;[...raw].forEach((char, index) => {
+    if (char === targetChar) result.push(index)
+  })
+  return result
 }

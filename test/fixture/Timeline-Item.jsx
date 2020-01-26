@@ -1,12 +1,13 @@
 import React from 'react'
-import {Timeline} from 'antd'
+import { Timeline } from 'antd'
 // component at Position(5, 3)
 // props at Position(6+, 5)
 const App = () => {
-  return
-  <Timeline.Item
-    color={}
-    dot={}
-    position={}
-  />
+  return (
+    <Timeline.Item
+      color={}
+      dot={}
+      position={}
+    />
+  )
 }

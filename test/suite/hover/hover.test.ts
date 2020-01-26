@@ -1,61 +1,76 @@
 import assert from 'assert'
-import fs from 'fs'
-import vscode from 'vscode'
+import vscode, { Position } from 'vscode'
 
-import { readComponentMapping, buildFixtures } from '../fixture'
+import { buildFixtures } from '../fixture'
 import { activateLS, FILE_LOAD_SLEEP_TIME, showFile, sleep } from '../helper'
-import { buildJsxTemplate, getDocUri, position, sameLineRange } from '../utils'
+import { findAllIndexInString } from '../utils'
 
-describe('Should do hover', () => {
+describe('Should show hover on component', async () => {
   const fixturePaths = buildFixtures()
-  console.log(fixturePaths)
+  const componentNames = Object.keys(fixturePaths)
 
-  fixturePaths.forEach(p => {
-    // for (let index = 0; index < fixturePaths.length; index++) {
-    // const p = fixturePaths[index]
-    const docUri = vscode.Uri.file(p)
+  for (let index = 0; index < componentNames.length; index++) {
+    const componentName = componentNames[index]
+    const p = fixturePaths[componentName]
 
-    // before('activate', async () => {
-    // })
-
-    it('shows hover for component', async () => {
+    await it('shows hover for component', async () => {
+      await vscode.commands.executeCommand('workbench.action.closeEditorsInGroup')
+      const docUri = vscode.Uri.file(p)
       await activateLS()
       await showFile(docUri)
       await sleep(FILE_LOAD_SLEEP_TIME)
-      console.log('🐲')
-      await testHover(docUri, position(6, 3), {
-        contents: ['An img element represents an image\\.'],
-        range: sameLineRange(6, 3, 10),
-      })
+      const editor = vscode!.window!.activeTextEditor
+      const line = editor?.document.lineAt(6)
+      const positions = findAllIndexInString(line?.text!, '.').map(c => c + 1)
+      positions.push(5)
+      await testComponentHover(docUri, componentName, positions)
     })
-    // }
-  })
+  }
 })
 
-async function testHover(
-  docUri: vscode.Uri,
-  position: vscode.Position,
-  expectedHover: vscode.Hover
-) {
-  await showFile(docUri)
+async function testComponentHover(docUri: vscode.Uri, componentName: string, columns: number[]) {
+  try {
+    await showFile(docUri)
+    bypassSpecialCase(componentName, columns)
+    for (let index = 0; index < columns.length; index++) {
+      const column = columns[index]
 
-  const result = (await vscode.commands.executeCommand(
-    'vscode.executeHoverProvider',
-    docUri,
-    position
-  )) as vscode.Hover[]
+      const result = (await vscode.commands.executeCommand(
+        'vscode.executeHoverProvider',
+        docUri,
+        new Position(6, column)
+      )) as vscode.Hover[]
 
-  if (!result[0]) {
-    throw Error('Hover failed')
+      if (!result.length) {
+        throw Error('Hover failed, no hover at all')
+      }
+
+      if (!isHoverContainsFlag(result)) {
+        throw Error(`Hover failed - no component hover of "${componentName}"`)
+      }
+    }
+
+    assert.ok(true, `Hover succeed - "${componentName}"`)
+  } catch (e) {
+    throw Error(`Hover failed, encounter error - "${e}"`)
   }
+}
 
-  const contents = result[0].contents
-  contents.forEach((c, i) => {
-    const val = (c as any).value
-    assert.equal(val, expectedHover.contents[i])
+function isHoverContainsFlag(hovers: vscode.Hover[]): boolean {
+  return hovers.some(hover => {
+    return hover.contents.some(content => {
+      return (content as any).value.includes('文档')
+    })
   })
+}
 
-  if (result[0] && result[0].range) {
-    assert.ok(result[0].range!.isEqual(expectedHover.range!))
+function bypassSpecialCase(componentName: string, positions: number[]) {
+  if (['Typography.Text', 'Typography.Title', 'Typography.Paragraph'].includes(componentName)) {
+    // TODO: not support Typography
+    positions.pop()
+    positions.pop()
+    positions.pop()
   }
+
+  return
 }
