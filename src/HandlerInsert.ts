@@ -49,7 +49,7 @@ export class HandlerInsert {
   constructor(
     editor: TextEditor,
     edit: TextEditorEdit,
-    sharpSymbolRange: Range,
+    triggerCharRange: Range,
     document: TextDocument,
     handlerName: string,
     insertKind: InsertKind,
@@ -58,7 +58,7 @@ export class HandlerInsert {
     this.editor = editor
     this.document = document
     this.sFile = createSourceFile(document.uri.toString(), document.getText(), ScriptTarget.Latest)
-    this.triggerCharRange = sharpSymbolRange
+    this.triggerCharRange = triggerCharRange
     this.edit = edit
     this.handlerName = handlerName
     this.fullHandlerName = addHandlerPrefix(handlerName)
@@ -67,8 +67,8 @@ export class HandlerInsert {
   }
 
   public insertHandler = async () => {
-    const { document, triggerCharRange: sharpSymbolRange, classComponentParent } = this
-    const symbolPosition = sharpSymbolRange.end
+    const { document, triggerCharRange, classComponentParent } = this
+    const symbolPosition = triggerCharRange.end
     // 1. Get closet outer class component
 
     if (classComponentParent) {
@@ -143,18 +143,18 @@ export class HandlerInsert {
   }
 
   private getHandlerParams = async (): Promise<FunctionParam[] | null> => {
-    const { document, triggerCharRange: sharpSymbolRange } = this
-    const position = sharpSymbolRange.end
+    const { document, triggerCharRange } = this
+    const position = triggerCharRange.end
 
     const definitions = await commands.executeCommand<Location[]>(
       'vscode.executeDefinitionProvider',
       document.uri,
       position
     )
-
     if (!definitions) return null
-    const antdDefinition = definitions.find(d => isInAntdModule(d.uri.path))
+    const antdDefinition = definitions[0]
     if (!antdDefinition) return null
+
     const dtsDocument = await workspace.openTextDocument(antdDefinition.uri)
     const definitionString = dtsDocument
       .getText()

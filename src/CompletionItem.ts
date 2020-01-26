@@ -16,7 +16,11 @@ import { antdComponentMap } from './buildResource/componentMap'
 import { DocLanguage } from './buildResource/constant'
 import { ComponentsDoc } from './buildResource/type'
 import _antdDocJson from './definition.json'
-import { composeCardMessage, transformConfigurationLanguage } from './utils'
+import {
+  composeCardMessage,
+  transformConfigurationLanguage,
+  getDefinitionInAntdModule,
+} from './utils'
 import { addHandlerPrefix } from './insertion'
 import { ClassDeclaration } from 'typescript'
 
@@ -50,10 +54,10 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
   }
 
   private getHandlerDocument = (componentName: string, handlerName: string) => {
-    const componentDoc = antdDocJson[this.language][componentName]
-    if (!componentDoc) return null
+    const propDoc = antdDocJson[this.language]?.[componentName]?.[handlerName]
+    if (!propDoc) return null
 
-    const { description, type, default: defaultValue, version } = componentDoc[handlerName]
+    const { description, type, default: defaultValue, version } = propDoc
 
     return composeCardMessage(
       [
@@ -108,12 +112,13 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
   public provideCompletionItems = async (): Promise<CompletionItem[]> => {
     const { document, position } = this
     const componentName = await getClosetAntdJsxElementNode(document, position)
-    // not in a JSX element
-    if (componentName === null) return []
+
+    if (componentName === null) return [] // not in a JSX element
 
     const availableHandler = antdComponentMap[componentName].methods
-    // element not from antd
-    if (!availableHandler) return []
+
+    if (!availableHandler) return [] // element not from antd
+
     const classComponentParent = await getParentsWhen<ClassDeclaration>(
       document,
       position,

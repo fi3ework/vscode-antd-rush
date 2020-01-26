@@ -35,7 +35,12 @@ import {
   Uri,
 } from 'vscode'
 
-import { isFromReactNodeModules } from './utils'
+import {
+  isFromReactNodeModules,
+  getDefinitionInAntdModule,
+  matchAntdModule,
+  tryMatchComponentName,
+} from './utils'
 import { composeHandlerString, addHandlerPrefix } from './insertion'
 
 /**
@@ -74,12 +79,20 @@ export const getClosetAntdJsxElementNode = async (
     isJsxAttribute(jsxAttribute) &&
     isIdentifier(identifier)
   ) {
-    const componentName = await getContainerSymbolAtPosition(
+    const definitionLoc = await getDefinitionInAntdModule(
       document,
-      // use `end`, cause `Breadcrumb.Item` must get definition for .Item
       document.positionAt(jsxElement.tagName.end)
     )
-    return componentName
+    if (!definitionLoc) return null
+    const definitionPath = definitionLoc.location.uri.path
+    const antdMatched = matchAntdModule(definitionPath)
+    const interaceName = definitionLoc.text
+    if (antdMatched === null) return null // return if not from antd
+    const { componentFolder } = antdMatched
+    const fullComponentName = tryMatchComponentName(interaceName, componentFolder)
+    if (!fullComponentName) return null
+
+    return fullComponentName
   }
 
   return null
