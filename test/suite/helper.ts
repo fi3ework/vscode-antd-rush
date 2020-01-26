@@ -2,7 +2,7 @@ import vscode from 'vscode'
 import fs from 'fs'
 
 export const EXT_IDENTIFIER = 'fi3ework.vscode-antd-rush'
-export const FILE_LOAD_SLEEP_TIME = 15000
+export const FILE_LOAD_SLEEP_TIME = 1500
 
 export const ext = vscode.extensions.getExtension(EXT_IDENTIFIER)
 

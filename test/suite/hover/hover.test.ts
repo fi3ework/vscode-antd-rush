@@ -12,6 +12,7 @@ describe('Should show hover on component', async () => {
   for (let index = 0; index < componentNames.length; index++) {
     const componentName = componentNames[index]
     const p = fixturePaths[componentName]
+    console.log(p)
 
     await it('shows hover for component', async () => {
       await vscode.commands.executeCommand('workbench.action.closeEditorsInGroup')
