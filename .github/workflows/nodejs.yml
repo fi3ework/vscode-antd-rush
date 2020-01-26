@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [10.16]
 
     steps:
       - uses: actions/checkout@master
@@ -18,7 +18,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: npm install, build, and test
         run: |
-          yarn install && yarn global add antd
+          yarn install
           yarn run compile && yarn run compile-test
           yarn test
         env:
