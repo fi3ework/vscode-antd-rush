@@ -12,9 +12,10 @@ describe('Should show hover on component', async () => {
   for (let index = 0; index < componentNames.length; index++) {
     const componentName = componentNames[index]
     const p = fixturePaths[componentName]
-    console.log(p)
 
     await it('shows hover for component', async () => {
+      // if (componentName !== 'Statistic') return
+
       await vscode.commands.executeCommand('workbench.action.closeEditorsInGroup')
       const docUri = vscode.Uri.file(p)
       await activateLS()
@@ -22,9 +23,9 @@ describe('Should show hover on component', async () => {
       await sleep(FILE_LOAD_SLEEP_TIME)
       const editor = vscode!.window!.activeTextEditor
       const line = editor?.document.lineAt(6)
-      const positions = findAllIndexInString(line?.text!, '.').map(c => c + 1)
-      positions.push(5)
-      await testComponentHover(docUri, componentName, positions)
+      const subCompCharacters = findAllIndexInString(line?.text!, '.').map(c => c + 1)
+      subCompCharacters.push(5)
+      await testComponentHover(docUri, componentName, subCompCharacters)
     })
   }
 })
@@ -33,6 +34,8 @@ async function testComponentHover(docUri: vscode.Uri, componentName: string, col
   try {
     await showFile(docUri)
     bypassSpecialCase(componentName, columns)
+    let hasFlag = false
+
     for (let index = 0; index < columns.length; index++) {
       const column = columns[index]
 
@@ -42,13 +45,13 @@ async function testComponentHover(docUri: vscode.Uri, componentName: string, col
         new Position(6, column)
       )) as vscode.Hover[]
 
-      if (!result.length) {
-        throw Error('Hover failed, no hover at all')
+      if (isHoverContainsFlag(result)) {
+        hasFlag = true
       }
+    }
 
-      if (!isHoverContainsFlag(result)) {
-        throw Error(`Hover failed - no component hover of "${componentName}"`)
-      }
+    if (!hasFlag) {
+      throw Error(`Hover failed - no component hover of "${componentName}"`)
     }
 
     assert.ok(true, `Hover succeed - "${componentName}"`)
@@ -67,9 +70,7 @@ function isHoverContainsFlag(hovers: vscode.Hover[]): boolean {
 
 function bypassSpecialCase(componentName: string, positions: number[]) {
   if (['Typography.Text', 'Typography.Title', 'Typography.Paragraph'].includes(componentName)) {
-    // TODO: not support Typography
-    positions.pop()
-    positions.pop()
+    // Typography is not a component
     positions.pop()
   }
 

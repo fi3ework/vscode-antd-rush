@@ -5,6 +5,7 @@ import { ComponentsDoc, ComponentsRawDoc } from './buildResource/type'
 import _antdDocJson from './definition.json'
 import _rawTableJson from './raw-table.json'
 import { matchAntdModule } from './utils'
+import { getClosetAntdJsxElementNode } from './ast'
 import {
   antdRushErrorMsg,
   composeCardMessage,
@@ -43,8 +44,10 @@ export class HoverProvider {
      * props hover card
      */
     if (nodeType.type === 'props') {
-      const fuzzyComponentName = this.fuzzySearchComponentMapping(interaceName)
+      const fuzzyComponentName = await getClosetAntdJsxElementNode(document, position)
       if (!fuzzyComponentName) return
+      // const fuzzyComponentName = this.fuzzySearchComponentMapping(interaceName)
+      // if (!fuzzyComponentName) return
       const componentData = antdDocJson[this.language][fuzzyComponentName]
       if (!componentData)
         throw antdRushErrorMsg(`did not match component for ${fuzzyComponentName}`)
@@ -71,7 +74,7 @@ export class HoverProvider {
      * component hover card
      */
     if (nodeType.type === 'component') {
-      const definitionPath = definitionLoc.location.uri.path
+      const definitionPath = definitionLoc.uri.path
 
       const antdMatched = matchAntdModule(definitionPath)
 
@@ -110,13 +113,13 @@ export class HoverProvider {
       .replace(/\-/g, '')
       .toLowerCase()
 
-  private fuzzySearchComponentMapping = (fuzzyName: string): string | null => {
-    const exactKey = Object.keys(antdComponentMap).find(
-      com => this.normalizeName(com) === this.normalizeName(fuzzyName)
-    )
-    if (!exactKey) return null
-    return exactKey
-  }
+  // private fuzzySearchComponentMapping = (fuzzyName: string): string | null => {
+  //   const exactKey = Object.keys(antdComponentMap).find(
+  //     com => this.normalizeName(com) === this.normalizeName(fuzzyName)
+  //   )
+  //   if (!exactKey) return null
+  //   return exactKey
+  // }
 
   private getAstNodeType = (name: string): { type: 'component' | 'props' } => {
     return {

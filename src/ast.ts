@@ -84,7 +84,7 @@ export const getClosetAntdJsxElementNode = async (
       document.positionAt(jsxElement.tagName.end)
     )
     if (!definitionLoc) return null
-    const definitionPath = definitionLoc.location.uri.path
+    const definitionPath = definitionLoc.uri.path
     const antdMatched = matchAntdModule(definitionPath)
     const interaceName = definitionLoc.text
     if (antdMatched === null) return null // return if not from antd
