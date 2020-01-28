@@ -1,9 +1,23 @@
+# development
+.github/**
 .vscode/**
-typings/**
-**/*.ts
-**/*.map
+.vscode-test/**
+doc-resource/**
+node_modules/**
+out/**
+out-test/**
+src/**
+test/**
+.editorconfig
 .gitignore
+.prettierrc.js
+CONTRIBUTING.md
 tsconfig.json
-preview.gif
+tsconfig.options.json
+tslint.json
+webpack.config.js
+yarn.lock
 
-**/token.js
+# build dist
+**/*.vsix
+

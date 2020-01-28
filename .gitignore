@@ -3,3 +3,5 @@ out-test
 node_modules
 .vscode-test
 doc-resource
+**/*.vsix
+dist
