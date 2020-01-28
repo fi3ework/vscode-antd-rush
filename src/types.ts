@@ -1,6 +1,7 @@
+// https://github.com/Microsoft/vscode/blob/master/src/vs/editor/common/core/position.ts
+
 import { Position, Uri, Range } from 'vscode'
 
-// from https://github.com/Microsoft/vscode/blob/master/src/vs/editor/common/core/position.ts
 /**
  * A position in the editor. This interface is suitable for serialization.
  */
@@ -15,7 +16,7 @@ export interface IPosition {
   readonly column: number
 }
 
-export function positionToModePosition(position: Position): IPosition {
+export function positionToIPosition(position: Position): IPosition {
   return { lineNumber: position.line + 1, column: position.character + 1 }
 }
 
@@ -64,7 +65,7 @@ export interface ILocationLink {
   targetSelectionRange?: IRange
 }
 
-export function modeRangeToRange(range: IRange): Range {
+export function IRangeToRange(range: IRange): Range {
   return new Range(
     range.startLineNumber - 1,
     range.startColumn - 1,

@@ -4,6 +4,7 @@
   "description": "Rush to Ant Design",
   "version": "0.0.1",
   "publisher": "fi3ework",
+  "typescript-language-features": "vscode.typescript-language-features",
   "repository": {
     "type": "git",
     "url": "https://github.com/fi3ework/vscode-antd-rush"

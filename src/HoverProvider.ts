@@ -44,13 +44,11 @@ export class HoverProvider {
      * props hover card
      */
     if (nodeType.type === 'props') {
-      const fuzzyComponentName = await getClosetAntdJsxElementNode(document, position)
-      if (!fuzzyComponentName) return
-      // const fuzzyComponentName = this.fuzzySearchComponentMapping(interaceName)
-      // if (!fuzzyComponentName) return
-      const componentData = antdDocJson[this.language][fuzzyComponentName]
+      const closetComponentName = await getClosetAntdJsxElementNode(document, position)
+      if (!closetComponentName) return
+      const componentData = antdDocJson[this.language][closetComponentName]
       if (!componentData)
-        throw antdRushErrorMsg(`did not match component for ${fuzzyComponentName}`)
+        throw antdRushErrorMsg(`did not match component for ${closetComponentName}`)
 
       const desc = componentData[interaceName].description
       const type = componentData[interaceName].type
@@ -81,12 +79,12 @@ export class HoverProvider {
       if (antdMatched === null) return // return if not from antd
       const { componentFolder } = antdMatched
 
-      const comName = tryMatchComponentName(interaceName, componentFolder)
-      if (!comName) return
+      const componentName = tryMatchComponentName(interaceName, componentFolder)
+      if (!componentName) return
 
-      const matchedComponent = antdComponentMap[comName]
+      const matchedComponent = antdComponentMap[componentName]
 
-      if (!matchedComponent) throw antdRushErrorMsg(`did not match component for ${comName}`)
+      if (!matchedComponent) throw antdRushErrorMsg(`did not match component for ${componentName}`)
 
       const enDocLink = `[EN](${composeDocLink(componentFolder, 'en')})`
       const zhDocLink = `[中文](${composeDocLink(componentFolder, 'zh')})`
@@ -94,10 +92,10 @@ export class HoverProvider {
         this.language === 'en' ? `${enDocLink} | ${zhDocLink}` : `${zhDocLink} | ${enDocLink}`
 
       const headMd = new MarkdownString(
-        `**${comName}** ${__intl('componentHint', this.language)} \[ ${docLinks} \]`
+        `**${componentName}** ${__intl('componentHint', this.language)} \[ ${docLinks} \]`
       )
 
-      const tablesMd = rawTableJson[this.language][comName].map(table => {
+      const tablesMd = rawTableJson[this.language][componentName].map(table => {
         return new MarkdownString(table)
       })
 
@@ -106,20 +104,6 @@ export class HoverProvider {
 
     return
   }
-
-  private normalizeName = (raw: string): string =>
-    raw
-      .replace(/\./g, '')
-      .replace(/\-/g, '')
-      .toLowerCase()
-
-  // private fuzzySearchComponentMapping = (fuzzyName: string): string | null => {
-  //   const exactKey = Object.keys(antdComponentMap).find(
-  //     com => this.normalizeName(com) === this.normalizeName(fuzzyName)
-  //   )
-  //   if (!exactKey) return null
-  //   return exactKey
-  // }
 
   private getAstNodeType = (name: string): { type: 'component' | 'props' } => {
     return {

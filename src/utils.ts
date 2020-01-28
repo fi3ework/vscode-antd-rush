@@ -1,21 +1,16 @@
 import {
-  CancellationToken,
   commands,
-  Hover,
   Location,
-  DefinitionLink,
   MarkdownString,
   Position,
   TextDocument,
   workspace,
   Range,
-  window,
   Uri,
 } from 'vscode'
 import { __intl, DocLanguage, LabelType } from './buildResource/constant'
 import { antdComponentMap } from './buildResource/componentMap'
-import { getContainerSymbolAtLocation } from './ast'
-import { positionToModePosition, ILocationLink, modeRangeToRange } from './types'
+import { positionToIPosition, ILocationLink, IRangeToRange } from './types'
 
 /**
  * try to match  node_modules import path
@@ -123,7 +118,7 @@ const appendMarkdown = (mdToAppend: MarkdownString, type: TypeMdType, language: 
 }
 
 /**
- * Normalize string for fuzzy match
+ * normalize string for fuzzy match
  */
 const normalizeName = (raw: string): string =>
   raw
@@ -132,7 +127,7 @@ const normalizeName = (raw: string): string =>
     .toLowerCase()
 
 /**
- * Try match with component name and its folder to a component
+ * try match with component name and its folder to a component
  */
 export const tryMatchComponentName = (symbolName: string, libName: string): string | null => {
   // 1. try exact match
@@ -164,27 +159,7 @@ export const tryMatchComponentName = (symbolName: string, libName: string): stri
 }
 
 /**
- * Select a ref from a def that contains its range
- */
-const selectRefInDefs = async (
-  def: Location,
-  refs: Location[] | undefined
-): Promise<{ text: string; location: Location } | null> => {
-  let doc = await workspace.openTextDocument(def.uri)
-  const rangeInDef =
-    refs?.find(ref => {
-      return ref.uri.path === doc.uri.path && ref.range.contains(ref.range)
-    }) || def
-
-  const text = doc
-    .lineAt(rangeInDef.range.start.line)
-    .text.slice(rangeInDef.range.start.character, rangeInDef.range.end.character)
-
-  return { text, location: rangeInDef }
-}
-
-/**
- * Get antd component data at position
+ * get antd component data at position
  */
 export const getDefinitionInAntdModule = async (
   document: TextDocument,
@@ -209,41 +184,28 @@ export const getDefinitionInAntdModule = async (
   return null
 }
 
-const extractTextOfRange = async (uri: Uri, range: Range) => {
-  const document = await workspace.openTextDocument(uri)
-  return document.lineAt(range.start.line).text.slice(range.start.character, range.end.character)
-}
-
-const inAntdCondition = (def: ILocationLink) => {
-  return !!isInAntdModule(def.uri.path)
-}
-
 /**
- * Find type definition in antd
+ * find type definition in antd
  */
 const findTypeDefinition = async (
   document: TextDocument,
   position: Position
 ): Promise<{ text: string; uri: Uri } | null> => {
   const typeDefinitions = await commands
+    // NOTE: internal command
+    // https://github.com/Microsoft/vscode/blob/master/src/vs/editor/contrib/gotoSymbol/goToSymbol.ts#L55-L59
     .executeCommand<ILocationLink[]>('_executeTypeDefinitionProvider', {
       resource: document.uri,
-      position: positionToModePosition(position),
+      position: positionToIPosition(position),
     })
     .then(refs => refs?.filter(ref => !!isInAntdModule(ref.uri.path)))
-
-  // const refs = await commands.executeCommand<Location[]>(
-  //   'vscode.executeReferenceProvider',
-  //   document.uri,
-  //   position
-  // )
 
   if (!typeDefinitions?.length) return null
 
   const typeDefinition = typeDefinitions[0]
   const text = await extractTextOfRange(
     typeDefinition.uri,
-    modeRangeToRange(typeDefinition.targetSelectionRange || typeDefinition.range)
+    IRangeToRange(typeDefinition.targetSelectionRange || typeDefinition.range)
   )
 
   return {
@@ -253,72 +215,38 @@ const findTypeDefinition = async (
 }
 
 /**
- * Call "Go to definition" recursively
+ * call "Go to definition" recursively
  */
 const recursiveFindDefinition = async (
   document: TextDocument,
   position: Position
 ): Promise<{ text: string; uri: Uri } | null> => {
+  // NOTE: internal command
+  // https://github.com/Microsoft/vscode/blob/master/src/vs/editor/contrib/gotoSymbol/goToSymbol.ts#L37-L41
   const defs = await commands.executeCommand<ILocationLink[]>('_executeDefinitionProvider', {
     resource: document.uri,
-    position: positionToModePosition(position),
+    position: positionToIPosition(position),
   })
-
-  // const refPromise = commands.executeCommand<Location[]>(
-  //   'vscode.executeReferenceProvider',
-  //   document.uri,
-  //   position
-  // )
-
-  // let defs, refs
-  // try {
-  // ;[defs, refs] = await Promise.all([defPromise, refPromise])
-  // const defs = await defPromise
-  // } catch (e) {
-  //   console.log(e)
-  // }
 
   if (!defs) return null
 
-  const antdDef = defs.filter(inAntdCondition)[0]
+  const antdDef = defs.filter((def: ILocationLink) => !!isInAntdModule(def.uri.path))[0]
   const userlandLineDef = defs.filter(d => !matchNodeModules(d.uri.path))[0]
-  // const isWholeLineRange = await isRangeAsLines(antdDef)
 
-  // import from antd
   if (antdDef) {
-    // accurate definition range
+    // recursive end
     const text = await extractTextOfRange(
       antdDef.uri,
-      modeRangeToRange(antdDef.targetSelectionRange || antdDef.range)
+      IRangeToRange(antdDef.targetSelectionRange || antdDef.range)
     )
     if (!text) return null
-    // if (!isWholeLineRange) {
-    //   const antdDefRangeLoc = refs?.find(ref => {
-    //     return antdDef.range.contains(ref.range)
-    //   })
-    //   if (!antdDefRangeLoc) return null
-    //   const _doc = await workspace.openTextDocument(antdDef.uri)
-    //   const text = _doc
-    //     .lineAt(antdDefRangeLoc.range.start.line)
-    //     .text.slice(antdDefRangeLoc.range.start.character, antdDefRangeLoc.range.end.character)
-
-    //   return { text, location: antdDefRangeLoc }
-    // } else {
-    //   // inaccurate whole line definition range
-    //   const interfaceName = await getContainerSymbolAtLocation(antdDef)
-    //   if (!interfaceName) return null
-    //   return { text: interfaceName, location: antdDef }
-    // }
     return { text, uri: antdDef.uri }
   } else if (userlandLineDef) {
-    // alias import
     let doc = await workspace.openTextDocument(userlandLineDef.uri)
-    // const userlandRangeDef = await selectRefInDefs(userlandLineDef, refs)
-    // if (!userlandRangeDef) return null
 
     const nextDef = await recursiveFindDefinition(
       doc,
-      modeRangeToRange(userlandLineDef.targetSelectionRange!).end
+      IRangeToRange(userlandLineDef.targetSelectionRange!).end
     )
     return nextDef
   }
@@ -326,14 +254,9 @@ const recursiveFindDefinition = async (
 }
 
 /**
- * Calc is a range contains line or lines
+ * extract string from of range
  */
-const isRangeAsLines = async (loc: Location | undefined): Promise<boolean> => {
-  if (!loc) return true
-  const _doc = await workspace.openTextDocument(loc.uri)
-  const startWord = _doc.getWordRangeAtPosition(loc.range.start)
-  const endWord = _doc.getWordRangeAtPosition(loc.range.end)
-  if (!startWord || !endWord) return true
-
-  return !startWord.isEqual(endWord)
+const extractTextOfRange = async (uri: Uri, range: Range) => {
+  const document = await workspace.openTextDocument(uri)
+  return document.lineAt(range.start.line).text.slice(range.start.character, range.end.character)
 }

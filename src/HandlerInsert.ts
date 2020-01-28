@@ -28,9 +28,7 @@ import {
   getParentsWhen,
   insertStringToClassComponent,
   insertStringToFunctionalComponent,
-  isClassExtendsReactComponent,
 } from './ast'
-import { isInAntdModule } from './utils'
 import { addHandlerPrefix } from './insertion'
 import { InsertKind } from './CompletionItem'
 import { Position } from 'vscode'
