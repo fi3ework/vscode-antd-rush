@@ -35,12 +35,15 @@ export function activate(context: ExtensionContext) {
     }
   )
 
-  const hoverRegistration = languages.registerHoverProvider('javascript', {
-    provideHover(document, position, token) {
-      const hoverProvider = new HoverProvider(document, position, token)
-      return hoverProvider.provideHover()
-    },
-  })
+  const hoverRegistration = languages.registerHoverProvider(
+    ['javascript', 'javascriptreact', 'typescriptreact'],
+    {
+      provideHover(document, position, token) {
+        const hoverProvider = new HoverProvider(document, position, token)
+        return hoverProvider.provideHover()
+      },
+    }
+  )
 
   const completionItemRegistration = languages.registerCompletionItemProvider(
     ['javascript', 'javascriptreact', 'typescriptreact'],
