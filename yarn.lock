@@ -103,6 +103,11 @@
   dependencies:
     "@types/node" ">= 8"
 
+"@recursive/assign@^1.2.4":
+  version "1.2.5"
+  resolved "https://registry.npmjs.org/@recursive/assign/-/assign-1.2.5.tgz#b4171b8f2599f1aa38d084a0bda30db307d33cd4"
+  integrity sha512-AuHbTaz0cLo6XXaYjRWgWnP/IzqcsPanoBV24ViFWpkYU0eRrwkO+b1DzYyItOhoiEiKnSI3lMc3rLSrBmf0AQ==
+
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.npmjs.org/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
@@ -1262,6 +1267,13 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
+
+edit-package@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/edit-package/-/edit-package-1.0.3.tgz#6786943dc31de983237256340004717303ab0530"
+  integrity sha512-UeZMf0HxdLeegGVokUrPhvzMpCcQg9zxuCX6i76zVIWRjz4jhv3Ejq/KS1zhpMHu5cwqi6MkZOoZz0HQfWX4gw==
+  dependencies:
+    "@recursive/assign" "^1.2.4"
 
 elliptic@^6.0.0:
   version "6.5.2"

@@ -28,9 +28,9 @@ ${' '.repeat(indent)}
   if (type === 'functional') {
     return withIndent(
       '\n\n' +
-        `const ${fullHandlerName} = useCallback((${paramsText}) => {
-
-}, [])`,
+        `const ${fullHandlerName} = useCallback((${paramsText}) => {\n${' '.repeat(
+          indent
+        )}\n}, [])`,
       indent
     )
   }

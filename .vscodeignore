@@ -6,6 +6,7 @@ doc-resource/**
 node_modules/**
 out/**
 out-test/**
+script/**
 src/**
 test/**
 .editorconfig
