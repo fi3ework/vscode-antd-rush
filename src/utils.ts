@@ -165,20 +165,20 @@ export const getDefinitionInAntdModule = async (
   document: TextDocument,
   position: Position
 ): Promise<{ text: string; uri: Uri } | null> => {
-  const [definitionUnderAntd, typeDefinition] = await Promise.all([
+  const [definitionInAntd, typeDefinitionInAntd] = await Promise.all([
     await recursiveFindDefinition(document, position),
     await findTypeDefinition(document, position),
   ])
 
   // TODO: difference between definition and type definition
-  if (!definitionUnderAntd) console.info('[antd-rush]: get more than one definition')
+  if (!definitionInAntd) console.info('[antd-rush]: get more than one definition')
 
-  if (definitionUnderAntd) {
-    return definitionUnderAntd
+  if (definitionInAntd) {
+    return definitionInAntd
   }
 
-  if (typeDefinition) {
-    return typeDefinition
+  if (typeDefinitionInAntd) {
+    return typeDefinitionInAntd
   }
 
   return null
@@ -256,7 +256,16 @@ const recursiveFindDefinition = async (
 /**
  * extract string from of range
  */
-const extractTextOfRange = async (uri: Uri, range: Range) => {
-  const document = await workspace.openTextDocument(uri)
-  return document.lineAt(range.start.line).text.slice(range.start.character, range.end.character)
+export async function extractTextOfRange(uri: Uri, range: Range): Promise<string>
+export function extractTextOfRange(document: TextDocument, range: Range): string
+export function extractTextOfRange(d: Uri | TextDocument, range: Range): Thenable<string> | string {
+  if (d instanceof Uri) {
+    return workspace
+      .openTextDocument(d)
+      .then(document =>
+        document.lineAt(range.start.line).text.slice(range.start.character, range.end.character)
+      )
+  } else {
+    return d.lineAt(range.start.line).text.slice(range.start.character, range.end.character)
+  }
 }

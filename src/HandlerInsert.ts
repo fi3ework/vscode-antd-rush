@@ -67,7 +67,7 @@ export class HandlerInsert {
   public insertHandler = async () => {
     const { document, triggerCharRange, classComponentParent } = this
     const symbolPosition = triggerCharRange.end
-    // 1. Get closet outer class component
+    // 1. Get closest outer class component
 
     if (classComponentParent) {
       // 2-a. insert class component handler

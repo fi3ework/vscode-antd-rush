@@ -11,7 +11,11 @@ import {
   CompletionContext,
 } from 'vscode'
 
-import { getClosetAntdJsxElementNode, getParentsWhen, isClassExtendsReactComponent } from './ast'
+import {
+  getClosetAntdJsxElementNode as getClosestAntdJsxElementNode,
+  getParentsWhen,
+  isClassExtendsReactComponent,
+} from './ast'
 import { antdComponentMap } from './buildResource/componentMap'
 import { DocLanguage } from './buildResource/constant'
 import { ComponentsDoc } from './buildResource/type'
@@ -111,7 +115,7 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
 
   public provideCompletionItems = async (): Promise<CompletionItem[]> => {
     const { document, position } = this
-    const componentName = await getClosetAntdJsxElementNode(document, position)
+    const componentName = await getClosestAntdJsxElementNode(document, position)
 
     if (componentName === null) return [] // not in a JSX element
 

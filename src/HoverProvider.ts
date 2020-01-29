@@ -13,6 +13,7 @@ import {
   getDefinitionInAntdModule,
   tryMatchComponentName,
   transformConfigurationLanguage,
+  extractTextOfRange,
 } from './utils'
 
 const antdDocJson: { [k in DocLanguage]: ComponentsDoc } = _antdDocJson
@@ -34,26 +35,25 @@ export class HoverProvider {
 
   public provideHover = async () => {
     const { document, position } = this
-    const definitionLoc = await getDefinitionInAntdModule(document, position)
-    if (!definitionLoc) return
-
-    const interaceName = definitionLoc.text
-    const nodeType = this.getAstNodeType(interaceName)
+    const hoveredWordRange = document.getWordRangeAtPosition(position)
+    if (!hoveredWordRange) return
+    const nodeType = this.calcNodeType(extractTextOfRange(document, hoveredWordRange))
 
     /**
      * props hover card
      */
     if (nodeType.type === 'props') {
-      const closetComponentName = await getClosetAntdJsxElementNode(document, position)
-      if (!closetComponentName) return
-      const componentData = antdDocJson[this.language][closetComponentName]
+      const interfaceName = extractTextOfRange(document, hoveredWordRange)
+      const closestComponentName = await getClosetAntdJsxElementNode(document, position)
+      if (!closestComponentName) return
+      const componentData = antdDocJson[this.language][closestComponentName]
       if (!componentData)
-        throw antdRushErrorMsg(`did not match component for ${closetComponentName}`)
+        throw antdRushErrorMsg(`did not match component for ${closestComponentName}`)
 
-      const desc = componentData[interaceName].description
-      const type = componentData[interaceName].type
-      const version = componentData[interaceName].version
-      const defaultValue = componentData[interaceName].default
+      const desc = componentData[interfaceName].description
+      const type = componentData[interfaceName].type
+      const version = componentData[interfaceName].version
+      const defaultValue = componentData[interfaceName].default
 
       const md = composeCardMessage(
         [
@@ -72,8 +72,11 @@ export class HoverProvider {
      * component hover card
      */
     if (nodeType.type === 'component') {
-      const definitionPath = definitionLoc.uri.path
+      const definitionLoc = await getDefinitionInAntdModule(document, position)
+      if (!definitionLoc) return
 
+      const interaceName = definitionLoc.text
+      const definitionPath = definitionLoc.uri.path
       const antdMatched = matchAntdModule(definitionPath)
 
       if (antdMatched === null) return // return if not from antd
@@ -105,7 +108,7 @@ export class HoverProvider {
     return
   }
 
-  private getAstNodeType = (name: string): { type: 'component' | 'props' } => {
+  private calcNodeType = (name: string): { type: 'component' | 'props' } => {
     return {
       type: name[0].toUpperCase() !== name[0] ? 'props' : 'component',
     }
