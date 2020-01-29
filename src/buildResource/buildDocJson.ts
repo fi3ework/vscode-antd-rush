@@ -80,7 +80,6 @@ export class DefinitionBuilder {
       description,
       type,
       _default,
-      // TODO: AutoComplete.defaultValue missing default
       version = '',
     ] = (tableRow as Parent).children.map(cell => this.stringifier.stringify(cell))
 

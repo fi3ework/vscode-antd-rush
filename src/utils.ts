@@ -13,7 +13,7 @@ import { antdComponentMap } from './buildResource/componentMap'
 import { positionToIPosition, ILocationLink, IRangeToRange } from './types'
 
 /**
- * try to match  node_modules import path
+ * try to match node_modules import path
  */
 export const matchNodeModules = (path: string): string | null => {
   const regMatched = path.match(/(.*)\/node_modules\/(.*)/)
@@ -37,7 +37,7 @@ export const matchAntdModule = (path: string) => {
 }
 
 /**
- * try to match ant-design node_modules import path
+ * is path from antd module
  */
 export const isInAntdModule = (path: string): boolean => {
   const regMatched = path.match(/(.*)\/node_modules\/antd\/lib\/(.*)/)
@@ -45,24 +45,29 @@ export const isInAntdModule = (path: string): boolean => {
 }
 
 /**
- * try to match ant-design node_modules import path
+ * is path from @types/react module
  */
-export const isFromReactNodeModules = (path: string) => {
-  // TODO: match exact declartion node
+export const isInReactModule = (path: string) => {
   const regMatched = path.match(/(.*)\/node_modules\/@types\/react\/(.*)/)
   return !!regMatched
 }
 
+/**
+ * formart error message
+ */
 export const antdRushErrorMsg = (message: string) => `[antd-rush] ${message}`
 
+/**
+ * composet ant-design documentation link
+ */
 export const composeDocLink = (folder: string, lang: 'en' | 'zh') => {
   const suffix = lang === 'en' ? '' : '-cn'
   return `https://ant.design/components/${folder}${suffix}/`
 }
 
 export const transformConfigurationLanguage = (enumLabel: string | undefined): DocLanguage => {
-  // default return EN
-  return enumLabel === '中文' ? 'zh' : 'en'
+  // default return Chinese
+  return enumLabel === 'English' ? 'en' : 'zh'
 }
 
 /**
@@ -219,8 +224,12 @@ const findTypeDefinition = async (
  */
 const recursiveFindDefinition = async (
   document: TextDocument,
-  position: Position
+  position: Position,
+  trace: Position[] = []
 ): Promise<{ text: string; uri: Uri } | null> => {
+  if (trace.some(t => t.isEqual(position))) return null
+  trace.push(position)
+
   // NOTE: internal command
   // https://github.com/Microsoft/vscode/blob/master/src/vs/editor/contrib/gotoSymbol/goToSymbol.ts#L37-L41
   const defs = await commands.executeCommand<ILocationLink[]>('_executeDefinitionProvider', {
@@ -234,7 +243,7 @@ const recursiveFindDefinition = async (
   const userlandLineDef = defs.filter(d => !matchNodeModules(d.uri.path))[0]
 
   if (antdDef) {
-    // recursive end
+    // endding of recursive
     const text = await extractTextOfRange(
       antdDef.uri,
       IRangeToRange(antdDef.targetSelectionRange || antdDef.range)
@@ -243,11 +252,8 @@ const recursiveFindDefinition = async (
     return { text, uri: antdDef.uri }
   } else if (userlandLineDef) {
     let doc = await workspace.openTextDocument(userlandLineDef.uri)
-
-    const nextDef = await recursiveFindDefinition(
-      doc,
-      IRangeToRange(userlandLineDef.targetSelectionRange!).end
-    )
+    const nextPos = IRangeToRange(userlandLineDef.targetSelectionRange!).end
+    const nextDef = await recursiveFindDefinition(doc, nextPos, trace)
     return nextDef
   }
   return null

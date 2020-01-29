@@ -114,7 +114,9 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
   }
 
   public provideCompletionItems = async (): Promise<CompletionItem[]> => {
-    const { document, position } = this
+    const { document, position, token } = this
+    if (token.isCancellationRequested) return []
+
     const componentName = await getClosestAntdJsxElementNode(document, position)
 
     if (componentName === null) return [] // not in a JSX element

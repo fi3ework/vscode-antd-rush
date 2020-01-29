@@ -34,7 +34,9 @@ export class HoverProvider {
   }
 
   public provideHover = async () => {
-    const { document, position } = this
+    const { document, position, token } = this
+    if (token.isCancellationRequested) return
+
     const hoveredWordRange = document.getWordRangeAtPosition(position)
     if (!hoveredWordRange) return
     const nodeType = this.calcNodeType(extractTextOfRange(document, hoveredWordRange))
@@ -50,10 +52,9 @@ export class HoverProvider {
       if (!componentData)
         throw antdRushErrorMsg(`did not match component for ${closestComponentName}`)
 
-      const desc = componentData[interfaceName].description
-      const type = componentData[interfaceName].type
-      const version = componentData[interfaceName].version
-      const defaultValue = componentData[interfaceName].default
+      const { description: desc, type, version, default: defaultValue } = componentData[
+        interfaceName
+      ]
 
       const md = composeCardMessage(
         [
@@ -98,9 +99,9 @@ export class HoverProvider {
         `**${componentName}** ${__intl('componentHint', this.language)} \[ ${docLinks} \]`
       )
 
-      const tablesMd = rawTableJson[this.language][componentName].map(table => {
-        return new MarkdownString(table)
-      })
+      const tablesMd = rawTableJson[this.language][componentName].map(
+        table => new MarkdownString(table)
+      )
 
       return new Hover([headMd, ...tablesMd])
     }

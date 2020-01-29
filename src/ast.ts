@@ -36,7 +36,7 @@ import {
 } from 'vscode'
 
 import {
-  isFromReactNodeModules,
+  isInReactModule,
   getDefinitionInAntdModule,
   matchAntdModule,
   tryMatchComponentName,
@@ -96,25 +96,6 @@ export const getClosetAntdJsxElementNode = async (
   }
 
   return null
-}
-
-/**
- * Get symbol name in given Document at given position
- */
-export const getContainerSymbolAtPosition = async (
-  document: TextDocument,
-  position: Position
-): Promise<string | null> => {
-  const typeDefinition = await commands.executeCommand<Location[]>(
-    'vscode.executeTypeDefinitionProvider',
-    document.uri,
-    position
-  )
-
-  if (!typeDefinition) return null
-
-  // TODO: only consider first one
-  return getContainerSymbolAtLocation(typeDefinition[0])
 }
 
 /**
@@ -277,7 +258,7 @@ export const isClassExtendsReactComponent = async (
       )
 
       const hasDefinitionFromReact = !!typeDefinition?.some(definition =>
-        isFromReactNodeModules(definition.uri.path)
+        isInReactModule(definition.uri.path)
       )
 
       return hasDefinitionFromReact

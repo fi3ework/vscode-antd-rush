@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/fi3ework/vscode-antd-rush">
-    <img width="200" src="./assets/logo.png">
+    <img width="200px" height="200px" src="https://user-images.githubusercontent.com/12322740/73346951-ba4dbe80-42c1-11ea-8784-5af0916ec459.png">
   </a>
 </p>
 <h1 align="center">Antd Rush</h1>
