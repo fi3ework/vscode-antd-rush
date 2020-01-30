@@ -9,7 +9,6 @@ Rush to Ant Design in VS Code
 
 <img src="https://vsmarketplacebadge.apphb.com/version-short/fi3ework.antd-rush.svg" /> <img src="https://vsmarketplacebadge.apphb.com/installs/fi3ework.antd-rush.svg" /> <img src="https://vsmarketplacebadge.apphb.com/rating/fi3ework.antd-rush.svg" /></div>
 
-
 English | [中文](./README-zh_CN.md)
 
 ## Feature
@@ -17,7 +16,7 @@ English | [中文](./README-zh_CN.md)
 - 💬 Show documentation for Ant Design component and props
 - ⚡️ Insert method handler automatically
 - ✨ Easy to upgrade with Ant Design
-- 🌐 Support Chinese/English documentation
+- 🌐 Support Chinese and English documentation
 
 ## Caveat
 
