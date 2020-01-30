@@ -2,6 +2,7 @@
 .github/**
 .vscode/**
 .vscode-test/**
+assets/**
 doc-resource/**
 node_modules/**
 out/**
@@ -21,4 +22,3 @@ yarn.lock
 
 # build dist
 **/*.vsix
-

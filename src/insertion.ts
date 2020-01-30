@@ -20,7 +20,7 @@ export const composeHandlerString = (
       withIndent(
         `${fullHandlerName} = (${paramsText}) => {
 ${' '.repeat(indent)}
-}`,
+}\n`,
         indent
       )
     )
@@ -30,7 +30,7 @@ ${' '.repeat(indent)}
       '\n\n' +
         `const ${fullHandlerName} = useCallback((${paramsText}) => {\n${' '.repeat(
           indent
-        )}\n}, [])`,
+        )}\n}, [])\n`,
       indent
     )
   }

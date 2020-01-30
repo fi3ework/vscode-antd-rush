@@ -9,46 +9,47 @@ Rush to Ant Design in VS Code
 
 <img src="https://vsmarketplacebadge.apphb.com/version-short/fi3ework.antd-rush.svg" /> <img src="https://vsmarketplacebadge.apphb.com/installs/fi3ework.antd-rush.svg" /> <img src="https://vsmarketplacebadge.apphb.com/rating/fi3ework.antd-rush.svg" /></div>
 
+[English](./README) | 中文
 
-English | [中文](./README-zh_CN.md)
+## 特性
 
-## Feature
+- 💬 为 Ant Design 组件及属性显示对应文档
+- ⚡️ 自动插入组件 handler
+- ✨ 易于随官方进行升级
+- 🌐 支持中/英文档
 
-- 💬 Show documentation for Ant Design component and props
-- ⚡️ Insert method handler automatically
-- ✨ Easy to upgrade with Ant Design
-- 🌐 Support Chinese/English documentation
+## 提示
 
-## Caveat
+- 当前使用的 Ant Design 文档版本为 **3.26.4**
+- 需要项目中安装了 `@types/react`
 
-- Currently used version of the Ant Design documentation is **3.26.4**
-- `@types/react` is required to be installed in the project
+## 功能
 
-## Usage
+### 悬浮提示组件 props 表格
 
-### Component props table hover hint
-
-- Hover on component and get component documentation hint
-- Jump to Ant Design documentation page via link
+- 悬浮在组件上获取官方文档的组件信详情
+- 可以直接跳转到 Ant Design 的官方文档页面
 
 <img src="assets/hover-component.gif">
 
-### Props detail hover hint
+### 悬浮提示 props 详情
+
+- 悬浮在 props 上获取官方文档的 props 详情
 
 <img src="assets/hover-props.gif">
 
-### Auto insert method handler
+### 自动插入 method handler
 
-- Trigger `!` to auto insert handler with prefix `#` (default `handle`, it's configurable)
-- Trigger `#` to insert handler after inquiry input
-- No add TypeScript type annotation for now
-- class component insertion template is
+- 触发 `!` 自动插入带预置前缀的 handler（前缀默认为 `handle`，可配置）
+- 触发 `#` 在提示输入 handler name 后插入
+- 暂时不会为 TypeScript 自动添加类型标注
+- class component 插入的模板为
 
 ```jsx
 this.handleMethod = () => {}
 ```
 
-- functional component insertion template is
+- functional component 插入的模板为
 
 ```jsx
 const handleMethod = useCallback(() => {})
