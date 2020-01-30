@@ -19,9 +19,9 @@ jobs:
 
       - name: npm install and test
         run: |
-          npm ci
-          npm run compile
-          npm run compile-test
-          npm test
+          yarn
+          yarn run compile
+          yarn run compile-test
+          yarn test
         env:
           CI: true

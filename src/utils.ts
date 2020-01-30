@@ -190,20 +190,46 @@ export const getDefinitionInAntdModule = async (
 }
 
 /**
+ * NOTE: VSCode internal command
+ * VSCode has changed its internal commands invoke method recently
+ * Try both old/new method for compatibility
+ */
+// https://github.com/Microsoft/vscode/blob/master/src/vs/editor/contrib/gotoSymbol/goToSymbol.ts#L55-L59
+// https://github.com/Microsoft/vscode/blob/master/src/vs/editor/contrib/gotoSymbol/goToSymbol.ts#L37-L41
+const adaptVscodeInternalApi = async <T>(
+  cmd: string,
+  entries: [string, any][]
+): Promise<T | null> => {
+  const [oldApiRes, newApiRes] = await Promise.all([
+    commands.executeCommand<T>(cmd, Object.fromEntries(entries)).then(
+      res => res,
+      e => null
+    ),
+    commands.executeCommand<T>(cmd, ...entries.map(([k, v]) => v)).then(
+      res => res,
+      e => null
+    ),
+  ])
+
+  console.log(oldApiRes, newApiRes)
+  return oldApiRes ?? newApiRes ?? null
+}
+
+/**
  * find type definition in antd
  */
+
 const findTypeDefinition = async (
   document: TextDocument,
   position: Position
 ): Promise<{ text: string; uri: Uri } | null> => {
-  const typeDefinitions = await commands
-    // NOTE: internal command
-    // https://github.com/Microsoft/vscode/blob/master/src/vs/editor/contrib/gotoSymbol/goToSymbol.ts#L55-L59
-    .executeCommand<ILocationLink[]>('_executeTypeDefinitionProvider', {
-      resource: document.uri,
-      position: positionToIPosition(position),
-    })
-    .then(refs => refs?.filter(ref => !!isInAntdModule(ref.uri.path)))
+  const typeDefinitions = await adaptVscodeInternalApi<ILocationLink[]>(
+    '_executeTypeDefinitionProvider',
+    [
+      ['resource', document.uri],
+      ['position', positionToIPosition(position)],
+    ]
+  ).then(refs => refs?.filter(ref => !!isInAntdModule(ref.uri.path)))
 
   if (!typeDefinitions?.length) return null
 
@@ -230,12 +256,10 @@ const recursiveFindDefinition = async (
   if (trace.some(t => t.isEqual(position))) return null
   trace.push(position)
 
-  // NOTE: internal command
-  // https://github.com/Microsoft/vscode/blob/master/src/vs/editor/contrib/gotoSymbol/goToSymbol.ts#L37-L41
-  const defs = await commands.executeCommand<ILocationLink[]>('_executeDefinitionProvider', {
-    resource: document.uri,
-    position: positionToIPosition(position),
-  })
+  const defs = await adaptVscodeInternalApi<ILocationLink[]>('_executeDefinitionProvider', [
+    ['resource', document.uri],
+    ['position', positionToIPosition(position)],
+  ])
 
   if (!defs) return null
 

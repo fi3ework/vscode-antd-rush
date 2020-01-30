@@ -35,7 +35,7 @@
     "onLanguage:javascriptreact",
     "onLanguage:typescriptreact"
   ],
-  "main": "./dist/extension.js",
+  "main": "./out/extension.js",
   "contributes": {
     "capabilities": {
       "hoverProvider": "true"
