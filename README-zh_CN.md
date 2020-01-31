@@ -7,7 +7,23 @@
 <div align="center">
 Rush to Ant Design in VS Code
 
-<img src="https://vsmarketplacebadge.apphb.com/version/fi3ework.vscode-antd-rush.svg" /> <img src="https://vsmarketplacebadge.apphb.com/installs-short/fi3ework.vscode-antd-rush.svg" /> <img src="https://vsmarketplacebadge.apphb.com/rating-short/fi3ework.vscode-antd-rush.svg" /></div>
+<p align="center">
+<a href="https://marketplace.visualstudio.com/items?itemName=fi3ework.vscode-antd-rush">
+<img src="https://vsmarketplacebadge.apphb.com/version/fi3ework.vscode-antd-rush.svg" />
+</a>
+<a href="https://marketplace.visualstudio.com/items?itemName=fi3ework.vscode-antd-rush">
+<img src="https://vsmarketplacebadge.apphb.com/downloads-short/fi3ework.vscode-antd-rush.svg" />
+</a>
+<a href="https://marketplace.visualstudio.com/items?itemName=fi3ework.vscode-antd-rush">
+<img src="https://vsmarketplacebadge.apphb.com/installs-short/fi3ework.vscode-antd-rush.svg" />
+</a>
+<a href="https://marketplace.visualstudio.com/items?itemName=fi3ework.vscode-antd-rush">
+<img src="https://vsmarketplacebadge.apphb.com/rating-short/fi3ework.vscode-antd-rush.svg" />
+</a>
+<a href="https://github.com/fi3ework/vscode-antd-rush/actions?query=workflow%3ATest">
+<img src="https://img.shields.io/github/workflow/status/fi3ework/vscode-antd-rush/Test?label=GitHub%20Actions" />
+</a>
+</p>
 
 [Download from Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=fi3ework.vscode-antd-rush)
 
