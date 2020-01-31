@@ -79,8 +79,8 @@
     }
   },
   "scripts": {
-    "toggle-out": "VSC_BUILDER=tsc node ./script/togglePackageJson.js",
-    "toggle-dist": "VSC_BUILDER=wp node ./script/togglePackageJson.js",
+    "toggle-out": "cross-env VSC_BUILDER=tsc node ./script/togglePackageJson.js",
+    "toggle-dist": "cross-env VSC_BUILDER=wp node ./script/togglePackageJson.js",
     "prewebpack-build": "npm run toggle-dist",
     "webpack-build": "webpack --mode production",
     "vscode:prepublish": "npm run webpack-build",
@@ -104,6 +104,7 @@
     "@types/react": "^16.9.19",
     "@types/vscode": "^1.35.0",
     "antd": "^3.26.7",
+    "cross-env": "^7.0.0",
     "edit-package": "^1.0.3",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
