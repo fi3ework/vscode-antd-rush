@@ -35,7 +35,7 @@
     "onLanguage:javascriptreact",
     "onLanguage:typescriptreact"
   ],
-  "main": "./dist/extension.js",
+  "main": "./out/extension.js",
   "contributes": {
     "capabilities": {
       "hoverProvider": "true"
@@ -79,17 +79,19 @@
     }
   },
   "scripts": {
-    "prewebpack-build": "VSC_BUILDER=wp node ./script/togglePackageJson.js",
+    "toggle-out": "VSC_BUILDER=tsc node ./script/togglePackageJson.js",
+    "toggle-dist": "VSC_BUILDER=wp node ./script/togglePackageJson.js",
+    "prewebpack-build": "npm run toggle-dist",
     "webpack-build": "webpack --mode production",
     "vscode:prepublish": "npm run webpack-build",
     "compile": "tsc -p ./src",
     "compile-test": "tsc -p ./test",
     "lint": "tslint -p ./src",
-    "prewatch": "VSC_BUILDER=tsc node ./script/togglePackageJson.js",
+    "prewatch": "npm run toggle-out",
     "watch": "tsc -watch -p ./src",
     "watch-test": "tsc -watch -p ./test",
     "build-doc": "ts-node ./src/buildResource/index.ts",
-    "pretest": "npm run compile-test",
+    "pretest": "npm run compile-test && npm run toggle-out",
     "test": "node ./out-test/runTest.js"
   },
   "devDependencies": {
