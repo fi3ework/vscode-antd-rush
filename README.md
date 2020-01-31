@@ -11,6 +11,8 @@ Rush to Ant Design in VS Code
 
 English | [中文](./README-zh_CN.md)
 
+[Download from Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=fi3ework.antd-rush)
+
 ## Feature
 
 - 💬 Show documentation for Ant Design component and props

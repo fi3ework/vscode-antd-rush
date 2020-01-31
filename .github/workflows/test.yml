@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: test
+        shell: bash
         run: |
           yarn
           yarn run compile
