@@ -7,11 +7,11 @@
 <div align="center">
 Rush to Ant Design in VS Code
 
-<img src="https://vsmarketplacebadge.apphb.com/version-short/fi3ework.antd-rush.svg" /> <img src="https://vsmarketplacebadge.apphb.com/installs/fi3ework.antd-rush.svg" /> <img src="https://vsmarketplacebadge.apphb.com/rating/fi3ework.antd-rush.svg" /></div>
+<img src="https://vsmarketplacebadge.apphb.com/version/fi3ework.vscode-antd-rush.svg" /> <img src="https://vsmarketplacebadge.apphb.com/installs-short/fi3ework.vscode-antd-rush.svg" /> <img src="https://vsmarketplacebadge.apphb.com/rating-short/fi3ework.vscode-antd-rush.svg" /></div>
+
+[Download from Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=fi3ework.vscode-antd-rush)
 
 [English](./README) | 中文
-
-[Download from Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=fi3ework.antd-rush)
 
 ## 特性
 
