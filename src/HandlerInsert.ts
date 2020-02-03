@@ -96,6 +96,7 @@ export class HandlerInsert {
         },
         'inward'
       )
+
       const handlerParams = await this.getHandlerParams()
       if (functionalComponent === null || handlerParams === null) return
       const indent = this.countIndentsInNode(functionalComponent)
@@ -104,7 +105,7 @@ export class HandlerInsert {
         editor: this.editor,
         document,
         indent,
-        functionalNode: functionalComponent,
+        position: this.triggerCharRange.end,
         symbolPosition,
         fullHandlerName: this.fullHandlerName,
         handlerParams,

@@ -18,11 +18,14 @@ import ts, {
   isJsxClosingFragment,
   isJsxOpeningFragment,
   isJsxElement,
+  isBlock,
   FunctionTypeNode,
   PropertySignature,
   isTypeLiteralNode,
   isUnionTypeNode,
   isParenthesizedTypeNode,
+  isFunctionExpression,
+  Block,
 } from 'typescript'
 import {
   commands,
@@ -198,7 +201,7 @@ export const insertStringToFunctionalComponent = async (args: {
   editor: TextEditor
   document: TextDocument
   indent: number
-  functionalNode: FunctionDeclaration | VariableStatement
+  position: Position
   symbolPosition: Position
   fullHandlerName: string
   handlerParams: FunctionParam[]
@@ -207,7 +210,7 @@ export const insertStringToFunctionalComponent = async (args: {
     editor,
     document,
     indent,
-    functionalNode,
+    position,
     symbolPosition,
     fullHandlerName,
     handlerParams,
@@ -222,12 +225,23 @@ export const insertStringToFunctionalComponent = async (args: {
   // find outermost statement
   const parents = getNodeWithParentsAt(sFile, document.offsetAt(symbolPosition))
   // exclude outermost component, cause we should insert handler in it
-  const closetStatement = parents.slice(1).find(parent => {
-    return isVariableStatement(parent) || isReturnStatement(parent)
-  })
+  const closetBlock = parents.slice(1).find(parent => {
+    return isBlock(parent)
+  }) as Block
 
-  if (!closetStatement) return null
-  const insertAt = document.positionAt(closetStatement.pos)
+  // arrow function
+  // function declaration
+  // function variable
+  // anonymous function
+
+  if (!closetBlock) return null
+  const subStatement = closetBlock.statements.find(statement =>
+    offsetContains(document.offsetAt(position), statement.pos, statement.end)
+  )
+
+  if (!subStatement) return null
+
+  const insertAt = document.positionAt(subStatement.pos)
   editor.edit(builder => {
     builder.insert(
       insertAt,
