@@ -34,34 +34,36 @@ English | [中文](./README-zh_CN.md)
 
 ## Feature
 
-- 💬 Show documentation for Ant Design component and props
-- ⚡️ Insert method handler automatically
+- 💬 Show official documentation for Ant Design component and props
+- ⚡️ Insert component method handler automatically
 - ✨ Easy to upgrade with Ant Design
 - 🌐 Support Chinese and English documentation
 
 ## Caveat
 
 - Currently used version of the Ant Design documentation is **3.26.4**
-- `@types/react` is required to be installed in the project
+- `@types/react` is required to be installed in userland project
 
 ## Usage
 
 ### Component props table hover hint
 
-- Hover on component and get component documentation hint
-- Jump to Ant Design documentation page via link
+- Hover on component to get component description hint
+- Provide Ant Design documentation page link of component
 
 <img src="assets/hover-component.gif">
 
 ### Props detail hover hint
 
+- Hover on component props to get props description hint
+
 <img src="assets/hover-props.gif">
 
-### Auto insert method handler
+### Insert method handler automatically
 
-- Trigger `!` to auto insert handler with prefix `#` (default `handle`, it's configurable)
-- Trigger `#` to insert handler after inquiry input
-- No add TypeScript type annotation for now
+- Trigger `!` to auto insert handler with default prefix (default prefix is `handle`, it's configurable)
+- Trigger `#` to insert handler after handler name inquiry
+- TypeScript type annotation will not be added for now
 - class component insertion template is
 
 ```jsx

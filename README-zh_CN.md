@@ -5,6 +5,7 @@
 </p>
 <h1 align="center">Antd Rush</h1>
 <div align="center">
+
 Rush to Ant Design in VS Code
 
 <p align="center">
@@ -25,13 +26,15 @@ Rush to Ant Design in VS Code
 </a>
 </p>
 
+</div>
+
 [Download from Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=fi3ework.vscode-antd-rush)
 
-[English](./README) | 中文
+[English](./README.md) | 中文
 
 ## 特性
 
-- 💬 为 Ant Design 组件及属性显示对应文档
+- 💬 为 Ant Design 组件及属性显示对应官方文档
 - ⚡️ 自动插入组件 handler
 - ✨ 易于随官方进行升级
 - 🌐 支持中/英文档
@@ -39,26 +42,26 @@ Rush to Ant Design in VS Code
 ## 提示
 
 - 当前使用的 Ant Design 文档版本为 **3.26.4**
-- 需要项目中安装了 `@types/react`
+- 需要用户的项目中安装了 `@types/react`
 
 ## 功能
 
 ### 悬浮提示组件 props 表格
 
-- 悬浮在组件上获取官方文档的组件信详情
-- 可以直接跳转到 Ant Design 的官方文档页面
+- 悬浮在组件上显示官方文档的组件详情
+- 提供链接直接跳转到 Ant Design 的官方文档页面
 
 <img src="assets/hover-component.gif">
 
 ### 悬浮提示 props 详情
 
-- 悬浮在 props 上获取官方文档的 props 详情
+- 悬浮在 props 上显示官方文档的 props 详情
 
 <img src="assets/hover-props.gif">
 
 ### 自动插入 method handler
 
-- 触发 `!` 自动插入带预置前缀的 handler（前缀默认为 `handle`，可配置）
+- 触发 `!` 自动插入带默认前缀的 handler（默认前缀预置为 `handle`，可配置）
 - 触发 `#` 在提示输入 handler name 后插入
 - 暂时不会为 TypeScript 自动添加类型标注
 - class component 插入的模板为
