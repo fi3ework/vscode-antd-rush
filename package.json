@@ -124,7 +124,7 @@
     "decamelize": "^4.0.0",
     "remark-parse": "^7.0.2",
     "remark-stringify": "^7.0.4",
-    "typescript": "^3.7.4",
+    "typescript": "^3.8.2",
     "vscode-languageserver": "^6.1.0"
   }
 }
