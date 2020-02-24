@@ -95,7 +95,7 @@
     "test": "node ./out-test/runTest.js"
   },
   "devDependencies": {
-    "@octokit/rest": "^16.35.2",
+    "@octokit/rest": "^17.0.0",
     "@types/fs-extra": "^8.0.1",
     "@types/glob": "^7.1.1",
     "@types/js-base64": "^2.3.1",
