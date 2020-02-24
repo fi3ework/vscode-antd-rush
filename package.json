@@ -125,6 +125,6 @@
     "remark-parse": "^7.0.2",
     "remark-stringify": "^7.0.4",
     "typescript": "^3.7.4",
-    "vscode-languageserver": "^6.1.0"
+    "vscode-languageserver": "^6.1.1"
   }
 }
