@@ -73,7 +73,7 @@ this.handleMethod = () => {}
 - functional component insertion template is
 
 ```jsx
-const handleMethod = useCallback(() => {})
+const handleMethod = useCallback(() => { })
 ```
 
 <img src="assets/insertion.gif">
