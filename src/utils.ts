@@ -8,8 +8,8 @@ import {
   Range,
   Uri,
 } from 'vscode'
-import { __intl, DocLanguage, LabelType } from './buildResource/constant'
-import { antdComponentMap } from './buildResource/componentMap'
+import { __intl, DocLanguage, LabelType } from './build-resource/constant'
+import { antdComponentMap } from './build-resource/componentMap'
 import { positionToIPosition, ILocationLink, IRangeToRange } from './types'
 
 /**

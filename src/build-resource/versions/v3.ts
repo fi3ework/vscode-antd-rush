@@ -1,14 +1,6 @@
-export interface ComponentMapping {
-  [k: string]: ComponentDocLocation
-}
+import { ComponentMapping } from '../componentMap'
 
-export interface ComponentDocLocation {
-  docAlias?: string // by default use lower case component name
-  anchorBeforeProps: string | string[]
-  methods: string[]
-}
-
-export const antdComponentMap: ComponentMapping = {
+export const antdComponentMapV3: ComponentMapping = {
   Affix: {
     anchorBeforeProps: '## API',
     methods: ['target', 'onChange'],

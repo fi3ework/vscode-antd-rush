@@ -90,7 +90,7 @@
     "prewatch": "npm run toggle-out",
     "watch": "tsc -watch -p ./src",
     "watch-test": "tsc -watch -p ./test",
-    "build-doc": "ts-node ./src/buildResource/index.ts",
+    "build-doc": "ts-node ./src/build-resource/index.ts",
     "pretest": "npm run compile-test && npm run toggle-out",
     "test": "node ./out-test/runTest.js"
   },

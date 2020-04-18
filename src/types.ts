@@ -3,6 +3,11 @@
 import { Position, Uri, Range } from 'vscode'
 
 /**
+ * Major version of antd that resource based on
+ */
+export type ResourceVersion = 'v3' | 'v4'
+
+/**
  * A position in the editor. This interface is suitable for serialization.
  */
 export interface IPosition {

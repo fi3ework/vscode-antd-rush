@@ -1,7 +1,7 @@
 import { CancellationToken, Hover, MarkdownString, Position, TextDocument, workspace } from 'vscode'
-import { antdComponentMap } from './buildResource/componentMap'
-import { __intl, DocLanguage } from './buildResource/constant'
-import { ComponentsDoc, ComponentsRawDoc } from './buildResource/type'
+import { antdComponentMap } from './build-resource/componentMap'
+import { __intl, DocLanguage } from './build-resource/constant'
+import { ComponentsDoc, ComponentsRawDoc } from './build-resource/type'
 import _antdDocJson from './definition.json'
 import _rawTableJson from './raw-table.json'
 import { matchAntdModule } from './utils'
@@ -100,7 +100,7 @@ export class HoverProvider {
       )
 
       const tablesMd = rawTableJson[this.language][componentName].map(
-        table => new MarkdownString(table)
+        (table) => new MarkdownString(table)
       )
 
       return new Hover([headMd, ...tablesMd])

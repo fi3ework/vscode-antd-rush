@@ -1,6 +1,6 @@
 import { antdRushErrorMsg } from './utils'
 import { FunctionParam } from './ast'
-import { __intl, DocLanguage, LabelType } from './buildResource/constant'
+import { __intl, DocLanguage, LabelType } from './build-resource/constant'
 import { workspace } from 'vscode'
 
 /**
@@ -12,7 +12,7 @@ export const composeHandlerString = (
   indent: number,
   type: 'class' | 'functional'
 ) => {
-  const paramsText = params.map(p => p.text).join(', ')
+  const paramsText = params.map((p) => p.text).join(', ')
   // TODO: inset param types in ts
   if (type === 'class') {
     return (
@@ -43,7 +43,7 @@ ${' '.repeat(indent)}
 export const withIndent = (raw: string, indent: number): string => {
   return raw
     .split('\n')
-    .map(line => ' '.repeat(indent) + line)
+    .map((line) => ' '.repeat(indent) + line)
     .join('\n')
 }
 

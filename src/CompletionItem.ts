@@ -16,9 +16,9 @@ import {
   getParentsWhen,
   isClassExtendsReactComponent,
 } from './ast'
-import { antdComponentMap } from './buildResource/componentMap'
-import { DocLanguage } from './buildResource/constant'
-import { ComponentsDoc } from './buildResource/type'
+import { antdComponentMap } from './build-resource/componentMap'
+import { DocLanguage } from './build-resource/constant'
+import { ComponentsDoc } from './build-resource/type'
 import _antdDocJson from './definition.json'
 import {
   composeCardMessage,
@@ -132,7 +132,7 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
       'outward'
     )
 
-    const items = availableHandler.map(handlerName =>
+    const items = availableHandler.map((handlerName) =>
       this.transformHandlerToItem(componentName, handlerName, classComponentParent)
     )
 

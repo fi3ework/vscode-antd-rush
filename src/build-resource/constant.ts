@@ -1,14 +1,16 @@
 import path from 'path'
+import { ResourceVersion } from '../types'
 
 export type DocLanguage = 'en' | 'zh'
 
 export const ANTD_GITHUB = {
   OWNER_NAME: 'ant-design',
   REPO_NAME: 'ant-design',
-  TARGET_TAG: '3.26.15',
+  V3_SOURCE_TAG: '3.26.15',
+  V4_SOURCE_TAG: '4.1.3',
   EN_MD_NAME: 'index.en-US.md',
   ZH_MD_NAME: 'index.zh-CN.md',
-}
+} as const
 
 export const INTL_TEXT: {
   [k in 'description' | 'type' | 'default' | 'version' | 'componentHint']: {
@@ -46,6 +48,9 @@ export const __intl = (label: LabelType, language: DocLanguage) => {
 
 export const STORAGE = {
   distPath: '../../doc-resource',
+  versioned(raw: string, version: ResourceVersion) {
+    return `${raw}${version.toUpperCase()}`
+  },
   get mdPath() {
     return STORAGE.distPath + '/md'
   },

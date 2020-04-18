@@ -27,6 +27,7 @@ const IGNORED_COMPONENTS: string[] = [
   'version',
   'col',
   'row',
+  'locale-provider',
 ]
 
 type IShaMap = { [k: string]: { enSha: string; zhSha: string } }
@@ -40,7 +41,7 @@ export async function buildShaMap(tag: string) {
   })
 
   const contentData = tagContentRes.data
-  if (!Array.isArray(contentData)) return {}
+  if (!Array.isArray(contentData)) throw new Error('failed to get contents in `/components`')
 
   const componentPaths = contentData
     .filter((c) => !IGNORED_COMPONENTS.includes(c.name))
@@ -54,7 +55,9 @@ export async function buildShaMap(tag: string) {
       path: `/components/${name}`,
       ref: tag,
     })
+
     if (Array.isArray(folderRes.data)) {
+      console.log(folderRes.data.map((f) => f.name))
       shaMap[name] = {
         enSha: folderRes.data.find((file) => file.name === ANTD_GITHUB.EN_MD_NAME)!.sha,
         zhSha: folderRes.data.find((file) => file.name === ANTD_GITHUB.ZH_MD_NAME)!.sha,

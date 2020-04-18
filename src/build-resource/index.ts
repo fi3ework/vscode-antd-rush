@@ -4,17 +4,29 @@ import fs from 'fs'
 import { promisify } from 'util'
 
 import { DefinitionBuilder } from './buildDocJson'
-import { antdComponentMap } from './componentMap'
+import { antdComponentMap, antdComponentMapV4 } from './componentMap'
 import { ANTD_GITHUB, STORAGE } from './constant'
 import { buildShaMap, downloadByShaMap } from './fetchDocs'
+import { ResourceVersion } from '../types'
 
-async function buildResource() {
+const sourceVersion = {
+  v3: ANTD_GITHUB.V3_SOURCE_TAG,
+  v4: ANTD_GITHUB.V4_SOURCE_TAG,
+} as const
+
+const mapVersion = {
+  v3: antdComponentMap,
+  v4: antdComponentMapV4,
+} as const
+
+async function buildResource(version: ResourceVersion) {
   try {
     await remove(path.resolve(__dirname, STORAGE.distPath))
     console.log('🌝 resource cleaned')
-    const shaMap = await buildShaMap(ANTD_GITHUB.TARGET_TAG)
+
+    const shaMap = await buildShaMap(sourceVersion[version])
     await Promise.all(downloadByShaMap(shaMap))
-    const builder = new DefinitionBuilder(antdComponentMap)
+    const builder = new DefinitionBuilder(mapVersion[version])
     const enEmit = builder.emitJson('en')
     const zhEmit = builder.emitJson('zh')
     const [
@@ -72,4 +84,4 @@ async function buildResource() {
   }
 }
 
-buildResource()
+buildResource('v4')
