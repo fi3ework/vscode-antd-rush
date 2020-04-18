@@ -2,10 +2,8 @@ import { ensureDirSync, outputFile } from 'fs-extra'
 import { Base64 } from 'js-base64'
 import path from 'path'
 
-import Octokit, { ReposGetContentsResponse } from '@octokit/rest'
-
+import { Octokit } from '@octokit/rest'
 import { ANTD_GITHUB, STORAGE } from './constant'
-
 /**
  * Token is not tracked by Git.
  * If you want to develop this extension.
@@ -41,7 +39,7 @@ export async function buildShaMap(tag: string) {
     ref: tag,
   })
 
-  const contentData: ReposGetContentsResponse = tagContentRes.data
+  const contentData = tagContentRes.data
   if (!Array.isArray(contentData)) return {}
 
   const componentPaths = contentData

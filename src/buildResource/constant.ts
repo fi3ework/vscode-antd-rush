@@ -5,7 +5,7 @@ export type DocLanguage = 'en' | 'zh'
 export const ANTD_GITHUB = {
   OWNER_NAME: 'ant-design',
   REPO_NAME: 'ant-design',
-  TARGET_TAG: '3.26.4',
+  TARGET_TAG: '3.26.15',
   EN_MD_NAME: 'index.en-US.md',
   ZH_MD_NAME: 'index.zh-CN.md',
 }
