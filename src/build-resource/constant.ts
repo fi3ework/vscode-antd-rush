@@ -1,7 +1,5 @@
 import path from 'path'
-import { ResourceVersion } from '../types'
-
-export type DocLanguage = 'en' | 'zh'
+import { ResourceVersion, DocLanguage } from '../types'
 
 export const ANTD_GITHUB = {
   OWNER_NAME: 'ant-design',
@@ -47,23 +45,32 @@ export const __intl = (label: LabelType, language: DocLanguage) => {
 }
 
 export const STORAGE = {
-  distPath: '../../doc-resource',
+  /**
+   * Path of downloaded .md files and composed definition JSON
+   */
+  resourcePath: path.resolve(__dirname, '../resource'),
+  /**
+   * Decorate path with version prefix
+   */
   versioned(raw: string, version: ResourceVersion) {
     return `${raw}${version.toUpperCase()}`
   },
-  get mdPath() {
-    return STORAGE.distPath + '/md'
+  /**
+   * Path of downloaded .md files
+   */
+  getMarkdownPath(componentName: string, fileName: string, version: ResourceVersion) {
+    return path.join(STORAGE.resourcePath, `/${version}/md/${componentName}/${fileName}`)
   },
-  get srcDefinitionPath() {
-    return path.resolve(__dirname, `../definition.json`)
+  /**
+   * Path of dist file -- definition-{lang}.json, will be used for hover on props
+   */
+  getDefinitionPath(version: ResourceVersion) {
+    return path.join(STORAGE.resourcePath, `/${version}/definition.json`)
   },
-  get srcRawPath() {
-    return path.resolve(__dirname, `../raw-table.json`)
-  },
-  getDefinitionPath(language: DocLanguage) {
-    return path.resolve(__dirname, `${STORAGE.distPath}/definition-${language}.json`)
-  },
-  getRawDefinitionPath(language: DocLanguage) {
-    return path.resolve(__dirname, `${STORAGE.distPath}/raw-table-${language}.json`)
+  /**
+   * Path of dist file -- raw-table-{lang}.json, will be used for hover on component
+   */
+  getRawDefinitionPath(version: ResourceVersion) {
+    return path.join(STORAGE.resourcePath, `/${version}/raw-table.json`)
   },
 }

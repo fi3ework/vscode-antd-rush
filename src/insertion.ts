@@ -1,7 +1,8 @@
-import { antdRushErrorMsg } from './utils'
-import { FunctionParam } from './ast'
-import { __intl, DocLanguage, LabelType } from './build-resource/constant'
 import { workspace } from 'vscode'
+
+import { FunctionParam } from './ast'
+import { __intl } from './build-resource/constant'
+import { antdRushErrorMsg } from './utils'
 
 /**
  * Fill handler template with parameters and its type

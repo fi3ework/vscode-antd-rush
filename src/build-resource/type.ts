@@ -1,3 +1,5 @@
+import { DocLanguage, ResourceVersion } from '../types'
+
 export interface Prop {
   property: string
   description: string
@@ -16,4 +18,19 @@ export interface ComponentsDoc {
 
 export interface ComponentsRawDoc {
   [k: string]: string[]
+}
+
+export type PropsJson = {
+  [k in DocLanguage]: ComponentsDoc
+}
+
+export type ComponentsJson = {
+  [k in DocLanguage]: ComponentsRawDoc
+}
+
+export type VersionJson = {
+  [k in ResourceVersion]: {
+    propsJson: PropsJson
+    componentJson: ComponentsJson
+  }
 }

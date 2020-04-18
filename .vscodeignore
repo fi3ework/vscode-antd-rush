@@ -2,7 +2,7 @@
 .github/**
 .vscode/**
 .vscode-test/**
-doc-resource/**
+# doc-resource/**
 node_modules/**
 out/**
 out-test/**

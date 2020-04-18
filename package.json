@@ -74,6 +74,15 @@
           "default": "handle",
           "minLength": 1,
           "description": "Prefix of automatically generated handler."
+        },
+        "antdRush.defaultAntdMajorVersion": {
+          "type": "string",
+          "default": "^3",
+          "enum": [
+            "^3",
+            "^4"
+          ],
+          "description": "Set default major version of antd (3.x or 4.x) of workspace. You can change this for each workspace."
         }
       }
     }

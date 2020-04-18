@@ -1,5 +1,5 @@
 // https://github.com/Microsoft/vscode/blob/master/src/vs/editor/common/core/position.ts
-
+// ===== start =====
 import { Position, Uri, Range } from 'vscode'
 
 /**
@@ -70,6 +70,8 @@ export interface ILocationLink {
   targetSelectionRange?: IRange
 }
 
+// ===== end =====
+
 export function IRangeToRange(range: IRange): Range {
   return new Range(
     range.startLineNumber - 1,
@@ -78,3 +80,5 @@ export function IRangeToRange(range: IRange): Range {
     range.endColumn - 1
   )
 }
+
+export type DocLanguage = 'en' | 'zh'

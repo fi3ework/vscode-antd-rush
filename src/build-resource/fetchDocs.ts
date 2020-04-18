@@ -1,8 +1,9 @@
 import { ensureDirSync, outputFile } from 'fs-extra'
 import { Base64 } from 'js-base64'
-import path from 'path'
 
 import { Octokit } from '@octokit/rest'
+
+import { ResourceVersion } from '../types'
 import { ANTD_GITHUB, STORAGE } from './constant'
 /**
  * Token is not tracked by Git.
@@ -30,9 +31,19 @@ const IGNORED_COMPONENTS: string[] = [
   'locale-provider',
 ]
 
+/**
+ * @property {string} [k] component name
+ */
 type IShaMap = { [k: string]: { enSha: string; zhSha: string } }
 
-export async function buildShaMap(tag: string) {
+/**
+ * Get each component's zh/en Markdown file sha of specific tag
+ *
+ * @export
+ * @param {string} tag antd version tag
+ * @returns
+ */
+export async function buildShaMap(tag: string): Promise<IShaMap> {
   const tagContentRes = await octokit.repos.getContents({
     owner: ANTD_GITHUB.OWNER_NAME,
     repo: ANTD_GITHUB.REPO_NAME,
@@ -57,7 +68,6 @@ export async function buildShaMap(tag: string) {
     })
 
     if (Array.isArray(folderRes.data)) {
-      console.log(folderRes.data.map((f) => f.name))
       shaMap[name] = {
         enSha: folderRes.data.find((file) => file.name === ANTD_GITHUB.EN_MD_NAME)!.sha,
         zhSha: folderRes.data.find((file) => file.name === ANTD_GITHUB.ZH_MD_NAME)!.sha,
@@ -69,16 +79,29 @@ export async function buildShaMap(tag: string) {
   return shaMap
 }
 
-async function downloadFile(componentName: string, fileName: string, fileSha: string) {
+/**
+ * Download and save Markdown files
+ *
+ * @param componentName component name, will be used to compose fileName
+ * @param fileName where to save
+ * @param fileSha file sha
+ */
+async function downloadMdFiles(args: {
+  componentName: string
+  fileName: string
+  fileSha: string
+  version: ResourceVersion
+}) {
+  const { componentName, fileName, fileSha, version } = args
   try {
     const contentRes = await octokit.git.getBlob({
       owner: ANTD_GITHUB.OWNER_NAME,
       repo: ANTD_GITHUB.REPO_NAME,
       file_sha: fileSha,
     })
-    ensureDirSync(path.resolve(__dirname, `${STORAGE.mdPath}/${componentName}`))
+    ensureDirSync(STORAGE.getMarkdownPath(componentName, '', version))
     await outputFile(
-      path.resolve(__dirname, `${STORAGE.mdPath}/${componentName}/${fileName}`),
+      STORAGE.getMarkdownPath(componentName, fileName, version),
       Base64.decode(contentRes.data.content)
     )
     console.log(`✅ ${componentName}/${fileName} download succeed.`)
@@ -87,9 +110,25 @@ async function downloadFile(componentName: string, fileName: string, fileSha: st
   }
 }
 
-export function downloadByShaMap(shaMap: IShaMap) {
+/**
+ * Download Markdown files by file sha
+ *
+ * @param shaMap An object maps component name and its Markdown files sha
+ */
+export function downloadByShaMap(shaMap: IShaMap, version: ResourceVersion) {
   return Object.entries(shaMap).map(async ([componentName, entity]) => {
-    await downloadFile(componentName, ANTD_GITHUB.EN_MD_NAME, entity.enSha)
-    await downloadFile(componentName, ANTD_GITHUB.ZH_MD_NAME, entity.zhSha)
+    await downloadMdFiles({
+      componentName,
+      fileName: ANTD_GITHUB.EN_MD_NAME,
+      fileSha: entity.enSha,
+      version: version,
+    })
+
+    await downloadMdFiles({
+      componentName,
+      fileName: ANTD_GITHUB.ZH_MD_NAME,
+      fileSha: entity.zhSha,
+      version: version,
+    })
   })
 }

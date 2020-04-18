@@ -2,7 +2,7 @@ out
 out-test
 node_modules
 .vscode-test
-doc-resource
+src/resource/**/*.md
 **/*.vsix
 dist
 token.ts

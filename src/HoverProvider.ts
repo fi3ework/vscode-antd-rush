@@ -1,36 +1,42 @@
 import { CancellationToken, Hover, MarkdownString, Position, TextDocument, workspace } from 'vscode'
-import { antdComponentMap } from './build-resource/componentMap'
-import { __intl, DocLanguage } from './build-resource/constant'
-import { ComponentsDoc, ComponentsRawDoc } from './build-resource/type'
-import _antdDocJson from './definition.json'
-import _rawTableJson from './raw-table.json'
-import { matchAntdModule } from './utils'
+
 import { getClosetAntdJsxElementNode } from './ast'
+import { antdComponentMap } from './build-resource/componentMap'
+import { __intl } from './build-resource/constant'
+import { DocLanguage, ResourceVersion } from './types'
+import { PropsJson, ComponentsJson, VersionJson } from './build-resource/type'
 import {
   antdRushErrorMsg,
   composeCardMessage,
   composeDocLink,
-  getDefinitionInAntdModule,
-  tryMatchComponentName,
-  transformConfigurationLanguage,
   extractTextOfRange,
+  getAntdMajorVersionConfiguration,
+  getDefinitionInAntdModule,
+  getLanguageConfiguration,
+  matchAntdModule,
+  tryMatchComponentName,
 } from './utils'
-
-const antdDocJson: { [k in DocLanguage]: ComponentsDoc } = _antdDocJson
-const rawTableJson: { [k in DocLanguage]: ComponentsRawDoc } = _rawTableJson
+import { versionsJson } from './cache'
 
 export class HoverProvider {
   private document!: TextDocument
   private position!: Position
   private token!: CancellationToken
-  private language: DocLanguage = transformConfigurationLanguage(
+  private language: DocLanguage = getLanguageConfiguration(
     workspace.getConfiguration().get('antdRush.language')
   )
+  private antdVersion: ResourceVersion = getAntdMajorVersionConfiguration(
+    workspace.getConfiguration().get('antdRush.defaultAntdMajorVersion') || 'v4'
+  )
+  private antdDocJson: PropsJson
+  private rawTableJson: ComponentsJson
 
   public constructor(document: TextDocument, position: Position, token: CancellationToken) {
     this.document = document
     this.position = position
     this.token = token
+    this.antdDocJson = versionsJson[this.antdVersion].propsJson
+    this.rawTableJson = versionsJson[this.antdVersion].componentJson
   }
 
   public provideHover = async () => {
@@ -48,7 +54,7 @@ export class HoverProvider {
       const interfaceName = extractTextOfRange(document, hoveredWordRange)
       const closestComponentName = await getClosetAntdJsxElementNode(document, position)
       if (!closestComponentName) return
-      const componentData = antdDocJson[this.language][closestComponentName]
+      const componentData = this.antdDocJson[this.language][closestComponentName]
       if (!componentData)
         throw antdRushErrorMsg(`did not match component for ${closestComponentName}`)
 
@@ -99,7 +105,7 @@ export class HoverProvider {
         `**${componentName}** ${__intl('componentHint', this.language)} \[ ${docLinks} \]`
       )
 
-      const tablesMd = rawTableJson[this.language][componentName].map(
+      const tablesMd = this.rawTableJson[this.language][componentName].map(
         (table) => new MarkdownString(table)
       )
 

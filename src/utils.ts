@@ -1,16 +1,14 @@
-import {
-  commands,
-  Location,
-  MarkdownString,
-  Position,
-  TextDocument,
-  workspace,
-  Range,
-  Uri,
-} from 'vscode'
-import { __intl, DocLanguage, LabelType } from './build-resource/constant'
+import { commands, MarkdownString, Position, Range, TextDocument, Uri, workspace } from 'vscode'
+
 import { antdComponentMap } from './build-resource/componentMap'
-import { positionToIPosition, ILocationLink, IRangeToRange } from './types'
+import { __intl, LabelType } from './build-resource/constant'
+import {
+  DocLanguage,
+  ILocationLink,
+  IRangeToRange,
+  positionToIPosition,
+  ResourceVersion,
+} from './types'
 
 /**
  * try to match node_modules import path
@@ -65,9 +63,22 @@ export const composeDocLink = (folder: string, lang: 'en' | 'zh') => {
   return `https://ant.design/components/${folder}${suffix}/`
 }
 
-export const transformConfigurationLanguage = (enumLabel: string | undefined): DocLanguage => {
+/**
+ * Get language from workspace configuration
+ */
+export const getLanguageConfiguration = (enumLabel: string | undefined): DocLanguage => {
   // default return Chinese
   return enumLabel === 'English' ? 'en' : 'zh'
+}
+
+/**
+ * Get antd major version from workspace configuration
+ */
+export const getAntdMajorVersionConfiguration = (
+  enumLabel: string | undefined
+): ResourceVersion => {
+  // default return Chinese
+  return enumLabel === '^4' ? 'v4' : 'v3'
 }
 
 /**

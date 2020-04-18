@@ -10,11 +10,13 @@ import find from 'unist-util-find'
 import { promisify } from 'util'
 
 import { ComponentDocLocation, ComponentMapping } from './componentMap'
-import { ANTD_GITHUB, STORAGE, DocLanguage } from './constant'
+import { ANTD_GITHUB, STORAGE } from './constant'
 import { ComponentsDoc, ComponentsRawDoc, Prop, Props } from './type'
+import { ResourceVersion, DocLanguage } from '../types'
 
 export class DefinitionBuilder {
-  public constructor(mapping: ComponentMapping) {
+  public constructor(version: ResourceVersion, mapping: ComponentMapping) {
+    this.version = version
     this.mapping = mapping
   }
 
@@ -26,6 +28,8 @@ export class DefinitionBuilder {
     en: ANTD_GITHUB.EN_MD_NAME,
     zh: ANTD_GITHUB.ZH_MD_NAME,
   }
+
+  private version: ResourceVersion
   private mapping: ComponentMapping
   private processor = unified().use(markdown)
   private stringifier = unified()
@@ -52,7 +56,7 @@ export class DefinitionBuilder {
 
       const anchors = this.findAnchorNode(mdAst, anchorProps)
       const tables: Parent[] = anchors
-        .map(anchor => this.findFirstTableAfterAnchor(mdAst, anchor) as Parent)
+        .map((anchor) => this.findFirstTableAfterAnchor(mdAst, anchor) as Parent)
         .filter(Boolean)
 
       if (!tables.length) {
@@ -64,7 +68,7 @@ export class DefinitionBuilder {
 
       const componentDoc: Props = this.extractPropsFromTables(tables)
       propDefJson[componentName] = componentDoc
-      rawTableJson[componentName] = tables.map(table => this.stringifier.stringify(table))
+      rawTableJson[componentName] = tables.map((table) => this.stringifier.stringify(table))
     })
 
     await Promise.all(promises)
@@ -81,7 +85,7 @@ export class DefinitionBuilder {
       type,
       _default,
       version = '',
-    ] = (tableRow as Parent).children.map(cell => this.stringifier.stringify(cell))
+    ] = (tableRow as Parent).children.map((cell) => this.stringifier.stringify(cell))
 
     const prop: Prop = {
       property,
@@ -96,12 +100,12 @@ export class DefinitionBuilder {
 
   private extractPropsFromTables(tables: Parent[]) {
     const prosDoc: Props = {}
-    tables.forEach(table => {
+    tables.forEach((table) => {
       const [tableHead, ...propRows] = table.children
       // check is valid table
       // if ((tableHead as Parent).children.length <= 3) return
 
-      propRows.forEach(tableRow => {
+      propRows.forEach((tableRow) => {
         const prop = this.composeProp(tableRow as Parent)
         prosDoc[prop.property] = prop
       })
@@ -113,7 +117,7 @@ export class DefinitionBuilder {
   private findComponentMd(componentName: string, loc: ComponentDocLocation, language: DocLanguage) {
     const mdName = this.langToMdName[language]
     const docFolderName = decamelize(loc.docAlias || componentName, '-')
-    const docContentPath = path.resolve(__dirname, `${STORAGE.mdPath}/${docFolderName}/${mdName}`)
+    const docContentPath = STORAGE.getMarkdownPath(docFolderName, mdName, this.version)
 
     return promisify(fs.readFile)(docContentPath, { encoding: 'utf-8' })
   }
@@ -124,7 +128,7 @@ export class DefinitionBuilder {
       // anchor's type will not be `tableRow`
       if (node.type === 'tableRow') return false
       const stringifiedNode = this.stringifier.stringify(node)
-      const isMatch = anchors.forEach(anchor => {
+      const isMatch = anchors.forEach((anchor) => {
         const anchorReg = new RegExp('^' + anchor + '$')
         if (!!stringifiedNode.match(anchorReg)) anchorNodes.push(node)
       })
@@ -152,7 +156,7 @@ export class DefinitionBuilder {
     let hasFindTable = false
     let siblingTable: null | Node = null
 
-    parent.children.forEach(child => {
+    parent.children.forEach((child) => {
       if (hasFindTable) return
 
       if (this.isSamePosition(child.position!, anchorPosition)) {

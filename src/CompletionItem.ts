@@ -1,14 +1,15 @@
+import { ClassDeclaration } from 'typescript'
 import {
   CancellationToken,
   Command,
+  CompletionContext,
   CompletionItem,
   CompletionItemKind,
+  CompletionItemProvider,
   Position,
   Range,
   TextDocument,
   workspace,
-  CompletionItemProvider,
-  CompletionContext,
 } from 'vscode'
 
 import {
@@ -17,18 +18,15 @@ import {
   isClassExtendsReactComponent,
 } from './ast'
 import { antdComponentMap } from './build-resource/componentMap'
-import { DocLanguage } from './build-resource/constant'
-import { ComponentsDoc } from './build-resource/type'
-import _antdDocJson from './definition.json'
+import { PropsJson } from './build-resource/type'
+import { versionsJson } from './cache'
+import { addHandlerPrefix } from './insertion'
+import { DocLanguage, ResourceVersion } from './types'
 import {
   composeCardMessage,
-  transformConfigurationLanguage,
-  getDefinitionInAntdModule,
+  getAntdMajorVersionConfiguration,
+  getLanguageConfiguration,
 } from './utils'
-import { addHandlerPrefix } from './insertion'
-import { ClassDeclaration } from 'typescript'
-
-const antdDocJson: { [k in DocLanguage]: ComponentsDoc } = _antdDocJson
 
 export type InsertKind = 'direct' | 'inquiry'
 
@@ -41,8 +39,12 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
   private position: Position
   private token: CancellationToken
   private context: CompletionContext
-  private language: DocLanguage = transformConfigurationLanguage(
+  private antdDocJson: PropsJson
+  private language: DocLanguage = getLanguageConfiguration(
     workspace.getConfiguration().get('antdRush.language')
+  )
+  private antdVersion: ResourceVersion = getAntdMajorVersionConfiguration(
+    workspace.getConfiguration().get('antdRush.defaultAntdMajorVersion') || 'v4'
   )
 
   public constructor(
@@ -55,10 +57,11 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
     this.position = position
     this.token = token
     this.context = context
+    this.antdDocJson = versionsJson[this.antdVersion].propsJson
   }
 
   private getHandlerDocument = (componentName: string, handlerName: string) => {
-    const propDoc = antdDocJson[this.language]?.[componentName]?.[handlerName]
+    const propDoc = this.antdDocJson[this.language]?.[componentName]?.[handlerName]
     if (!propDoc) return null
 
     const { description, type, default: defaultValue, version } = propDoc
