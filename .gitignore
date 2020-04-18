@@ -5,3 +5,5 @@ node_modules
 doc-resource
 **/*.vsix
 dist
+token.ts
+token.js

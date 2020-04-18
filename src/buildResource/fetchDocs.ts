@@ -5,6 +5,13 @@ import path from 'path'
 import Octokit, { ReposGetContentsResponse } from '@octokit/rest'
 
 import { ANTD_GITHUB, STORAGE } from './constant'
+
+/**
+ * Token is not tracked by Git.
+ * If you want to develop this extension.
+ * Add new file `token.ts` beside and export `GITHUB_TOKEN` variable of your own GitHub token
+ * eg: export const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN'
+ */
 import { GITHUB_TOKEN } from './token'
 
 const octokit = new Octokit({
@@ -38,11 +45,11 @@ export async function buildShaMap(tag: string) {
   if (!Array.isArray(contentData)) return {}
 
   const componentPaths = contentData
-    .filter(c => !IGNORED_COMPONENTS.includes(c.name))
-    .map(c => c.name)
+    .filter((c) => !IGNORED_COMPONENTS.includes(c.name))
+    .map((c) => c.name)
 
   const shaMap: IShaMap = {}
-  const promises = componentPaths.map(async name => {
+  const promises = componentPaths.map(async (name) => {
     const folderRes = await octokit.repos.getContents({
       owner: ANTD_GITHUB.OWNER_NAME,
       repo: ANTD_GITHUB.REPO_NAME,
@@ -51,8 +58,8 @@ export async function buildShaMap(tag: string) {
     })
     if (Array.isArray(folderRes.data)) {
       shaMap[name] = {
-        enSha: folderRes.data.find(file => file.name === ANTD_GITHUB.EN_MD_NAME)!.sha,
-        zhSha: folderRes.data.find(file => file.name === ANTD_GITHUB.ZH_MD_NAME)!.sha,
+        enSha: folderRes.data.find((file) => file.name === ANTD_GITHUB.EN_MD_NAME)!.sha,
+        zhSha: folderRes.data.find((file) => file.name === ANTD_GITHUB.ZH_MD_NAME)!.sha,
       }
     }
   })
