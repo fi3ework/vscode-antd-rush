@@ -85,7 +85,7 @@ export const composeCardMessage = (
 ) => {
   const md = new MarkdownString()
 
-  items.forEach(item => {
+  items.forEach((item) => {
     if (!item.value) return
 
     if (item.label === 'type') {
@@ -126,10 +126,7 @@ const appendMarkdown = (mdToAppend: MarkdownString, type: TypeMdType, language: 
  * normalize string for fuzzy match
  */
 const normalizeName = (raw: string): string =>
-  raw
-    .replace(/\./g, '')
-    .replace(/\-/g, '')
-    .toLowerCase()
+  raw.replace(/\./g, '').replace(/\-/g, '').toLowerCase()
 
 /**
  * try match with component name and its folder to a component
@@ -137,25 +134,20 @@ const normalizeName = (raw: string): string =>
 export const tryMatchComponentName = (symbolName: string, libName: string): string | null => {
   // 1. try exact match
   const exactName = Object.keys(antdComponentMap).find(
-    text => normalizeName(text) === normalizeName(symbolName)
+    (text) => normalizeName(text) === normalizeName(symbolName)
   )
   if (exactName) return exactName
 
   // 2. try match folder + component name
   const nameWithFolder = Object.keys(antdComponentMap)
-    .filter(text => text.split('.').pop() === symbolName)
-    .filter(text =>
-      text
-        .split('.')
-        .map(normalizeName)
-        .includes(normalizeName(libName))
-    )?.[0]
+    .filter((text) => text.split('.').pop() === symbolName)
+    .filter((text) => text.split('.').map(normalizeName).includes(normalizeName(libName)))?.[0]
 
   if (nameWithFolder) return nameWithFolder
 
   // 3. try to use folder name
   const folderMatchName = Object.keys(antdComponentMap).find(
-    text => normalizeName(text) === normalizeName(libName)
+    (text) => normalizeName(text) === normalizeName(libName)
   )
 
   if (folderMatchName) return folderMatchName
@@ -202,16 +194,15 @@ const adaptVscodeInternalApi = async <T>(
 ): Promise<T | null> => {
   const [oldApiRes, newApiRes] = await Promise.all([
     commands.executeCommand<T>(cmd, Object.fromEntries(entries)).then(
-      res => res,
-      e => null
+      (res) => res,
+      (e) => null
     ),
     commands.executeCommand<T>(cmd, ...entries.map(([k, v]) => v)).then(
-      res => res,
-      e => null
+      (res) => res,
+      (e) => null
     ),
   ])
 
-  console.log(oldApiRes, newApiRes)
   return oldApiRes ?? newApiRes ?? null
 }
 
@@ -229,7 +220,7 @@ const findTypeDefinition = async (
       ['resource', document.uri],
       ['position', positionToIPosition(position)],
     ]
-  ).then(refs => refs?.filter(ref => !!isInAntdModule(ref.uri.path)))
+  ).then((refs) => refs?.filter((ref) => !!isInAntdModule(ref.uri.path)))
 
   if (!typeDefinitions?.length) return null
 
@@ -253,7 +244,7 @@ const recursiveFindDefinition = async (
   position: Position,
   trace: Position[] = []
 ): Promise<{ text: string; uri: Uri } | null> => {
-  if (trace.some(t => t.isEqual(position))) return null
+  if (trace.some((t) => t.isEqual(position))) return null
   trace.push(position)
 
   const defs = await adaptVscodeInternalApi<ILocationLink[]>('_executeDefinitionProvider', [
@@ -264,7 +255,7 @@ const recursiveFindDefinition = async (
   if (!defs) return null
 
   const antdDef = defs.filter((def: ILocationLink) => !!isInAntdModule(def.uri.path))[0]
-  const userlandLineDef = defs.filter(d => !matchNodeModules(d.uri.path))[0]
+  const userlandLineDef = defs.filter((d) => !matchNodeModules(d.uri.path))[0]
 
   if (antdDef) {
     // endding of recursive
@@ -292,7 +283,7 @@ export function extractTextOfRange(d: Uri | TextDocument, range: Range): Thenabl
   if (d instanceof Uri) {
     return workspace
       .openTextDocument(d)
-      .then(document =>
+      .then((document) =>
         document.lineAt(range.start.line).text.slice(range.start.character, range.end.character)
       )
   } else {
