@@ -27,16 +27,7 @@ import ts, {
   isFunctionExpression,
   Block,
 } from 'typescript'
-import {
-  commands,
-  Location,
-  Position,
-  TextDocument,
-  window,
-  TextEditor,
-  SymbolInformation,
-  Uri,
-} from 'vscode'
+import { commands, Location, Position, TextDocument, TextEditor, SymbolInformation } from 'vscode'
 
 import {
   isInReactModule,
@@ -59,10 +50,10 @@ import { composeHandlerString, addHandlerPrefix } from './insertion'
 /**
  * Return nearest JsxElement at position, return null if not found.
  */
-export const getClosetAntdJsxElementNode = async (
+export async function getClosetAntdJsxElementNode(
   document: TextDocument,
   position: Position
-): Promise<string | null> => {
+): Promise<string | null> {
   const offset = document.offsetAt(position)
 
   // NOTE: change symbol to common letter as a legal JSX attribute for AST right paring
@@ -104,7 +95,7 @@ export const getClosetAntdJsxElementNode = async (
 /**
  * Get symbol name of given VSCode location
  */
-export const getContainerSymbolAtLocation = async (loc: Location) => {
+export async function getContainerSymbolAtLocation(loc: Location) {
   const { uri, range } = loc
   const symbols = await commands.executeCommand<SymbolInformation[]>(
     'vscode.executeDocumentSymbolProvider',
@@ -112,7 +103,7 @@ export const getContainerSymbolAtLocation = async (loc: Location) => {
   )
 
   if (!symbols) return null
-  const container = symbols.find(symbol => {
+  const container = symbols.find((symbol) => {
     // NOTE: symbol tree is not from line start and line end
     return (
       symbol.location.range.start.line <= range.start.line &&
@@ -125,12 +116,12 @@ export const getContainerSymbolAtLocation = async (loc: Location) => {
 /**
  * Return nearest userland component (class component / functional component) with condition
  */
-export const getParentsWhen = async <T extends Node>(
+export async function getParentsWhen<T extends Node>(
   document: TextDocument,
   position: Position,
   condition: (parent: Node, document: TextDocument) => Promise<boolean>,
   direction: 'inward' | 'outward'
-): Promise<T | null> => {
+): Promise<T | null> {
   const sFile = ts.createSourceFile(
     document.uri.toString(),
     document.getText(),
@@ -142,7 +133,7 @@ export const getParentsWhen = async <T extends Node>(
   let parents: Node[] = getNodeWithParentsAt(sFile, offset)
   if (direction === 'outward') parents = parents.reverse()
 
-  const typeComponentNodePromises = parents.map(parent => {
+  const typeComponentNodePromises = parents.map((parent) => {
     return condition(parent, document)
   })
 
@@ -157,7 +148,7 @@ export const getParentsWhen = async <T extends Node>(
  * Insert string to class component
  * This function adapt indent and fill in handler template
  */
-export const insertStringToClassComponent = async (args: {
+export async function insertStringToClassComponent(args: {
   editor: TextEditor
   document: TextDocument
   classNode: ClassDeclaration
@@ -165,7 +156,7 @@ export const insertStringToClassComponent = async (args: {
   fullHandlerName: string
   indent: number
   handlerParams: FunctionParam[]
-}): Promise<Position | null> => {
+}): Promise<Position | null> {
   const {
     editor,
     document,
@@ -177,7 +168,7 @@ export const insertStringToClassComponent = async (args: {
   } = args
   const offset = document.offsetAt(symbolPosition)
 
-  const memberContainsSymbol = classNode.members.find(member => {
+  const memberContainsSymbol = classNode.members.find((member) => {
     return offsetContains(offset, member.pos, member.end)
   })
 
@@ -186,7 +177,7 @@ export const insertStringToClassComponent = async (args: {
   // memberContainsSymbol.pos point to the previous member ending position
   const insertAt = document.positionAt(memberContainsSymbol.pos)
 
-  await editor.edit(builder => {
+  await editor.edit((builder) => {
     builder.insert(insertAt, composeHandlerString(fullHandlerName, handlerParams, indent, 'class'))
   })
 
@@ -197,7 +188,7 @@ export const insertStringToClassComponent = async (args: {
  * Insert string to functional component
  * This function adapt indent and fill in handler template
  */
-export const insertStringToFunctionalComponent = async (args: {
+export async function insertStringToFunctionalComponent(args: {
   editor: TextEditor
   document: TextDocument
   indent: number
@@ -205,7 +196,7 @@ export const insertStringToFunctionalComponent = async (args: {
   symbolPosition: Position
   fullHandlerName: string
   handlerParams: FunctionParam[]
-}): Promise<Position | null> => {
+}): Promise<Position | null> {
   const {
     editor,
     document,
@@ -225,7 +216,7 @@ export const insertStringToFunctionalComponent = async (args: {
   // find outermost statement
   const parents = getNodeWithParentsAt(sFile, document.offsetAt(symbolPosition))
   // exclude outermost component, cause we should insert handler in it
-  const closetBlock = parents.slice(1).find(parent => {
+  const closetBlock = parents.slice(1).find((parent) => {
     return isBlock(parent)
   }) as Block
 
@@ -235,14 +226,14 @@ export const insertStringToFunctionalComponent = async (args: {
   // anonymous function
 
   if (!closetBlock) return null
-  const subStatement = closetBlock.statements.find(statement =>
+  const subStatement = closetBlock.statements.find((statement) =>
     offsetContains(document.offsetAt(position), statement.pos, statement.end)
   )
 
   if (!subStatement) return null
 
   const insertAt = document.positionAt(subStatement.pos)
-  editor.edit(builder => {
+  editor.edit((builder) => {
     builder.insert(
       insertAt,
       composeHandlerString(fullHandlerName, handlerParams, indent, 'functional')
@@ -255,15 +246,15 @@ export const insertStringToFunctionalComponent = async (args: {
 /**
  * Get ast node at postion, return with it's parent nodes
  */
-export const isClassExtendsReactComponent = async (
+export async function isClassExtendsReactComponent(
   node: Node,
   document: TextDocument
-): Promise<boolean> => {
+): Promise<boolean> {
   if (!isClassDeclaration(node)) return false
   if (!node.heritageClauses?.length) return false
-  const isReactClassPromises = node.heritageClauses.map(async heritage => {
-    const expressions = heritage.types.map(type => type.expression)
-    const isFromReactPromises = expressions.map(async expression => {
+  const isReactClassPromises = node.heritageClauses.map(async (heritage) => {
+    const expressions = heritage.types.map((type) => type.expression)
+    const isFromReactPromises = expressions.map(async (expression) => {
       const position = document.positionAt(expression.pos + 1)
       const typeDefinition = await commands.executeCommand<Location[]>(
         'vscode.executeTypeDefinitionProvider',
@@ -271,7 +262,7 @@ export const isClassExtendsReactComponent = async (
         position
       )
 
-      const hasDefinitionFromReact = !!typeDefinition?.some(definition =>
+      const hasDefinitionFromReact = !!typeDefinition?.some((definition) =>
         isInReactModule(definition.uri.path)
       )
 
@@ -291,7 +282,7 @@ export const isClassExtendsReactComponent = async (
 /**
  * Whether offset between start and end
  */
-const offsetContains = (offset: number, startOrEnd: number, endOrStart: number) => {
+function offsetContains(offset: number, startOrEnd: number, endOrStart: number) {
   const [start, end] = startOrEnd > endOrStart ? [endOrStart, startOrEnd] : [startOrEnd, endOrStart]
   return start <= offset && end >= offset
 }
@@ -304,7 +295,7 @@ export interface FunctionParam {
   text: string
 }
 
-export const getFunctionParams = (dtsString: string): FunctionParam[] | null => {
+export function getFunctionParams(dtsString: string): FunctionParam[] | null {
   // NOTE: definition is a property, it should be wrapped in type
   const dtsTypeString = `type DUMMY = {
   ${dtsString}
@@ -319,16 +310,16 @@ export const getFunctionParams = (dtsString: string): FunctionParam[] | null => 
     }
   })
 
-  return paramTexts.map(param => ({ type: '', text: param }))
+  return paramTexts.map((param) => ({ type: '', text: param }))
 }
 
 /**
  * Extract function params from property signature
  */
-const extractParamsFromPropertySignature = (
+function extractParamsFromPropertySignature(
   signature: PropertySignature,
   sCode: SourceFile
-): string[] => {
+): string[] {
   const paramTexts: string[] = []
   const sigType = signature.type
   if (!sigType) return paramTexts
@@ -354,8 +345,8 @@ const extractParamsFromPropertySignature = (
 /**
  * Extract parameter and its type from FunctionType node
  */
-const extractParamsFromFunctionType = (node: FunctionTypeNode, sCode: SourceFile): string[] => {
-  const typeParamsText = node.parameters.map(p => {
+function extractParamsFromFunctionType(node: FunctionTypeNode, sCode: SourceFile): string[] {
+  const typeParamsText = node.parameters.map((p) => {
     return p.name.getText(sCode as SourceFile)
   })
 
@@ -372,7 +363,7 @@ interface TraverseActions {
 
 const noop = () => true
 
-export const traverseTsAst = (entryNode: Node, traverseActions: TraverseActions) => {
+export function traverseTsAst(entryNode: Node, traverseActions: TraverseActions) {
   const { enter: _enter, leave: _leave } = traverseActions
   const enter = typeof _enter === 'function' ? _enter : noop
   const leave = typeof _leave === 'function' ? _leave : noop
@@ -391,10 +382,10 @@ export const traverseTsAst = (entryNode: Node, traverseActions: TraverseActions)
 /**
  * Traverse node with parents
  */
-export const traverseWithParents = (
+export function traverseWithParents(
   entryNode: Node,
   visitor: (node: Node, stack: Node[]) => boolean | void
-) => {
+) {
   const parentStack: Node[] = []
 
   const enter = (node: Node) => {
@@ -411,7 +402,7 @@ export const traverseWithParents = (
 /**
  * Get ast node at postion, return with it's parent nodes
  */
-const getNodeWithParentsAt = (entryNode: Node, offset: number) => {
+function getNodeWithParentsAt(entryNode: Node, offset: number) {
   const parentStack: Node[] = []
 
   const enter = (node: Node) => {

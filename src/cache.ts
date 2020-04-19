@@ -1,8 +1,8 @@
-import { VersionJson } from './build-resource/type'
 import _antdDocJsonV3 from './resource/v3/definition.json'
 import _rawTableJsonV3 from './resource/v3/raw-table.json'
 import _antdDocJsonV4 from './resource/v4/definition.json'
 import _rawTableJsonV4 from './resource/v4/raw-table.json'
+import { VersionJson } from './types'
 
 /**
  * It will be read in memory as cache

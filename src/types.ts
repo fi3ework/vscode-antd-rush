@@ -1,5 +1,68 @@
-// https://github.com/Microsoft/vscode/blob/master/src/vs/editor/common/core/position.ts
-// ===== start =====
+/**
+ * Available language
+ */
+export type DocLanguage = 'en' | 'zh'
+
+/**
+ * Content for a props hint
+ */
+export interface Prop {
+  property: string
+  description: string
+  type: string
+  default: string
+  version: string
+}
+
+/**
+ * Props hints
+ */
+export interface Props {
+  [k: string]: Prop
+}
+
+/**
+ * Components props hints
+ */
+export interface ComponentsDoc {
+  [k: string]: Props
+}
+
+/**
+ * Components table hints
+ */
+export interface ComponentsRawDoc {
+  [k: string]: string[]
+}
+
+/**
+ * Multiple language of components props hints
+ */
+export type PropsJson = {
+  [k in DocLanguage]: ComponentsDoc
+}
+
+/**
+ * Multiple language of components table hints
+ */
+export type ComponentsJson = {
+  [k in DocLanguage]: ComponentsRawDoc
+}
+
+/**
+ * Contains everything, different versions, different languages, props hints and table hints.
+ */
+export type VersionJson = {
+  [k in ResourceVersion]: {
+    propsJson: PropsJson
+    componentJson: ComponentsJson
+  }
+}
+
+/**
+ * ===== start =====
+ * https://github.com/Microsoft/vscode/blob/master/src/vs/editor/common/core/position.ts
+ */
 import { Position, Uri, Range } from 'vscode'
 
 /**
@@ -69,16 +132,6 @@ export interface ILocationLink {
    */
   targetSelectionRange?: IRange
 }
-
-// ===== end =====
-
-export function IRangeToRange(range: IRange): Range {
-  return new Range(
-    range.startLineNumber - 1,
-    range.startColumn - 1,
-    range.endLineNumber - 1,
-    range.endColumn - 1
-  )
-}
-
-export type DocLanguage = 'en' | 'zh'
+/**
+ * ==== end =====
+ */

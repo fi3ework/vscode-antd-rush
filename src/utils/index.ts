@@ -1,19 +1,17 @@
 import { commands, MarkdownString, Position, Range, TextDocument, Uri, workspace } from 'vscode'
 
-import { antdComponentMap } from './build-resource/componentMap'
-import { __intl, LabelType } from './build-resource/constant'
-import {
-  DocLanguage,
-  ILocationLink,
-  IRangeToRange,
-  positionToIPosition,
-  ResourceVersion,
-} from './types'
+import { antdComponentMap } from '../build-resource/componentMap'
+import { __intl, LabelType } from '../build-resource/constant'
+import { DocLanguage, ILocationLink, positionToIPosition, ResourceVersion, IRange } from '../types'
 
 /**
- * try to match node_modules import path
+ * Try to match node_modules import path.
+ *
+ * @export
+ * @param {string} path absolute path of file
+ * @returns {(string | null)} matched module name or null
  */
-export const matchNodeModules = (path: string): string | null => {
+export function matchNodeModules(path: string): string | null {
   const regMatched = path.match(/(.*)\/node_modules\/(.*)/)
   if (!regMatched) return null
   const [, importPath] = regMatched
@@ -21,9 +19,9 @@ export const matchNodeModules = (path: string): string | null => {
 }
 
 /**
- * try to match ant-design node_modules import path
+ * Try to match ant-design node_modules import path.
  */
-export const matchAntdModule = (path: string) => {
+export function matchAntdModule(path: string) {
   const regMatched = path.match(/(.*)\/node_modules\/antd\/lib\/(.*)\/(.*)/)
   if (!regMatched) return null
   const [, , componentFolder, filePath] = regMatched
@@ -35,30 +33,32 @@ export const matchAntdModule = (path: string) => {
 }
 
 /**
- * is path from antd module
+ * Is path from antd module?
  */
-export const isInAntdModule = (path: string): boolean => {
+export function isInAntdModule(path: string): boolean {
   const regMatched = path.match(/(.*)\/node_modules\/antd\/lib\/(.*)/)
   return !!regMatched
 }
 
 /**
- * is path from @types/react module
+ * Is path from @types/react module?
  */
-export const isInReactModule = (path: string) => {
+export function isInReactModule(path: string) {
   const regMatched = path.match(/(.*)\/node_modules\/@types\/react\/(.*)/)
   return !!regMatched
 }
 
 /**
- * formart error message
+ * Format error message.
  */
-export const antdRushErrorMsg = (message: string) => `[antd-rush] ${message}`
+export function antdRushErrorMsg(message: string) {
+  return `[antd-rush] ${message}`
+}
 
 /**
- * composet ant-design documentation link
+ * Composet ant-design documentation link.
  */
-export const composeDocLink = (folder: string, lang: 'en' | 'zh') => {
+export function composeDocLink(folder: string, lang: 'en' | 'zh') {
   const suffix = lang === 'en' ? '' : '-cn'
   return `https://ant.design/components/${folder}${suffix}/`
 }
@@ -66,32 +66,32 @@ export const composeDocLink = (folder: string, lang: 'en' | 'zh') => {
 /**
  * Get language from workspace configuration
  */
-export const getLanguageConfiguration = (enumLabel: string | undefined): DocLanguage => {
+export function getLanguageConfiguration(enumLabel: string | undefined): DocLanguage {
   // default return Chinese
   return enumLabel === 'English' ? 'en' : 'zh'
 }
 
 /**
- * Get antd major version from workspace configuration
+ * Get antd major version from workspace configuration.
  */
-export const toAntdMajorVersion = (enumLabel: string | undefined): ResourceVersion => {
+export function toAntdMajorVersion(enumLabel: string | undefined): ResourceVersion {
   // default return Chinese
   return enumLabel === '^4' ? 'v4' : 'v3'
 }
 
 /**
- * compose hover/completion item card message
+ * Compose hover/completion item card message.
  */
 type TypeMdType = { value: string; display: 'inline' | 'blockCode' }
 
-export const composeCardMessage = (
+export function composeCardMessage(
   items: {
     label: LabelType
     value: string
     display?: 'inline' | 'blockCode'
   }[],
   language: DocLanguage
-) => {
+) {
   const md = new MarkdownString()
 
   items.forEach((item) => {
@@ -109,7 +109,7 @@ export const composeCardMessage = (
   return md
 }
 
-const appendMarkdown = (mdToAppend: MarkdownString, type: TypeMdType, language: DocLanguage) => {
+function appendMarkdown(mdToAppend: MarkdownString, type: TypeMdType, language: DocLanguage) {
   const { value, display } = type
 
   if (display === 'blockCode') {
@@ -132,15 +132,16 @@ const appendMarkdown = (mdToAppend: MarkdownString, type: TypeMdType, language: 
 }
 
 /**
- * normalize string for fuzzy match
+ * Normalize string for fuzzy match.
  */
-const normalizeName = (raw: string): string =>
-  raw.replace(/\./g, '').replace(/\-/g, '').toLowerCase()
+function normalizeName(raw: string): string {
+  return raw.replace(/\./g, '').replace(/\-/g, '').toLowerCase()
+}
 
 /**
- * try match with component name and its folder to a component
+ * Try match with component name and its folder to a component.
  */
-export const tryMatchComponentName = (symbolName: string, libName: string): string | null => {
+export function tryMatchComponentName(symbolName: string, libName: string): string | null {
   // 1. try exact match
   const exactName = Object.keys(antdComponentMap).find(
     (text) => normalizeName(text) === normalizeName(symbolName)
@@ -165,12 +166,12 @@ export const tryMatchComponentName = (symbolName: string, libName: string): stri
 }
 
 /**
- * get antd component data at position
+ * Get antd component data at position.
  */
-export const getDefinitionInAntdModule = async (
+export async function getDefinitionInAntdModule(
   document: TextDocument,
   position: Position
-): Promise<{ text: string; uri: Uri } | null> => {
+): Promise<{ text: string; uri: Uri } | null> {
   const [definitionInAntd, typeDefinitionInAntd] = await Promise.all([
     await recursiveFindDefinition(document, position),
     await findTypeDefinition(document, position),
@@ -191,21 +192,43 @@ export const getDefinitionInAntdModule = async (
 }
 
 /**
- * NOTE: VSCode internal command
- * VSCode has changed its internal commands invoke method recently
- * Try both old/new method for compatibility
+ * Transfrom IRange to Range
+ *
+ * @export
+ * @param {IRange} range Used by VSCode internal API
+ * @returns {Range} Used by documented extension API
  */
-// https://github.com/Microsoft/vscode/blob/master/src/vs/editor/contrib/gotoSymbol/goToSymbol.ts#L55-L59
-// https://github.com/Microsoft/vscode/blob/master/src/vs/editor/contrib/gotoSymbol/goToSymbol.ts#L37-L41
-const adaptVscodeInternalApi = async <T>(
-  cmd: string,
-  entries: [string, any][]
-): Promise<T | null> => {
+export function IRangeToRange(range: IRange): Range {
+  return new Range(
+    range.startLineNumber - 1,
+    range.startColumn - 1,
+    range.endLineNumber - 1,
+    range.endColumn - 1
+  )
+}
+
+/**
+ * NOTE: This function uses VSCode internal command.
+ * VSCode has changed its internal commands invoke method recently.
+ * Try both old/new method for compat.
+ *
+ * older API:
+ * https://github.com/microsoft/vscode/blob/469a9d1cee5e3b351c28b609777d4de76ddd49da/src/vs/workbench/api/common/extHostApiCommands.ts#L312-L319
+ *
+ * newer API:
+ * https://github.com/microsoft/vscode/blob/fd487a7ed6388a465b72cb9091b1a470536b68ed/src/vs/workbench/api/common/extHostApiCommands.ts#L143-L147
+ *
+ * API changed by this commit: https://github.com/microsoft/vscode/commit/783970456be0c7634348e01ee61b2abb9a6ef3b1
+ */
+async function adaptVscodeInternalApi<T>(cmd: string, entries: [string, any][]): Promise<T | null> {
   const [oldApiRes, newApiRes] = await Promise.all([
+    // newer API
     commands.executeCommand<T>(cmd, Object.fromEntries(entries)).then(
       (res) => res,
       (e) => null
     ),
+
+    // older API
     commands.executeCommand<T>(cmd, ...entries.map(([k, v]) => v)).then(
       (res) => res,
       (e) => null
@@ -216,12 +239,12 @@ const adaptVscodeInternalApi = async <T>(
 }
 
 /**
- * find type definition in antd
+ * Find type definition in antd.
  */
-const findTypeDefinition = async (
+async function findTypeDefinition(
   document: TextDocument,
   position: Position
-): Promise<{ text: string; uri: Uri } | null> => {
+): Promise<{ text: string; uri: Uri } | null> {
   const typeDefinitions = await adaptVscodeInternalApi<ILocationLink[]>(
     '_executeTypeDefinitionProvider',
     [
@@ -245,13 +268,13 @@ const findTypeDefinition = async (
 }
 
 /**
- * call "Go to definition" recursively
+ * Call "Go to definition" recursively.
  */
-const recursiveFindDefinition = async (
+async function recursiveFindDefinition(
   document: TextDocument,
   position: Position,
   trace: Position[] = []
-): Promise<{ text: string; uri: Uri } | null> => {
+): Promise<{ text: string; uri: Uri } | null> {
   if (trace.some((t) => t.isEqual(position))) return null
   trace.push(position)
 
@@ -283,7 +306,7 @@ const recursiveFindDefinition = async (
 }
 
 /**
- * extract string from of range
+ * Extract string from of range.
  */
 export async function extractTextOfRange(uri: Uri, range: Range): Promise<string>
 export function extractTextOfRange(document: TextDocument, range: Range): string

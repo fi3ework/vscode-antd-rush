@@ -18,10 +18,9 @@ import {
   isClassExtendsReactComponent,
 } from './ast'
 import { antdComponentMap } from './build-resource/componentMap'
-import { PropsJson } from './build-resource/type'
 import { versionsJson } from './cache'
 import { addHandlerPrefix } from './insertion'
-import { DocLanguage, ResourceVersion } from './types'
+import { DocLanguage, PropsJson, ResourceVersion } from './types'
 import { composeCardMessage, getLanguageConfiguration } from './utils'
 import { ConfigHelper } from './utils/ConfigHelper'
 

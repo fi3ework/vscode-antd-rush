@@ -3,8 +3,8 @@ import { CancellationToken, Hover, MarkdownString, Position, TextDocument, works
 import { getClosetAntdJsxElementNode } from './ast'
 import { antdComponentMap } from './build-resource/componentMap'
 import { __intl } from './build-resource/constant'
-import { DocLanguage, ResourceVersion } from './types'
-import { PropsJson, ComponentsJson, VersionJson } from './build-resource/type'
+import { versionsJson } from './cache'
+import { ComponentsJson, DocLanguage, PropsJson, ResourceVersion, VersionJson } from './types'
 import {
   antdRushErrorMsg,
   composeCardMessage,
@@ -15,7 +15,6 @@ import {
   matchAntdModule,
   tryMatchComponentName,
 } from './utils'
-import { versionsJson } from './cache'
 import { ConfigHelper } from './utils/ConfigHelper'
 
 export class HoverProvider {

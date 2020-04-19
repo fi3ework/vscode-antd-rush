@@ -1,5 +1,6 @@
 import decamelize from 'decamelize'
 import fs from 'fs'
+import logSymbols from 'log-symbols'
 import path from 'path'
 import markdown from 'remark-parse'
 import stringify from 'remark-stringify'
@@ -9,11 +10,16 @@ import { Node, Parent, Position } from 'unist'
 import find from 'unist-util-find'
 import { promisify } from 'util'
 
+import {
+  ComponentsDoc,
+  ComponentsRawDoc,
+  DocLanguage,
+  Prop,
+  Props,
+  ResourceVersion,
+} from '../types'
 import { ComponentDocLocation, ComponentMapping } from './componentMap'
 import { ANTD_GITHUB, STORAGE } from './constant'
-import { ComponentsDoc, ComponentsRawDoc, Prop, Props } from './type'
-import { ResourceVersion, DocLanguage } from '../types'
-import logSymbols from 'log-symbols'
 
 export class DefinitionBuilder {
   public constructor(version: ResourceVersion, mapping: ComponentMapping) {
