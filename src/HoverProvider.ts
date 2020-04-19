@@ -10,31 +10,37 @@ import {
   composeCardMessage,
   composeDocLink,
   extractTextOfRange,
-  getAntdMajorVersionConfiguration,
   getDefinitionInAntdModule,
   getLanguageConfiguration,
   matchAntdModule,
   tryMatchComponentName,
 } from './utils'
 import { versionsJson } from './cache'
+import { ConfigHelper } from './utils/ConfigHelper'
 
 export class HoverProvider {
-  private document!: TextDocument
-  private position!: Position
-  private token!: CancellationToken
+  private document: TextDocument
+  private position: Position
+  private token: CancellationToken
+  private configHelper: ConfigHelper
   private language: DocLanguage = getLanguageConfiguration(
     workspace.getConfiguration().get('antdRush.language')
   )
-  private antdVersion: ResourceVersion = getAntdMajorVersionConfiguration(
-    workspace.getConfiguration().get('antdRush.defaultAntdMajorVersion') || 'v4'
-  )
+  private antdVersion: ResourceVersion
   private antdDocJson: PropsJson
   private rawTableJson: ComponentsJson
 
-  public constructor(document: TextDocument, position: Position, token: CancellationToken) {
+  public constructor(
+    document: TextDocument,
+    position: Position,
+    token: CancellationToken,
+    configHelper: ConfigHelper
+  ) {
     this.document = document
     this.position = position
     this.token = token
+    this.configHelper = configHelper
+    this.antdVersion = this.configHelper.getCurrConfig().antdVersion
     this.antdDocJson = versionsJson[this.antdVersion].propsJson
     this.rawTableJson = versionsJson[this.antdVersion].componentJson
   }
@@ -82,14 +88,14 @@ export class HoverProvider {
       const definitionLoc = await getDefinitionInAntdModule(document, position)
       if (!definitionLoc) return
 
-      const interaceName = definitionLoc.text
+      const interfaceName = definitionLoc.text
       const definitionPath = definitionLoc.uri.path
       const antdMatched = matchAntdModule(definitionPath)
 
       if (antdMatched === null) return // return if not from antd
       const { componentFolder } = antdMatched
 
-      const componentName = tryMatchComponentName(interaceName, componentFolder)
+      const componentName = tryMatchComponentName(interfaceName, componentFolder)
       if (!componentName) return
 
       const matchedComponent = antdComponentMap[componentName]

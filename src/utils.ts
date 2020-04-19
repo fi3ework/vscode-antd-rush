@@ -74,9 +74,7 @@ export const getLanguageConfiguration = (enumLabel: string | undefined): DocLang
 /**
  * Get antd major version from workspace configuration
  */
-export const getAntdMajorVersionConfiguration = (
-  enumLabel: string | undefined
-): ResourceVersion => {
+export const toAntdMajorVersion = (enumLabel: string | undefined): ResourceVersion => {
   // default return Chinese
   return enumLabel === '^4' ? 'v4' : 'v3'
 }
@@ -220,7 +218,6 @@ const adaptVscodeInternalApi = async <T>(
 /**
  * find type definition in antd
  */
-
 const findTypeDefinition = async (
   document: TextDocument,
   position: Position

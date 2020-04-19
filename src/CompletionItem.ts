@@ -22,11 +22,8 @@ import { PropsJson } from './build-resource/type'
 import { versionsJson } from './cache'
 import { addHandlerPrefix } from './insertion'
 import { DocLanguage, ResourceVersion } from './types'
-import {
-  composeCardMessage,
-  getAntdMajorVersionConfiguration,
-  getLanguageConfiguration,
-} from './utils'
+import { composeCardMessage, getLanguageConfiguration } from './utils'
+import { ConfigHelper } from './utils/ConfigHelper'
 
 export type InsertKind = 'direct' | 'inquiry'
 
@@ -40,24 +37,25 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
   private token: CancellationToken
   private context: CompletionContext
   private antdDocJson: PropsJson
+  private configHelper: ConfigHelper
   private language: DocLanguage = getLanguageConfiguration(
     workspace.getConfiguration().get('antdRush.language')
   )
-  private antdVersion: ResourceVersion = getAntdMajorVersionConfiguration(
-    workspace.getConfiguration().get('antdRush.defaultAntdMajorVersion') || 'v4'
-  )
+  private antdVersion: ResourceVersion = this.configHelper.getCurrConfig().antdVersion
 
   public constructor(
     document: TextDocument,
     position: Position,
     token: CancellationToken,
-    context: CompletionContext
+    context: CompletionContext,
+    configHelper: ConfigHelper
   ) {
     this.document = document
     this.position = position
     this.token = token
     this.context = context
     this.antdDocJson = versionsJson[this.antdVersion].propsJson
+    this.configHelper = configHelper
   }
 
   private getHandlerDocument = (componentName: string, handlerName: string) => {

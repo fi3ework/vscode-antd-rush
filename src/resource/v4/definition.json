@@ -75,7 +75,7 @@
     "Affix": {
       "offsetBottom": {
         "property": "offsetBottom",
-        "description": "距离窗口底部达到指定偏移量后触发",
+        "description": "距离窗口底部达到指定偏移量后触发~~",
         "type": "number",
         "default": "-",
         "version": ""
