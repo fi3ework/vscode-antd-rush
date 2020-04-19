@@ -101,4 +101,4 @@ async function buildResource(download: boolean = true) {
   await buildVersionResource('v4', download)
 }
 
-buildResource(true)
+buildResource(process.env.DOWNLOAD === 'true')

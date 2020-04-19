@@ -88,6 +88,8 @@
     }
   },
   "scripts": {
+    "build-doc:download-and-parse": "cross-env DOWNLOAD=true ts-node ./src/build-resource/index.ts",
+    "build-doc:parse": "cross-env DOWNLOAD=true ts-node ./src/build-resource/index.ts",
     "toggle-out": "cross-env VSC_BUILDER=tsc node ./script/togglePackageJson.js",
     "toggle-dist": "cross-env VSC_BUILDER=wp node ./script/togglePackageJson.js",
     "prewebpack-build": "npm run toggle-dist",
@@ -99,7 +101,6 @@
     "prewatch": "npm run toggle-out",
     "watch": "tsc -watch -p ./src",
     "watch-test": "tsc -watch -p ./test",
-    "build-doc": "ts-node ./src/build-resource/index.ts",
     "pretest": "npm run compile-test && npm run toggle-out",
     "test": "node ./out-test/runTest.js"
   },
