@@ -1,8 +1,8 @@
-import { readJsonSync, writeJsonSync } from 'fs-extra'
 import fs from 'fs'
+import { ensureFileSync, readJsonSync, writeJsonSync } from 'fs-extra'
+import merge from 'lodash.merge'
 import path from 'path'
 import { ExtensionContext, workspace } from 'vscode'
-import merge from 'lodash.merge'
 
 import { ResourceVersion } from '../types'
 
@@ -72,6 +72,7 @@ class ConfigHelper {
    */
   private initStorageFile() {
     if (!fs.existsSync(this.filePath)) {
+      ensureFileSync(this.filePath)
       writeJsonSync(this.filePath, {})
     }
   }
