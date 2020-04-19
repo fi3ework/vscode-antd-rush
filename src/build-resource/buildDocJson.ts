@@ -13,6 +13,7 @@ import { ComponentDocLocation, ComponentMapping } from './componentMap'
 import { ANTD_GITHUB, STORAGE } from './constant'
 import { ComponentsDoc, ComponentsRawDoc, Prop, Props } from './type'
 import { ResourceVersion, DocLanguage } from '../types'
+import logSymbols from 'log-symbols'
 
 export class DefinitionBuilder {
   public constructor(version: ResourceVersion, mapping: ComponentMapping) {
@@ -61,7 +62,8 @@ export class DefinitionBuilder {
 
       if (!tables.length) {
         console.error(
-          `😭 failed to find table after ${anchorProps[0]} for component ${componentName}(${language})`
+          logSymbols.warning,
+          `failed to find table after ${anchorProps[0]} for component ${componentName}(${language})`
         )
         return
       }

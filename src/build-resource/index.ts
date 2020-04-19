@@ -1,13 +1,15 @@
-import { remove } from 'fs-extra'
-import path from 'path'
 import fs from 'fs'
+import { remove } from 'fs-extra'
+import logSymbols from 'log-symbols'
+import path from 'path'
 import { promisify } from 'util'
 
+import { ResourceVersion } from '../types'
 import { DefinitionBuilder } from './buildDocJson'
 import { antdComponentMap, antdComponentMapV4 } from './componentMap'
 import { ANTD_GITHUB, STORAGE } from './constant'
 import { buildShaMap, downloadByShaMap } from './fetchDocs'
-import { ResourceVersion } from '../types'
+
 const pWriteFile = promisify(fs.writeFile)
 
 const sourceVersion = {
@@ -65,7 +67,7 @@ async function buildVersionResource(version: ResourceVersion, download: boolean)
       'utf8'
     )
   } catch (e) {
-    console.error(e)
+    console.error(logSymbols.error, e)
   }
 }
 
@@ -92,11 +94,11 @@ async function clean(scope: ('markdown' | 'json')[]) {
  */
 async function buildResource(download: boolean = true) {
   clean(download ? ['markdown', 'json'] : ['json'])
-  console.log('🌝 resource cleaned')
-  console.log('✨ start fetching v3')
+  console.log(logSymbols.success, 'resource cleaned')
+  console.log(logSymbols.info, 'start fetching v3')
   await buildVersionResource('v3', download)
-  console.log('✨ start fetching v4')
+  console.log(logSymbols.info, 'start fetching v4')
   await buildVersionResource('v4', download)
 }
 
-buildResource(false)
+buildResource(true)

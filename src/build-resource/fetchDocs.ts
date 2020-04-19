@@ -1,5 +1,6 @@
 import { ensureDirSync, outputFile } from 'fs-extra'
 import { Base64 } from 'js-base64'
+import logSymbols from 'log-symbols'
 
 import { Octokit } from '@octokit/rest'
 
@@ -104,9 +105,9 @@ async function downloadMdFiles(args: {
       STORAGE.getMarkdownPath(componentName, fileName, version),
       Base64.decode(contentRes.data.content)
     )
-    console.log(`✅ ${componentName}/${fileName} download succeed.`)
+    console.log(logSymbols.success, `${componentName}/${fileName} download succeed.`)
   } catch (e) {
-    console.error(`❌ failed to get ${componentName}/${fileName}. Error: ${e}`)
+    console.error(logSymbols.error, `failed to get ${componentName}/${fileName}. Error: ${e}`)
   }
 }
 
