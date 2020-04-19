@@ -20,7 +20,7 @@ jobs:
         shell: bash
         run: |
           yarn
-          yarn run compile
+          yarn run webpack-build
           yarn run compile-test
           yarn test
         env:

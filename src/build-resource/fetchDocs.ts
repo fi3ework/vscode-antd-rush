@@ -12,7 +12,12 @@ import { ANTD_GITHUB, STORAGE } from './constant'
  * Add new file `token.ts` beside and export `GITHUB_TOKEN` variable of your own GitHub token
  * eg: export const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN'
  */
-import { GITHUB_TOKEN } from './token'
+let GITHUB_TOKEN = ''
+try {
+  GITHUB_TOKEN = require('./token').GITHUB_TOKEN
+} catch {
+  // noop
+}
 
 const octokit = new Octokit({
   auth: GITHUB_TOKEN,
