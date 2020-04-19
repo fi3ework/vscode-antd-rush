@@ -1,5 +1,35 @@
 {
   "zh": {
+    "Affix": {
+      "offsetBottom": {
+        "property": "offsetBottom",
+        "description": "距离窗口底部达到指定偏移量后触发",
+        "type": "number",
+        "default": "",
+        "version": ""
+      },
+      "offsetTop": {
+        "property": "offsetTop",
+        "description": "距离窗口顶部达到指定偏移量后触发",
+        "type": "number",
+        "default": "",
+        "version": ""
+      },
+      "target": {
+        "property": "target",
+        "description": "设置 `Affix` 需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数",
+        "type": "() => HTMLElement",
+        "default": "() => window",
+        "version": ""
+      },
+      "onChange": {
+        "property": "onChange",
+        "description": "固定状态改变时触发的回调函数",
+        "type": "Function(affixed)",
+        "default": "无",
+        "version": ""
+      }
+    },
     "Alert": {
       "afterClose": {
         "property": "afterClose",
@@ -68,36 +98,6 @@
         "property": "onClose",
         "description": "关闭时触发的回调函数",
         "type": "(e: MouseEvent) => void",
-        "default": "无",
-        "version": ""
-      }
-    },
-    "Affix": {
-      "offsetBottom": {
-        "property": "offsetBottom",
-        "description": "距离窗口底部达到指定偏移量后触发",
-        "type": "number",
-        "default": "",
-        "version": ""
-      },
-      "offsetTop": {
-        "property": "offsetTop",
-        "description": "距离窗口顶部达到指定偏移量后触发",
-        "type": "number",
-        "default": "",
-        "version": ""
-      },
-      "target": {
-        "property": "target",
-        "description": "设置 `Affix` 需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数",
-        "type": "() => HTMLElement",
-        "default": "() => window",
-        "version": ""
-      },
-      "onChange": {
-        "property": "onChange",
-        "description": "固定状态改变时触发的回调函数",
-        "type": "Function(affixed)",
         "default": "无",
         "version": ""
       }
@@ -360,6 +360,29 @@
         "version": "3.9.3"
       }
     },
+    "BackTop": {
+      "target": {
+        "property": "target",
+        "description": "设置需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数",
+        "type": "Function",
+        "default": "() => window",
+        "version": ""
+      },
+      "visibilityHeight": {
+        "property": "visibilityHeight",
+        "description": "滚动高度达到此参数值才出现 `BackTop`",
+        "type": "number",
+        "default": "400",
+        "version": ""
+      },
+      "onClick": {
+        "property": "onClick",
+        "description": "点击按钮的回调函数",
+        "type": "Function",
+        "default": "-",
+        "version": ""
+      }
+    },
     "Avatar": {
       "icon": {
         "property": "icon",
@@ -409,29 +432,6 @@
         "type": "() => boolean",
         "default": "-",
         "version": "3.8.0"
-      }
-    },
-    "BackTop": {
-      "target": {
-        "property": "target",
-        "description": "设置需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数",
-        "type": "Function",
-        "default": "() => window",
-        "version": ""
-      },
-      "visibilityHeight": {
-        "property": "visibilityHeight",
-        "description": "滚动高度达到此参数值才出现 `BackTop`",
-        "type": "number",
-        "default": "400",
-        "version": ""
-      },
-      "onClick": {
-        "property": "onClick",
-        "description": "点击按钮的回调函数",
-        "type": "Function",
-        "default": "-",
-        "version": ""
       }
     },
     "Badge": {
@@ -529,111 +529,27 @@
         "version": "3.17.0"
       }
     },
-    "Calendar": {
-      "dateCellRender": {
-        "property": "dateCellRender",
-        "description": "自定义渲染日期单元格，返回内容会被追加到单元格",
-        "type": "function(date: moment): ReactNode",
-        "default": "无",
-        "version": ""
-      },
-      "dateFullCellRender": {
-        "property": "dateFullCellRender",
-        "description": "自定义渲染日期单元格，返回内容覆盖单元格",
-        "type": "function(date: moment): ReactNode",
-        "default": "无",
-        "version": ""
-      },
-      "defaultValue": {
-        "property": "defaultValue",
-        "description": "默认展示的日期",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "默认日期",
-        "version": ""
-      },
-      "disabledDate": {
-        "property": "disabledDate",
-        "description": "不可选择的日期",
-        "type": "(currentDate: moment) => boolean",
-        "default": "无",
-        "version": ""
-      },
-      "fullscreen": {
-        "property": "fullscreen",
-        "description": "是否全屏显示",
-        "type": "boolean",
-        "default": "true",
-        "version": ""
-      },
-      "locale": {
-        "property": "locale",
-        "description": "国际化配置",
-        "type": "object",
-        "default": "[默认配置](https://github.com/ant-design/ant-design/blob/master/components/date-picker/locale/example.json)",
-        "version": ""
-      },
-      "mode": {
-        "property": "mode",
-        "description": "初始模式，`month/year`",
+    "Breadcrumb.Item": {
+      "href": {
+        "property": "href",
+        "description": "链接的目的地",
         "type": "string",
-        "default": "month",
-        "version": ""
+        "default": "-",
+        "version": "3.17.0"
       },
-      "monthCellRender": {
-        "property": "monthCellRender",
-        "description": "自定义渲染月单元格，返回内容会被追加到单元格",
-        "type": "function(date: moment): ReactNode",
-        "default": "无",
-        "version": ""
+      "overlay": {
+        "property": "overlay",
+        "description": "下拉菜单的内容",
+        "type": "[Menu](/components/menu) \\| () => Menu",
+        "default": "-",
+        "version": "3.17.0"
       },
-      "monthFullCellRender": {
-        "property": "monthFullCellRender",
-        "description": "自定义渲染月单元格，返回内容覆盖单元格",
-        "type": "function(date: moment): ReactNode",
-        "default": "无",
-        "version": ""
-      },
-      "validRange": {
-        "property": "validRange",
-        "description": "设置可以显示的日期",
-        "type": "\\[[moment](http://momentjs.com/), [moment](http://momentjs.com/)]",
-        "default": "无",
-        "version": "3.3.0"
-      },
-      "value": {
-        "property": "value",
-        "description": "展示日期",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "当前日期",
-        "version": ""
-      },
-      "onPanelChange": {
-        "property": "onPanelChange",
-        "description": "日期面板变化回调",
-        "type": "function(date: moment, mode: string)",
-        "default": "无",
-        "version": ""
-      },
-      "onSelect": {
-        "property": "onSelect",
-        "description": "点击选择日期回调",
-        "type": "function(date: moment）",
-        "default": "无",
-        "version": ""
-      },
-      "onChange": {
-        "property": "onChange",
-        "description": "日期变化回调",
-        "type": "function(date: moment）",
-        "default": "无",
-        "version": "3.8.0"
-      },
-      "headerRender": {
-        "property": "headerRender",
-        "description": "自定义头部内容",
-        "type": "function(object:{value: moment, type: string, onChange: f(), onTypeChange: f()})",
-        "default": "无",
-        "version": "3.19.0"
+      "onClick": {
+        "property": "onClick",
+        "description": "单击事件",
+        "type": "(e:MouseEvent)=>void",
+        "default": "-",
+        "version": "3.17.0"
       }
     },
     "Button": {
@@ -729,29 +645,6 @@
         "type": "string\\|ReactNode",
         "default": "'/'",
         "version": "3.21.0"
-      }
-    },
-    "Breadcrumb.Item": {
-      "href": {
-        "property": "href",
-        "description": "链接的目的地",
-        "type": "string",
-        "default": "-",
-        "version": "3.17.0"
-      },
-      "overlay": {
-        "property": "overlay",
-        "description": "下拉菜单的内容",
-        "type": "[Menu](/components/menu) \\| () => Menu",
-        "default": "-",
-        "version": "3.17.0"
-      },
-      "onClick": {
-        "property": "onClick",
-        "description": "单击事件",
-        "type": "(e:MouseEvent)=>void",
-        "default": "-",
-        "version": "3.17.0"
       }
     },
     "Card": {
@@ -868,57 +761,6 @@
         "version": ""
       }
     },
-    "Carousel": {
-      "afterChange": {
-        "property": "afterChange",
-        "description": "切换面板的回调",
-        "type": "function(current)",
-        "default": "无",
-        "version": ""
-      },
-      "autoplay": {
-        "property": "autoplay",
-        "description": "是否自动切换",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "beforeChange": {
-        "property": "beforeChange",
-        "description": "切换面板的回调",
-        "type": "function(from, to)",
-        "default": "无",
-        "version": ""
-      },
-      "dotPosition": {
-        "property": "dotPosition",
-        "description": "面板指示点位置，可选 `top` `bottom` `left` `right`",
-        "type": "string",
-        "default": "bottom",
-        "version": "3.17.0"
-      },
-      "dots": {
-        "property": "dots",
-        "description": "是否显示面板指示点",
-        "type": "boolean",
-        "default": "true",
-        "version": ""
-      },
-      "easing": {
-        "property": "easing",
-        "description": "动画效果",
-        "type": "string",
-        "default": "linear",
-        "version": ""
-      },
-      "effect": {
-        "property": "effect",
-        "description": "动画效果函数，可取 scrollx, fade",
-        "type": "string",
-        "default": "scrollx",
-        "version": ""
-      }
-    },
     "Card.Grid": {
       "className": {
         "property": "className",
@@ -976,6 +818,164 @@
         "description": "标题内容",
         "type": "ReactNode",
         "default": "-",
+        "version": ""
+      }
+    },
+    "Calendar": {
+      "dateCellRender": {
+        "property": "dateCellRender",
+        "description": "自定义渲染日期单元格，返回内容会被追加到单元格",
+        "type": "function(date: moment): ReactNode",
+        "default": "无",
+        "version": ""
+      },
+      "dateFullCellRender": {
+        "property": "dateFullCellRender",
+        "description": "自定义渲染日期单元格，返回内容覆盖单元格",
+        "type": "function(date: moment): ReactNode",
+        "default": "无",
+        "version": ""
+      },
+      "defaultValue": {
+        "property": "defaultValue",
+        "description": "默认展示的日期",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "默认日期",
+        "version": ""
+      },
+      "disabledDate": {
+        "property": "disabledDate",
+        "description": "不可选择的日期",
+        "type": "(currentDate: moment) => boolean",
+        "default": "无",
+        "version": ""
+      },
+      "fullscreen": {
+        "property": "fullscreen",
+        "description": "是否全屏显示",
+        "type": "boolean",
+        "default": "true",
+        "version": ""
+      },
+      "locale": {
+        "property": "locale",
+        "description": "国际化配置",
+        "type": "object",
+        "default": "[默认配置](https://github.com/ant-design/ant-design/blob/master/components/date-picker/locale/example.json)",
+        "version": ""
+      },
+      "mode": {
+        "property": "mode",
+        "description": "初始模式，`month/year`",
+        "type": "string",
+        "default": "month",
+        "version": ""
+      },
+      "monthCellRender": {
+        "property": "monthCellRender",
+        "description": "自定义渲染月单元格，返回内容会被追加到单元格",
+        "type": "function(date: moment): ReactNode",
+        "default": "无",
+        "version": ""
+      },
+      "monthFullCellRender": {
+        "property": "monthFullCellRender",
+        "description": "自定义渲染月单元格，返回内容覆盖单元格",
+        "type": "function(date: moment): ReactNode",
+        "default": "无",
+        "version": ""
+      },
+      "validRange": {
+        "property": "validRange",
+        "description": "设置可以显示的日期",
+        "type": "\\[[moment](http://momentjs.com/), [moment](http://momentjs.com/)]",
+        "default": "无",
+        "version": "3.3.0"
+      },
+      "value": {
+        "property": "value",
+        "description": "展示日期",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "当前日期",
+        "version": ""
+      },
+      "onPanelChange": {
+        "property": "onPanelChange",
+        "description": "日期面板变化回调",
+        "type": "function(date: moment, mode: string)",
+        "default": "无",
+        "version": ""
+      },
+      "onSelect": {
+        "property": "onSelect",
+        "description": "点击选择日期回调",
+        "type": "function(date: moment）",
+        "default": "无",
+        "version": ""
+      },
+      "onChange": {
+        "property": "onChange",
+        "description": "日期变化回调",
+        "type": "function(date: moment）",
+        "default": "无",
+        "version": "3.8.0"
+      },
+      "headerRender": {
+        "property": "headerRender",
+        "description": "自定义头部内容",
+        "type": "function(object:{value: moment, type: string, onChange: f(), onTypeChange: f()})",
+        "default": "无",
+        "version": "3.19.0"
+      }
+    },
+    "Carousel": {
+      "afterChange": {
+        "property": "afterChange",
+        "description": "切换面板的回调",
+        "type": "function(current)",
+        "default": "无",
+        "version": ""
+      },
+      "autoplay": {
+        "property": "autoplay",
+        "description": "是否自动切换",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "beforeChange": {
+        "property": "beforeChange",
+        "description": "切换面板的回调",
+        "type": "function(from, to)",
+        "default": "无",
+        "version": ""
+      },
+      "dotPosition": {
+        "property": "dotPosition",
+        "description": "面板指示点位置，可选 `top` `bottom` `left` `right`",
+        "type": "string",
+        "default": "bottom",
+        "version": "3.17.0"
+      },
+      "dots": {
+        "property": "dots",
+        "description": "是否显示面板指示点",
+        "type": "boolean",
+        "default": "true",
+        "version": ""
+      },
+      "easing": {
+        "property": "easing",
+        "description": "动画效果",
+        "type": "string",
+        "default": "linear",
+        "version": ""
+      },
+      "effect": {
+        "property": "effect",
+        "description": "动画效果函数，可取 scrollx, fade",
+        "type": "string",
+        "default": "scrollx",
         "version": ""
       }
     },
@@ -1237,6 +1237,50 @@
         "version": "3.6.2"
       }
     },
+    "Collapse.Panel": {
+      "disabled": {
+        "property": "disabled",
+        "description": "禁用后的面板展开与否将无法通过用户交互改变",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "forceRender": {
+        "property": "forceRender",
+        "description": "被隐藏时是否渲染 DOM 结构",
+        "type": "boolean",
+        "default": "false",
+        "version": "3.2.0"
+      },
+      "header": {
+        "property": "header",
+        "description": "面板头内容",
+        "type": "string\\|ReactNode",
+        "default": "无",
+        "version": ""
+      },
+      "key": {
+        "property": "key",
+        "description": "对应 activeKey",
+        "type": "string\\|number",
+        "default": "无",
+        "version": ""
+      },
+      "showArrow": {
+        "property": "showArrow",
+        "description": "是否展示当前面板上的箭头",
+        "type": "boolean",
+        "default": "`true`",
+        "version": "3.13.0"
+      },
+      "extra": {
+        "property": "extra",
+        "description": "自定义渲染每个面板右上角的内容",
+        "type": "ReactNode",
+        "default": "-",
+        "version": "3.14.0"
+      }
+    },
     "Collapse": {
       "activeKey": {
         "property": "activeKey",
@@ -1295,50 +1339,6 @@
         "version": "3.13.0"
       }
     },
-    "Collapse.Panel": {
-      "disabled": {
-        "property": "disabled",
-        "description": "禁用后的面板展开与否将无法通过用户交互改变",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "forceRender": {
-        "property": "forceRender",
-        "description": "被隐藏时是否渲染 DOM 结构",
-        "type": "boolean",
-        "default": "false",
-        "version": "3.2.0"
-      },
-      "header": {
-        "property": "header",
-        "description": "面板头内容",
-        "type": "string\\|ReactNode",
-        "default": "无",
-        "version": ""
-      },
-      "key": {
-        "property": "key",
-        "description": "对应 activeKey",
-        "type": "string\\|number",
-        "default": "无",
-        "version": ""
-      },
-      "showArrow": {
-        "property": "showArrow",
-        "description": "是否展示当前面板上的箭头",
-        "type": "boolean",
-        "default": "`true`",
-        "version": "3.13.0"
-      },
-      "extra": {
-        "property": "extra",
-        "description": "自定义渲染每个面板右上角的内容",
-        "type": "ReactNode",
-        "default": "-",
-        "version": "3.14.0"
-      }
-    },
     "Comment": {
       "actions": {
         "property": "actions",
@@ -1381,6 +1381,50 @@
         "type": "string\\|ReactNode",
         "default": "-",
         "version": "3.11.0"
+      }
+    },
+    "DatePicker.WeekPicker": {
+      "defaultValue": {
+        "property": "defaultValue",
+        "description": "默认日期",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "-",
+        "version": ""
+      },
+      "defaultPickerValue": {
+        "property": "defaultPickerValue",
+        "description": "默认面板日期",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "无",
+        "version": "3.10.8"
+      },
+      "format": {
+        "property": "format",
+        "description": "展示的日期格式，配置参考 [moment.js](http://momentjs.com/)",
+        "type": "string",
+        "default": "\"YYYY-wo\"",
+        "version": ""
+      },
+      "value": {
+        "property": "value",
+        "description": "日期",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "-",
+        "version": ""
+      },
+      "onChange": {
+        "property": "onChange",
+        "description": "时间发生变化的回调，发生在用户选择时间时",
+        "type": "function(date: moment, dateString: string)",
+        "default": "-",
+        "version": ""
+      },
+      "renderExtraFooter": {
+        "property": "renderExtraFooter",
+        "description": "在面板中添加额外的页脚",
+        "type": "(mode) => React.ReactNode",
+        "default": "-",
+        "version": "3.12.0"
       }
     },
     "DatePicker": {
@@ -1467,101 +1511,6 @@
         "type": "function(value, mode)",
         "default": "-",
         "version": "3.5.0"
-      }
-    },
-    "DatePicker.MonthPicker": {
-      "defaultValue": {
-        "property": "defaultValue",
-        "description": "默认日期",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "无",
-        "version": ""
-      },
-      "defaultPickerValue": {
-        "property": "defaultPickerValue",
-        "description": "默认面板日期",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "无",
-        "version": "3.10.8"
-      },
-      "format": {
-        "property": "format",
-        "description": "展示的日期格式，配置参考 [moment.js](http://momentjs.com/)",
-        "type": "string",
-        "default": "\"YYYY-MM\"",
-        "version": ""
-      },
-      "monthCellContentRender": {
-        "property": "monthCellContentRender",
-        "description": "自定义的月份内容渲染方法",
-        "type": "function(date, locale): ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "renderExtraFooter": {
-        "property": "renderExtraFooter",
-        "description": "在面板中添加额外的页脚",
-        "type": "() => React.ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "value": {
-        "property": "value",
-        "description": "日期",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "无",
-        "version": ""
-      },
-      "onChange": {
-        "property": "onChange",
-        "description": "时间发生变化的回调，发生在用户选择时间时",
-        "type": "function(date: moment, dateString: string)",
-        "default": "-",
-        "version": ""
-      }
-    },
-    "DatePicker.WeekPicker": {
-      "defaultValue": {
-        "property": "defaultValue",
-        "description": "默认日期",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "-",
-        "version": ""
-      },
-      "defaultPickerValue": {
-        "property": "defaultPickerValue",
-        "description": "默认面板日期",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "无",
-        "version": "3.10.8"
-      },
-      "format": {
-        "property": "format",
-        "description": "展示的日期格式，配置参考 [moment.js](http://momentjs.com/)",
-        "type": "string",
-        "default": "\"YYYY-wo\"",
-        "version": ""
-      },
-      "value": {
-        "property": "value",
-        "description": "日期",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "-",
-        "version": ""
-      },
-      "onChange": {
-        "property": "onChange",
-        "description": "时间发生变化的回调，发生在用户选择时间时",
-        "type": "function(date: moment, dateString: string)",
-        "default": "-",
-        "version": ""
-      },
-      "renderExtraFooter": {
-        "property": "renderExtraFooter",
-        "description": "在面板中添加额外的页脚",
-        "type": "(mode) => React.ReactNode",
-        "default": "-",
-        "version": "3.12.0"
       }
     },
     "DatePicker.RangePicker": {
@@ -1653,6 +1602,57 @@
         "property": "onOk",
         "description": "点击确定按钮的回调",
         "type": "function(dates: [moment](http://momentjs.com/)\\[])",
+        "default": "-",
+        "version": ""
+      }
+    },
+    "DatePicker.MonthPicker": {
+      "defaultValue": {
+        "property": "defaultValue",
+        "description": "默认日期",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "无",
+        "version": ""
+      },
+      "defaultPickerValue": {
+        "property": "defaultPickerValue",
+        "description": "默认面板日期",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "无",
+        "version": "3.10.8"
+      },
+      "format": {
+        "property": "format",
+        "description": "展示的日期格式，配置参考 [moment.js](http://momentjs.com/)",
+        "type": "string",
+        "default": "\"YYYY-MM\"",
+        "version": ""
+      },
+      "monthCellContentRender": {
+        "property": "monthCellContentRender",
+        "description": "自定义的月份内容渲染方法",
+        "type": "function(date, locale): ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "renderExtraFooter": {
+        "property": "renderExtraFooter",
+        "description": "在面板中添加额外的页脚",
+        "type": "() => React.ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "value": {
+        "property": "value",
+        "description": "日期",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "无",
+        "version": ""
+      },
+      "onChange": {
+        "property": "onChange",
+        "description": "时间发生变化的回调，发生在用户选择时间时",
+        "type": "function(date: moment, dateString: string)",
         "default": "-",
         "version": ""
       }
@@ -1896,6 +1896,71 @@
         "version": "3.19.8"
       }
     },
+    "Dropdown": {
+      "disabled": {
+        "property": "disabled",
+        "description": "菜单是否禁用",
+        "type": "boolean",
+        "default": "-",
+        "version": ""
+      },
+      "getPopupContainer": {
+        "property": "getPopupContainer",
+        "description": "菜单渲染父节点。默认渲染到 body 上，如果你遇到菜单滚动定位问题，试试修改为滚动的区域，并相对其定位。[示例](https://codepen.io/afc163/pen/zEjNOy?editors=0010)",
+        "type": "Function(triggerNode)",
+        "default": "`() => document.body`",
+        "version": ""
+      },
+      "overlay": {
+        "property": "overlay",
+        "description": "菜单",
+        "type": "[Menu](/components/menu) \\| () => Menu",
+        "default": "-",
+        "version": ""
+      },
+      "overlayClassName": {
+        "property": "overlayClassName",
+        "description": "下拉根元素的类名称",
+        "type": "string",
+        "default": "-",
+        "version": "3.11.0"
+      },
+      "overlayStyle": {
+        "property": "overlayStyle",
+        "description": "下拉根元素的样式",
+        "type": "object",
+        "default": "-",
+        "version": "3.11.0"
+      },
+      "placement": {
+        "property": "placement",
+        "description": "菜单弹出位置：`bottomLeft` `bottomCenter` `bottomRight` `topLeft` `topCenter` `topRight`",
+        "type": "String",
+        "default": "`bottomLeft`",
+        "version": ""
+      },
+      "trigger": {
+        "property": "trigger",
+        "description": "触发下拉的行为, 移动端不支持 hover",
+        "type": "Array&lt;`click`\\|`hover`\\|`contextMenu`>",
+        "default": "`['hover']`",
+        "version": ""
+      },
+      "visible": {
+        "property": "visible",
+        "description": "菜单是否显示",
+        "type": "boolean",
+        "default": "-",
+        "version": ""
+      },
+      "onVisibleChange": {
+        "property": "onVisibleChange",
+        "description": "菜单显示状态改变时调用，参数为 visible",
+        "type": "Function(visible)",
+        "default": "-",
+        "version": ""
+      }
+    },
     "Dropdown.Button": {
       "disabled": {
         "property": "disabled",
@@ -1968,71 +2033,6 @@
         "version": ""
       }
     },
-    "Dropdown": {
-      "disabled": {
-        "property": "disabled",
-        "description": "菜单是否禁用",
-        "type": "boolean",
-        "default": "-",
-        "version": ""
-      },
-      "getPopupContainer": {
-        "property": "getPopupContainer",
-        "description": "菜单渲染父节点。默认渲染到 body 上，如果你遇到菜单滚动定位问题，试试修改为滚动的区域，并相对其定位。[示例](https://codepen.io/afc163/pen/zEjNOy?editors=0010)",
-        "type": "Function(triggerNode)",
-        "default": "`() => document.body`",
-        "version": ""
-      },
-      "overlay": {
-        "property": "overlay",
-        "description": "菜单",
-        "type": "[Menu](/components/menu) \\| () => Menu",
-        "default": "-",
-        "version": ""
-      },
-      "overlayClassName": {
-        "property": "overlayClassName",
-        "description": "下拉根元素的类名称",
-        "type": "string",
-        "default": "-",
-        "version": "3.11.0"
-      },
-      "overlayStyle": {
-        "property": "overlayStyle",
-        "description": "下拉根元素的样式",
-        "type": "object",
-        "default": "-",
-        "version": "3.11.0"
-      },
-      "placement": {
-        "property": "placement",
-        "description": "菜单弹出位置：`bottomLeft` `bottomCenter` `bottomRight` `topLeft` `topCenter` `topRight`",
-        "type": "String",
-        "default": "`bottomLeft`",
-        "version": ""
-      },
-      "trigger": {
-        "property": "trigger",
-        "description": "触发下拉的行为, 移动端不支持 hover",
-        "type": "Array&lt;`click`\\|`hover`\\|`contextMenu`>",
-        "default": "`['hover']`",
-        "version": ""
-      },
-      "visible": {
-        "property": "visible",
-        "description": "菜单是否显示",
-        "type": "boolean",
-        "default": "-",
-        "version": ""
-      },
-      "onVisibleChange": {
-        "property": "onVisibleChange",
-        "description": "菜单显示状态改变时调用，参数为 visible",
-        "type": "Function(visible)",
-        "default": "-",
-        "version": ""
-      }
-    },
     "Empty": {
       "description": {
         "property": "description",
@@ -2084,6 +2084,57 @@
         "type": "string",
         "default": "",
         "version": ""
+      }
+    },
+    "Icon": {
+      "type": {
+        "property": "type",
+        "description": "图标类型。遵循图标的命名规范",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "style": {
+        "property": "style",
+        "description": "设置图标的样式，例如 `fontSize` 和 `color`",
+        "type": "CSSProperties",
+        "default": "-",
+        "version": ""
+      },
+      "theme": {
+        "property": "theme",
+        "description": "图标主题风格。可选实心、描线、双色等主题风格，适用于官方图标",
+        "type": "'filled' \\| 'outlined' \\| 'twoTone'",
+        "default": "'outlined'",
+        "version": "3.9.0"
+      },
+      "spin": {
+        "property": "spin",
+        "description": "是否有旋转动画",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "rotate": {
+        "property": "rotate",
+        "description": "图标旋转角度（3.13.0 后新增，IE9 无效）",
+        "type": "number",
+        "default": "-",
+        "version": "3.13.0"
+      },
+      "component": {
+        "property": "component",
+        "description": "控制如何渲染图标，通常是一个渲染根标签为 `<svg>` 的 `React` 组件，**会使 `type` 属性失效**",
+        "type": "ComponentType&lt;CustomIconComponentProps>",
+        "default": "-",
+        "version": "3.9.0"
+      },
+      "twoToneColor": {
+        "property": "twoToneColor",
+        "description": "仅适用双色图标。设置双色图标的主要颜色",
+        "type": "string (十六进制颜色)",
+        "default": "-",
+        "version": "3.9.0"
       }
     },
     "Col": {
@@ -2265,57 +2316,6 @@
         "version": "3.12.0"
       }
     },
-    "Icon": {
-      "type": {
-        "property": "type",
-        "description": "图标类型。遵循图标的命名规范",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "style": {
-        "property": "style",
-        "description": "设置图标的样式，例如 `fontSize` 和 `color`",
-        "type": "CSSProperties",
-        "default": "-",
-        "version": ""
-      },
-      "theme": {
-        "property": "theme",
-        "description": "图标主题风格。可选实心、描线、双色等主题风格，适用于官方图标",
-        "type": "'filled' \\| 'outlined' \\| 'twoTone'",
-        "default": "'outlined'",
-        "version": "3.9.0"
-      },
-      "spin": {
-        "property": "spin",
-        "description": "是否有旋转动画",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "rotate": {
-        "property": "rotate",
-        "description": "图标旋转角度（3.13.0 后新增，IE9 无效）",
-        "type": "number",
-        "default": "-",
-        "version": "3.13.0"
-      },
-      "component": {
-        "property": "component",
-        "description": "控制如何渲染图标，通常是一个渲染根标签为 `<svg>` 的 `React` 组件，**会使 `type` 属性失效**",
-        "type": "ComponentType&lt;CustomIconComponentProps>",
-        "default": "-",
-        "version": "3.9.0"
-      },
-      "twoToneColor": {
-        "property": "twoToneColor",
-        "description": "仅适用双色图标。设置双色图标的主要颜色",
-        "type": "string (十六进制颜色)",
-        "default": "-",
-        "version": "3.9.0"
-      }
-    },
     "Input.TextArea": {
       "autoSize": {
         "property": "autoSize",
@@ -2392,29 +2392,6 @@
         "version": ""
       }
     },
-    "Layout": {
-      "className": {
-        "property": "className",
-        "description": "容器 className",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "hasSider": {
-        "property": "hasSider",
-        "description": "表示子元素里有 Sider，一般不用指定。可用于服务端渲染时避免样式闪动",
-        "type": "boolean",
-        "default": "-",
-        "version": "3.2.0"
-      },
-      "style": {
-        "property": "style",
-        "description": "指定样式",
-        "type": "object",
-        "default": "-",
-        "version": ""
-      }
-    },
     "Input.Password": {
       "visibilityToggle": {
         "property": "visibilityToggle",
@@ -2422,106 +2399,6 @@
         "type": "boolean",
         "default": "true",
         "version": "3.12.2"
-      }
-    },
-    "Layout.Sider": {
-      "breakpoint": {
-        "property": "breakpoint",
-        "description": "触发响应式布局的[断点](/components/grid-cn/#Col)",
-        "type": "Enum { 'xs', 'sm', 'md', 'lg', 'xl', 'xxl' }",
-        "default": "-",
-        "version": ""
-      },
-      "className": {
-        "property": "className",
-        "description": "容器 className",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "collapsed": {
-        "property": "collapsed",
-        "description": "当前收起状态",
-        "type": "boolean",
-        "default": "-",
-        "version": ""
-      },
-      "collapsedWidth": {
-        "property": "collapsedWidth",
-        "description": "收缩宽度，设置为 0 会出现特殊 trigger",
-        "type": "number",
-        "default": "80",
-        "version": ""
-      },
-      "collapsible": {
-        "property": "collapsible",
-        "description": "是否可收起",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "defaultCollapsed": {
-        "property": "defaultCollapsed",
-        "description": "是否默认收起",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "reverseArrow": {
-        "property": "reverseArrow",
-        "description": "翻转折叠提示箭头的方向，当 Sider 在右边时可以使用",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "style": {
-        "property": "style",
-        "description": "指定样式",
-        "type": "object",
-        "default": "-",
-        "version": ""
-      },
-      "theme": {
-        "property": "theme",
-        "description": "主题颜色",
-        "type": "string: `light` `dark`",
-        "default": "`dark`",
-        "version": "3.6.0"
-      },
-      "trigger": {
-        "property": "trigger",
-        "description": "自定义 trigger，设置为 null 时隐藏 trigger",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "width": {
-        "property": "width",
-        "description": "宽度",
-        "type": "number\\|string",
-        "default": "200",
-        "version": ""
-      },
-      "onCollapse": {
-        "property": "onCollapse",
-        "description": "展开-收起时的回调函数，有点击 trigger 以及响应式反馈两种方式可以触发",
-        "type": "(collapsed, type) => {}",
-        "default": "-",
-        "version": ""
-      },
-      "onBreakpoint": {
-        "property": "onBreakpoint",
-        "description": "触发响应式布局[断点](/components/grid#API)时的回调",
-        "type": "(broken) => {}",
-        "default": "-",
-        "version": "3.7.0"
-      },
-      "zeroWidthTriggerStyle": {
-        "property": "zeroWidthTriggerStyle",
-        "description": "指定当 `collapsedWidth` 为 0 时出现的特殊 trigger 的样式",
-        "type": "object",
-        "default": "-",
-        "version": "3.24.0"
       }
     },
     "InputNumber": {
@@ -2624,6 +2501,29 @@
         "version": ""
       }
     },
+    "Layout": {
+      "className": {
+        "property": "className",
+        "description": "容器 className",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "hasSider": {
+        "property": "hasSider",
+        "description": "表示子元素里有 Sider，一般不用指定。可用于服务端渲染时避免样式闪动",
+        "type": "boolean",
+        "default": "-",
+        "version": "3.2.0"
+      },
+      "style": {
+        "property": "style",
+        "description": "指定样式",
+        "type": "object",
+        "default": "-",
+        "version": ""
+      }
+    },
     "List": {
       "bordered": {
         "property": "bordered",
@@ -2717,6 +2617,106 @@
         "version": "3.20.1"
       }
     },
+    "Layout.Sider": {
+      "breakpoint": {
+        "property": "breakpoint",
+        "description": "触发响应式布局的[断点](/components/grid-cn/#Col)",
+        "type": "Enum { 'xs', 'sm', 'md', 'lg', 'xl', 'xxl' }",
+        "default": "-",
+        "version": ""
+      },
+      "className": {
+        "property": "className",
+        "description": "容器 className",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "collapsed": {
+        "property": "collapsed",
+        "description": "当前收起状态",
+        "type": "boolean",
+        "default": "-",
+        "version": ""
+      },
+      "collapsedWidth": {
+        "property": "collapsedWidth",
+        "description": "收缩宽度，设置为 0 会出现特殊 trigger",
+        "type": "number",
+        "default": "80",
+        "version": ""
+      },
+      "collapsible": {
+        "property": "collapsible",
+        "description": "是否可收起",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "defaultCollapsed": {
+        "property": "defaultCollapsed",
+        "description": "是否默认收起",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "reverseArrow": {
+        "property": "reverseArrow",
+        "description": "翻转折叠提示箭头的方向，当 Sider 在右边时可以使用",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "style": {
+        "property": "style",
+        "description": "指定样式",
+        "type": "object",
+        "default": "-",
+        "version": ""
+      },
+      "theme": {
+        "property": "theme",
+        "description": "主题颜色",
+        "type": "string: `light` `dark`",
+        "default": "`dark`",
+        "version": "3.6.0"
+      },
+      "trigger": {
+        "property": "trigger",
+        "description": "自定义 trigger，设置为 null 时隐藏 trigger",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "width": {
+        "property": "width",
+        "description": "宽度",
+        "type": "number\\|string",
+        "default": "200",
+        "version": ""
+      },
+      "onCollapse": {
+        "property": "onCollapse",
+        "description": "展开-收起时的回调函数，有点击 trigger 以及响应式反馈两种方式可以触发",
+        "type": "(collapsed, type) => {}",
+        "default": "-",
+        "version": ""
+      },
+      "onBreakpoint": {
+        "property": "onBreakpoint",
+        "description": "触发响应式布局[断点](/components/grid#API)时的回调",
+        "type": "(broken) => {}",
+        "default": "-",
+        "version": "3.7.0"
+      },
+      "zeroWidthTriggerStyle": {
+        "property": "zeroWidthTriggerStyle",
+        "description": "指定当 `collapsedWidth` 为 0 时出现的特殊 trigger 的样式",
+        "type": "object",
+        "default": "-",
+        "version": "3.24.0"
+      }
+    },
     "List.Item": {
       "actions": {
         "property": "actions",
@@ -2728,29 +2728,6 @@
       "extra": {
         "property": "extra",
         "description": "额外内容, 通常用在 `itemLayout` 为 `vertical` 的情况下, 展示右侧内容; `horizontal` 展示在列表元素最右侧",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      }
-    },
-    "List.Item.Meta": {
-      "avatar": {
-        "property": "avatar",
-        "description": "列表元素的图标",
-        "type": "ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "description": {
-        "property": "description",
-        "description": "列表元素的描述内容",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "title": {
-        "property": "title",
-        "description": "列表元素的标题",
         "type": "string\\|ReactNode",
         "default": "-",
         "version": ""
@@ -2895,6 +2872,29 @@
         "description": "下拉框选择建议时回调",
         "type": "function(suggestion: string, data?: any)",
         "default": "null",
+        "version": ""
+      }
+    },
+    "List.Item.Meta": {
+      "avatar": {
+        "property": "avatar",
+        "description": "列表元素的图标",
+        "type": "ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "description": {
+        "property": "description",
+        "description": "列表元素的描述内容",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "title": {
+        "property": "title",
+        "description": "列表元素的标题",
+        "type": "string\\|ReactNode",
+        "default": "-",
         "version": ""
       }
     },
@@ -3486,168 +3486,6 @@
         "version": "3.14.0"
       }
     },
-    "Popconfirm": {
-      "cancelText": {
-        "property": "cancelText",
-        "description": "取消按钮文字",
-        "type": "string",
-        "default": "取消",
-        "version": ""
-      },
-      "okText": {
-        "property": "okText",
-        "description": "确认按钮文字",
-        "type": "string",
-        "default": "确定",
-        "version": ""
-      },
-      "okType": {
-        "property": "okType",
-        "description": "确认按钮类型",
-        "type": "string",
-        "default": "primary",
-        "version": ""
-      },
-      "title": {
-        "property": "title",
-        "description": "确认框的描述",
-        "type": "string\\|ReactNode",
-        "default": "无",
-        "version": ""
-      },
-      "onCancel": {
-        "property": "onCancel",
-        "description": "点击取消的回调",
-        "type": "function(e)",
-        "default": "无",
-        "version": ""
-      },
-      "onConfirm": {
-        "property": "onConfirm",
-        "description": "点击确认的回调",
-        "type": "function(e)",
-        "default": "无",
-        "version": ""
-      },
-      "icon": {
-        "property": "icon",
-        "description": "自定义弹出气泡 Icon 图标",
-        "type": "ReactNode",
-        "default": "&lt;Icon type=\"exclamation-circle\" />",
-        "version": "3.8.0"
-      },
-      "disabled": {
-        "property": "disabled",
-        "description": "点击 Popconfirm 子元素是否弹出气泡确认框",
-        "type": "boolean",
-        "default": "false",
-        "version": "3.19.8"
-      }
-    },
-    "Popover": {
-      "content": {
-        "property": "content",
-        "description": "卡片内容",
-        "type": "string\\|ReactNode",
-        "default": "无",
-        "version": ""
-      },
-      "title": {
-        "property": "title",
-        "description": "卡片标题",
-        "type": "string\\|ReactNode",
-        "default": "无",
-        "version": ""
-      }
-    },
-    "Radio": {
-      "autoFocus": {
-        "property": "autoFocus",
-        "description": "自动获取焦点",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "checked": {
-        "property": "checked",
-        "description": "指定当前是否选中",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "defaultChecked": {
-        "property": "defaultChecked",
-        "description": "初始是否选中",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "value": {
-        "property": "value",
-        "description": "根据 value 进行比较，判断是否选中",
-        "type": "any",
-        "default": "-",
-        "version": ""
-      }
-    },
-    "Progress": {
-      "type": {
-        "property": "type",
-        "description": "类型，可选 `line` `circle` `dashboard`",
-        "type": "string",
-        "default": "`line`",
-        "version": ""
-      },
-      "format": {
-        "property": "format",
-        "description": "内容的模板函数",
-        "type": "function(percent, successPercent)",
-        "default": "`percent => percent + '%'`",
-        "version": ""
-      },
-      "percent": {
-        "property": "percent",
-        "description": "百分比",
-        "type": "number",
-        "default": "0",
-        "version": ""
-      },
-      "showInfo": {
-        "property": "showInfo",
-        "description": "是否显示进度数值或状态图标",
-        "type": "boolean",
-        "default": "true",
-        "version": ""
-      },
-      "status": {
-        "property": "status",
-        "description": "状态，可选：`success` `exception` `normal` `active`(仅限 line)",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "strokeLinecap": {
-        "property": "strokeLinecap",
-        "description": "",
-        "type": "Enum{ 'round', 'square' }",
-        "default": "`round`",
-        "version": "3.8.0"
-      },
-      "strokeColor": {
-        "property": "strokeColor",
-        "description": "进度条的色彩",
-        "type": "string",
-        "default": "-",
-        "version": "3.7.0"
-      },
-      "successPercent": {
-        "property": "successPercent",
-        "description": "已完成的分段百分比",
-        "type": "number",
-        "default": "0",
-        "version": "3.2.0"
-      }
-    },
     "Pagination": {
       "current": {
         "property": "current",
@@ -3769,6 +3607,80 @@
         "version": ""
       }
     },
+    "Popconfirm": {
+      "cancelText": {
+        "property": "cancelText",
+        "description": "取消按钮文字",
+        "type": "string",
+        "default": "取消",
+        "version": ""
+      },
+      "okText": {
+        "property": "okText",
+        "description": "确认按钮文字",
+        "type": "string",
+        "default": "确定",
+        "version": ""
+      },
+      "okType": {
+        "property": "okType",
+        "description": "确认按钮类型",
+        "type": "string",
+        "default": "primary",
+        "version": ""
+      },
+      "title": {
+        "property": "title",
+        "description": "确认框的描述",
+        "type": "string\\|ReactNode",
+        "default": "无",
+        "version": ""
+      },
+      "onCancel": {
+        "property": "onCancel",
+        "description": "点击取消的回调",
+        "type": "function(e)",
+        "default": "无",
+        "version": ""
+      },
+      "onConfirm": {
+        "property": "onConfirm",
+        "description": "点击确认的回调",
+        "type": "function(e)",
+        "default": "无",
+        "version": ""
+      },
+      "icon": {
+        "property": "icon",
+        "description": "自定义弹出气泡 Icon 图标",
+        "type": "ReactNode",
+        "default": "&lt;Icon type=\"exclamation-circle\" />",
+        "version": "3.8.0"
+      },
+      "disabled": {
+        "property": "disabled",
+        "description": "点击 Popconfirm 子元素是否弹出气泡确认框",
+        "type": "boolean",
+        "default": "false",
+        "version": "3.19.8"
+      }
+    },
+    "Popover": {
+      "content": {
+        "property": "content",
+        "description": "卡片内容",
+        "type": "string\\|ReactNode",
+        "default": "无",
+        "version": ""
+      },
+      "title": {
+        "property": "title",
+        "description": "卡片标题",
+        "type": "string\\|ReactNode",
+        "default": "无",
+        "version": ""
+      }
+    },
     "Radio.Group": {
       "defaultValue": {
         "property": "defaultValue",
@@ -3825,6 +3737,94 @@
         "type": "`outline` \\| `solid`",
         "default": "`outline`",
         "version": "3.7.0"
+      }
+    },
+    "Progress": {
+      "type": {
+        "property": "type",
+        "description": "类型，可选 `line` `circle` `dashboard`",
+        "type": "string",
+        "default": "`line`",
+        "version": ""
+      },
+      "format": {
+        "property": "format",
+        "description": "内容的模板函数",
+        "type": "function(percent, successPercent)",
+        "default": "`percent => percent + '%'`",
+        "version": ""
+      },
+      "percent": {
+        "property": "percent",
+        "description": "百分比",
+        "type": "number",
+        "default": "0",
+        "version": ""
+      },
+      "showInfo": {
+        "property": "showInfo",
+        "description": "是否显示进度数值或状态图标",
+        "type": "boolean",
+        "default": "true",
+        "version": ""
+      },
+      "status": {
+        "property": "status",
+        "description": "状态，可选：`success` `exception` `normal` `active`(仅限 line)",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "strokeLinecap": {
+        "property": "strokeLinecap",
+        "description": "",
+        "type": "Enum{ 'round', 'square' }",
+        "default": "`round`",
+        "version": "3.8.0"
+      },
+      "strokeColor": {
+        "property": "strokeColor",
+        "description": "进度条的色彩",
+        "type": "string",
+        "default": "-",
+        "version": "3.7.0"
+      },
+      "successPercent": {
+        "property": "successPercent",
+        "description": "已完成的分段百分比",
+        "type": "number",
+        "default": "0",
+        "version": "3.2.0"
+      }
+    },
+    "Radio": {
+      "autoFocus": {
+        "property": "autoFocus",
+        "description": "自动获取焦点",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "checked": {
+        "property": "checked",
+        "description": "指定当前是否选中",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "defaultChecked": {
+        "property": "defaultChecked",
+        "description": "初始是否选中",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "value": {
+        "property": "value",
+        "description": "根据 value 进行比较，判断是否选中",
+        "type": "any",
+        "default": "-",
+        "version": ""
       }
     },
     "Rate": {
@@ -3941,41 +3941,41 @@
         "version": ""
       }
     },
-    "Select.Option": {
-      "disabled": {
-        "property": "disabled",
-        "description": "是否禁用",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "key": {
-        "property": "key",
-        "description": "和 value 含义一致。如果 React 需要你设置此项，此项值与 value 的值相同，然后可以省略 value 设置",
-        "type": "string",
-        "default": "",
-        "version": ""
-      },
+    "Result": {
       "title": {
         "property": "title",
-        "description": "选中该 Option 后，Select 的 title",
-        "type": "string",
+        "description": "title 文字",
+        "type": "ReactNode",
         "default": "-",
-        "version": ""
+        "version": "3.20.0"
       },
-      "value": {
-        "property": "value",
-        "description": "默认根据此属性值进行筛选",
-        "type": "string\\|number",
+      "subTitle": {
+        "property": "subTitle",
+        "description": "subTitle 文字",
+        "type": "ReactNode",
         "default": "-",
-        "version": ""
+        "version": "3.20.0"
       },
-      "className": {
-        "property": "className",
-        "description": "Option 器类名",
-        "type": "string",
+      "status": {
+        "property": "status",
+        "description": "结果的状态,决定图标和颜色",
+        "type": "\\`'success'",
+        "default": "'error'",
+        "version": "'info'"
+      },
+      "icon": {
+        "property": "icon",
+        "description": "自定义 icon",
+        "type": "string \\| ReactNode",
         "default": "-",
-        "version": "3.10.1"
+        "version": "3.20.0"
+      },
+      "extra": {
+        "property": "extra",
+        "description": "操作区",
+        "type": "ReactNode",
+        "default": "-",
+        "version": "3.20.0"
       }
     },
     "Select": {
@@ -4302,6 +4302,43 @@
         "version": "3.11.0"
       }
     },
+    "Select.Option": {
+      "disabled": {
+        "property": "disabled",
+        "description": "是否禁用",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "key": {
+        "property": "key",
+        "description": "和 value 含义一致。如果 React 需要你设置此项，此项值与 value 的值相同，然后可以省略 value 设置",
+        "type": "string",
+        "default": "",
+        "version": ""
+      },
+      "title": {
+        "property": "title",
+        "description": "选中该 Option 后，Select 的 title",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "value": {
+        "property": "value",
+        "description": "默认根据此属性值进行筛选",
+        "type": "string\\|number",
+        "default": "-",
+        "version": ""
+      },
+      "className": {
+        "property": "className",
+        "description": "Option 器类名",
+        "type": "string",
+        "default": "-",
+        "version": "3.10.1"
+      }
+    },
     "Select.OptGroup": {
       "key": {
         "property": "key",
@@ -4316,43 +4353,6 @@
         "type": "string\\|React.Element",
         "default": "无",
         "version": ""
-      }
-    },
-    "Result": {
-      "title": {
-        "property": "title",
-        "description": "title 文字",
-        "type": "ReactNode",
-        "default": "-",
-        "version": "3.20.0"
-      },
-      "subTitle": {
-        "property": "subTitle",
-        "description": "subTitle 文字",
-        "type": "ReactNode",
-        "default": "-",
-        "version": "3.20.0"
-      },
-      "status": {
-        "property": "status",
-        "description": "结果的状态,决定图标和颜色",
-        "type": "\\`'success'",
-        "default": "'error'",
-        "version": "'info'"
-      },
-      "icon": {
-        "property": "icon",
-        "description": "自定义 icon",
-        "type": "string \\| ReactNode",
-        "default": "-",
-        "version": "3.20.0"
-      },
-      "extra": {
-        "property": "extra",
-        "description": "操作区",
-        "type": "ReactNode",
-        "default": "-",
-        "version": "3.20.0"
       }
     },
     "Skeleton": {
@@ -4527,6 +4527,50 @@
         "version": "3.19.0"
       }
     },
+    "Spin": {
+      "delay": {
+        "property": "delay",
+        "description": "延迟显示加载效果的时间（防止闪烁）",
+        "type": "number (毫秒)",
+        "default": "-",
+        "version": ""
+      },
+      "indicator": {
+        "property": "indicator",
+        "description": "加载指示符",
+        "type": "ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "size": {
+        "property": "size",
+        "description": "组件大小，可选值为 `small` `default` `large`",
+        "type": "string",
+        "default": "'default'",
+        "version": ""
+      },
+      "spinning": {
+        "property": "spinning",
+        "description": "是否为加载中状态",
+        "type": "boolean",
+        "default": "true",
+        "version": ""
+      },
+      "tip": {
+        "property": "tip",
+        "description": "当作为包裹元素时，可以自定义描述文案",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "wrapperClassName": {
+        "property": "wrapperClassName",
+        "description": "包装器的类属性",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      }
+    },
     "Statistic": {
       "decimalSeparator": {
         "property": "decimalSeparator",
@@ -4590,50 +4634,6 @@
         "type": "style",
         "default": "-",
         "version": "3.13.0"
-      }
-    },
-    "Spin": {
-      "delay": {
-        "property": "delay",
-        "description": "延迟显示加载效果的时间（防止闪烁）",
-        "type": "number (毫秒)",
-        "default": "-",
-        "version": ""
-      },
-      "indicator": {
-        "property": "indicator",
-        "description": "加载指示符",
-        "type": "ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "size": {
-        "property": "size",
-        "description": "组件大小，可选值为 `small` `default` `large`",
-        "type": "string",
-        "default": "'default'",
-        "version": ""
-      },
-      "spinning": {
-        "property": "spinning",
-        "description": "是否为加载中状态",
-        "type": "boolean",
-        "default": "true",
-        "version": ""
-      },
-      "tip": {
-        "property": "tip",
-        "description": "当作为包裹元素时，可以自定义描述文案",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "wrapperClassName": {
-        "property": "wrapperClassName",
-        "description": "包装器的类属性",
-        "type": "string",
-        "default": "-",
-        "version": ""
       }
     },
     "Statistic.Countdown": {
@@ -4759,6 +4759,50 @@
         "version": "3.19.0"
       }
     },
+    "Steps.Step": {
+      "description": {
+        "property": "description",
+        "description": "步骤的详情描述，可选",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "icon": {
+        "property": "icon",
+        "description": "步骤图标的类型，可选",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "status": {
+        "property": "status",
+        "description": "指定状态。当不配置该属性时，会使用 Steps 的 `current` 来自动指定状态。可选：`wait` `process` `finish` `error`",
+        "type": "string",
+        "default": "wait",
+        "version": ""
+      },
+      "title": {
+        "property": "title",
+        "description": "标题",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "subTitle": {
+        "property": "subTitle",
+        "description": "子标题",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": "3.22.0"
+      },
+      "disabled": {
+        "property": "disabled",
+        "description": "禁用点击",
+        "type": "boolean",
+        "default": "false",
+        "version": "3.22.0"
+      }
+    },
     "Switch": {
       "autoFocus": {
         "property": "autoFocus",
@@ -4836,50 +4880,6 @@
         "type": "string",
         "default": "-",
         "version": "3.10.1"
-      }
-    },
-    "Steps.Step": {
-      "description": {
-        "property": "description",
-        "description": "步骤的详情描述，可选",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "icon": {
-        "property": "icon",
-        "description": "步骤图标的类型，可选",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "status": {
-        "property": "status",
-        "description": "指定状态。当不配置该属性时，会使用 Steps 的 `current` 来自动指定状态。可选：`wait` `process` `finish` `error`",
-        "type": "string",
-        "default": "wait",
-        "version": ""
-      },
-      "title": {
-        "property": "title",
-        "description": "标题",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "subTitle": {
-        "property": "subTitle",
-        "description": "子标题",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": "3.22.0"
-      },
-      "disabled": {
-        "property": "disabled",
-        "description": "禁用点击",
-        "type": "boolean",
-        "default": "false",
-        "version": "3.22.0"
       }
     },
     "Tabs": {
@@ -5070,36 +5070,6 @@
         "type": "(checked) => void",
         "default": "-",
         "version": ""
-      }
-    },
-    "Timeline": {
-      "pending": {
-        "property": "pending",
-        "description": "指定最后一个幽灵节点是否存在或内容",
-        "type": "boolean\\|string\\|ReactNode",
-        "default": "false",
-        "version": ""
-      },
-      "pendingDot": {
-        "property": "pendingDot",
-        "description": "当最后一个幽灵节点存在時，指定其时间图点",
-        "type": "string\\|ReactNode",
-        "default": "`<Icon type=\"loading\" />`",
-        "version": "3.3.0"
-      },
-      "reverse": {
-        "property": "reverse",
-        "description": "节点排序",
-        "type": "boolean",
-        "default": "false",
-        "version": "3.5.0"
-      },
-      "mode": {
-        "property": "mode",
-        "description": "通过设置 `mode` 可以改变时间轴和内容的相对位置",
-        "type": "`left` \\| `alternate` \\| `right`",
-        "default": "-",
-        "version": "3.8.0"
       }
     },
     "TimePicker": {
@@ -5298,6 +5268,36 @@
         "type": "(open: boolean): void",
         "default": "无",
         "version": ""
+      }
+    },
+    "Timeline": {
+      "pending": {
+        "property": "pending",
+        "description": "指定最后一个幽灵节点是否存在或内容",
+        "type": "boolean\\|string\\|ReactNode",
+        "default": "false",
+        "version": ""
+      },
+      "pendingDot": {
+        "property": "pendingDot",
+        "description": "当最后一个幽灵节点存在時，指定其时间图点",
+        "type": "string\\|ReactNode",
+        "default": "`<Icon type=\"loading\" />`",
+        "version": "3.3.0"
+      },
+      "reverse": {
+        "property": "reverse",
+        "description": "节点排序",
+        "type": "boolean",
+        "default": "false",
+        "version": "3.5.0"
+      },
+      "mode": {
+        "property": "mode",
+        "description": "通过设置 `mode` 可以改变时间轴和内容的相对位置",
+        "type": "`left` \\| `alternate` \\| `right`",
+        "default": "-",
+        "version": "3.8.0"
       }
     },
     "Timeline.Item": {
@@ -5863,15 +5863,6 @@
         "version": ""
       }
     },
-    "Tree.DirectoryTree": {
-      "expandAction": {
-        "property": "expandAction",
-        "description": "目录展开逻辑，可选 `false` `'click'` `'doubleClick'`",
-        "type": "string",
-        "default": "click",
-        "version": "3.7.0"
-      }
-    },
     "TreeSelect": {
       "allowClear": {
         "property": "allowClear",
@@ -6126,6 +6117,15 @@
         "version": "3.10.0"
       }
     },
+    "Tree.DirectoryTree": {
+      "expandAction": {
+        "property": "expandAction",
+        "description": "目录展开逻辑，可选 `false` `'click'` `'doubleClick'`",
+        "type": "string",
+        "default": "click",
+        "version": "3.7.0"
+      }
+    },
     "TreeSelect.TreeNode": {
       "selectable": {
         "property": "selectable",
@@ -6182,78 +6182,6 @@
         "type": "string",
         "default": "-",
         "version": ""
-      }
-    },
-    "Typography.Title": {
-      "copyable": {
-        "property": "copyable",
-        "description": "是否可拷贝，为对象时可设置复制文本以回调函数",
-        "type": "boolean \\| { text: string, onCopy: Function }",
-        "default": "false",
-        "version": "3.14.0"
-      },
-      "delete": {
-        "property": "delete",
-        "description": "添加删除线样式",
-        "type": "boolean",
-        "default": "false",
-        "version": "3.14.0"
-      },
-      "disabled": {
-        "property": "disabled",
-        "description": "禁用文本",
-        "type": "boolean",
-        "default": "false",
-        "version": "3.14.0"
-      },
-      "editable": {
-        "property": "editable",
-        "description": "是否可编辑，为对象时可对编辑进行控制",
-        "type": "boolean \\| { editing: boolean, onStart: Function, onChange: Function(string) }",
-        "default": "false",
-        "version": "3.14.0"
-      },
-      "ellipsis": {
-        "property": "ellipsis",
-        "description": "自动溢出省略，为对象时可设置省略行数与是否可展开等",
-        "type": "boolean \\| { rows: number, expandable: boolean, onExpand: Function }",
-        "default": "false",
-        "version": "3.14.0"
-      },
-      "level": {
-        "property": "level",
-        "description": "重要程度，相当于 `h1`、`h2`、`h3`、`h4`",
-        "type": "number: `1`, `2`, `3`, `4`",
-        "default": "1",
-        "version": "3.14.0"
-      },
-      "mark": {
-        "property": "mark",
-        "description": "添加标记样式",
-        "type": "boolean",
-        "default": "false",
-        "version": "3.14.0"
-      },
-      "underline": {
-        "property": "underline",
-        "description": "添加下划线样式",
-        "type": "boolean",
-        "default": "false",
-        "version": "3.14.0"
-      },
-      "onChange": {
-        "property": "onChange",
-        "description": "当用户提交编辑内容时触发",
-        "type": "Function(string)",
-        "default": "-",
-        "version": "3.14.0"
-      },
-      "type": {
-        "property": "type",
-        "description": "文本类型",
-        "type": "`secondary`, `warning`, `danger`",
-        "default": "-",
-        "version": "3.14.0"
       }
     },
     "Typography.Text": {
@@ -6318,6 +6246,78 @@
         "description": "是否加粗",
         "type": "boolean",
         "default": "false",
+        "version": "3.14.0"
+      },
+      "type": {
+        "property": "type",
+        "description": "文本类型",
+        "type": "`secondary`, `warning`, `danger`",
+        "default": "-",
+        "version": "3.14.0"
+      }
+    },
+    "Typography.Title": {
+      "copyable": {
+        "property": "copyable",
+        "description": "是否可拷贝，为对象时可设置复制文本以回调函数",
+        "type": "boolean \\| { text: string, onCopy: Function }",
+        "default": "false",
+        "version": "3.14.0"
+      },
+      "delete": {
+        "property": "delete",
+        "description": "添加删除线样式",
+        "type": "boolean",
+        "default": "false",
+        "version": "3.14.0"
+      },
+      "disabled": {
+        "property": "disabled",
+        "description": "禁用文本",
+        "type": "boolean",
+        "default": "false",
+        "version": "3.14.0"
+      },
+      "editable": {
+        "property": "editable",
+        "description": "是否可编辑，为对象时可对编辑进行控制",
+        "type": "boolean \\| { editing: boolean, onStart: Function, onChange: Function(string) }",
+        "default": "false",
+        "version": "3.14.0"
+      },
+      "ellipsis": {
+        "property": "ellipsis",
+        "description": "自动溢出省略，为对象时可设置省略行数与是否可展开等",
+        "type": "boolean \\| { rows: number, expandable: boolean, onExpand: Function }",
+        "default": "false",
+        "version": "3.14.0"
+      },
+      "level": {
+        "property": "level",
+        "description": "重要程度，相当于 `h1`、`h2`、`h3`、`h4`",
+        "type": "number: `1`, `2`, `3`, `4`",
+        "default": "1",
+        "version": "3.14.0"
+      },
+      "mark": {
+        "property": "mark",
+        "description": "添加标记样式",
+        "type": "boolean",
+        "default": "false",
+        "version": "3.14.0"
+      },
+      "underline": {
+        "property": "underline",
+        "description": "添加下划线样式",
+        "type": "boolean",
+        "default": "false",
+        "version": "3.14.0"
+      },
+      "onChange": {
+        "property": "onChange",
+        "description": "当用户提交编辑内容时触发",
+        "type": "Function(string)",
+        "default": "-",
         "version": "3.14.0"
       },
       "type": {
@@ -6570,6 +6570,64 @@
         "version": "File"
       }
     },
+    "Form": {
+      "form": {
+        "property": "form",
+        "description": "经 `Form.create()` 包装过的组件会自带 `this.props.form` 属性",
+        "type": "object",
+        "default": "-",
+        "version": ""
+      },
+      "hideRequiredMark": {
+        "property": "hideRequiredMark",
+        "description": "隐藏所有表单项的必选标记",
+        "type": "Boolean",
+        "default": "false",
+        "version": ""
+      },
+      "labelAlign": {
+        "property": "labelAlign",
+        "description": "label 标签的文本对齐方式",
+        "type": "'left' \\| 'right'",
+        "default": "'right'",
+        "version": "3.15.0"
+      },
+      "labelCol": {
+        "property": "labelCol",
+        "description": "（3.14.0 新增，之前的版本只能设置到 FormItem 上。）label 标签布局，同 `<Col>` 组件，设置 `span` `offset` 值，如 `{span: 3, offset: 12}` 或 `sm: {span: 3, offset: 12}`",
+        "type": "[object](https://ant.design/components/grid/#Col)",
+        "default": "",
+        "version": "3.14.0"
+      },
+      "layout": {
+        "property": "layout",
+        "description": "表单布局",
+        "type": "'horizontal'\\|'vertical'\\|'inline'",
+        "default": "'horizontal'",
+        "version": ""
+      },
+      "onSubmit": {
+        "property": "onSubmit",
+        "description": "数据验证成功后回调事件",
+        "type": "Function(e:Event)",
+        "default": "",
+        "version": ""
+      },
+      "wrapperCol": {
+        "property": "wrapperCol",
+        "description": "（3.14.0 新增，之前的版本只能设置到 FormItem 上。）需要为输入控件设置布局样式时，使用该属性，用法同 labelCol",
+        "type": "[object](https://ant.design/components/grid-cn/#Col)",
+        "default": "",
+        "version": "3.14.0"
+      },
+      "colon": {
+        "property": "colon",
+        "description": "配置 Form.Item 的 colon 的默认值 (只有在属性 layout 为 horizontal 时有效)",
+        "type": "boolean",
+        "default": "true",
+        "version": "3.15.0"
+      }
+    },
     "Form.Item": {
       "colon": {
         "property": "colon",
@@ -6646,257 +6704,6 @@
         "description": "需要为输入控件设置布局样式时，使用该属性，用法同 labelCol。在 3.14.0 之后，你可以通过 Form 的 wrapperCol 进行统一设置。当和 Form 同时设置时，以 FormItem 为准。",
         "type": "[object](https://ant.design/components/grid/#Col)",
         "default": "",
-        "version": ""
-      }
-    },
-    "Form": {
-      "form": {
-        "property": "form",
-        "description": "经 `Form.create()` 包装过的组件会自带 `this.props.form` 属性",
-        "type": "object",
-        "default": "-",
-        "version": ""
-      },
-      "hideRequiredMark": {
-        "property": "hideRequiredMark",
-        "description": "隐藏所有表单项的必选标记",
-        "type": "Boolean",
-        "default": "false",
-        "version": ""
-      },
-      "labelAlign": {
-        "property": "labelAlign",
-        "description": "label 标签的文本对齐方式",
-        "type": "'left' \\| 'right'",
-        "default": "'right'",
-        "version": "3.15.0"
-      },
-      "labelCol": {
-        "property": "labelCol",
-        "description": "（3.14.0 新增，之前的版本只能设置到 FormItem 上。）label 标签布局，同 `<Col>` 组件，设置 `span` `offset` 值，如 `{span: 3, offset: 12}` 或 `sm: {span: 3, offset: 12}`",
-        "type": "[object](https://ant.design/components/grid/#Col)",
-        "default": "",
-        "version": "3.14.0"
-      },
-      "layout": {
-        "property": "layout",
-        "description": "表单布局",
-        "type": "'horizontal'\\|'vertical'\\|'inline'",
-        "default": "'horizontal'",
-        "version": ""
-      },
-      "onSubmit": {
-        "property": "onSubmit",
-        "description": "数据验证成功后回调事件",
-        "type": "Function(e:Event)",
-        "default": "",
-        "version": ""
-      },
-      "wrapperCol": {
-        "property": "wrapperCol",
-        "description": "（3.14.0 新增，之前的版本只能设置到 FormItem 上。）需要为输入控件设置布局样式时，使用该属性，用法同 labelCol",
-        "type": "[object](https://ant.design/components/grid-cn/#Col)",
-        "default": "",
-        "version": "3.14.0"
-      },
-      "colon": {
-        "property": "colon",
-        "description": "配置 Form.Item 的 colon 的默认值 (只有在属性 layout 为 horizontal 时有效)",
-        "type": "boolean",
-        "default": "true",
-        "version": "3.15.0"
-      }
-    },
-    "Table.ColumnGroup": {
-      "title": {
-        "property": "title",
-        "description": "列头显示文字",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      }
-    },
-    "Table.Column": {
-      "align": {
-        "property": "align",
-        "description": "设置列的对齐方式",
-        "type": "'left' \\| 'right' \\| 'center'",
-        "default": "'left'",
-        "version": "3.3.2"
-      },
-      "ellipsis": {
-        "property": "ellipsis",
-        "description": "超过宽度将自动省略，暂不支持和排序筛选一起使用。<br />设置为 `true` 时，表格布局将变成 `tableLayout=\"fixed\"`。",
-        "type": "boolean",
-        "default": "false",
-        "version": "3.24.0"
-      },
-      "className": {
-        "property": "className",
-        "description": "列样式类名",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "colSpan": {
-        "property": "colSpan",
-        "description": "表头列合并,设置为 0 时，不渲染",
-        "type": "number",
-        "default": "",
-        "version": ""
-      },
-      "dataIndex": {
-        "property": "dataIndex",
-        "description": "列数据在数据项中对应的 key，支持 `a.b.c`、`a[0].b.c[1]` 的嵌套写法",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "defaultFilteredValue": {
-        "property": "defaultFilteredValue",
-        "description": "默认筛选值",
-        "type": "string\\[]",
-        "default": "-",
-        "version": ""
-      },
-      "defaultSortOrder": {
-        "property": "defaultSortOrder",
-        "description": "默认排序顺序",
-        "type": "'ascend' \\| 'descend'",
-        "default": "-",
-        "version": "3.9.3"
-      },
-      "filterDropdown": {
-        "property": "filterDropdown",
-        "description": "可以自定义筛选菜单，此函数只负责渲染图层，需要自行编写各种交互",
-        "type": "React.ReactNode \\| (props: [FilterDropdownProps](https://git.io/fjP5h)) => React.ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "filterDropdownVisible": {
-        "property": "filterDropdownVisible",
-        "description": "用于控制自定义筛选菜单是否可见",
-        "type": "boolean",
-        "default": "-",
-        "version": ""
-      },
-      "filtered": {
-        "property": "filtered",
-        "description": "标识数据是否经过过滤，筛选图标会高亮",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "filteredValue": {
-        "property": "filteredValue",
-        "description": "筛选的受控属性，外界可用此控制列的筛选状态，值为已筛选的 value 数组",
-        "type": "string\\[]",
-        "default": "-",
-        "version": ""
-      },
-      "filterIcon": {
-        "property": "filterIcon",
-        "description": "自定义 filter 图标。",
-        "type": "ReactNode\\|(filtered: boolean) => ReactNode",
-        "default": "false",
-        "version": ""
-      },
-      "filterMultiple": {
-        "property": "filterMultiple",
-        "description": "是否多选",
-        "type": "boolean",
-        "default": "true",
-        "version": ""
-      },
-      "filters": {
-        "property": "filters",
-        "description": "表头的筛选菜单项",
-        "type": "object\\[]",
-        "default": "-",
-        "version": ""
-      },
-      "fixed": {
-        "property": "fixed",
-        "description": "列是否固定，可选 `true`(等效于 left) `'left'` `'right'`",
-        "type": "boolean\\|string",
-        "default": "false",
-        "version": ""
-      },
-      "key": {
-        "property": "key",
-        "description": "React 需要的 key，如果已经设置了唯一的 `dataIndex`，可以忽略这个属性",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "render": {
-        "property": "render",
-        "description": "生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return 里面可以设置表格[行/列合并](#components-table-demo-colspan-rowspan)",
-        "type": "Function(text, record, index) {}",
-        "default": "-",
-        "version": ""
-      },
-      "sorter": {
-        "property": "sorter",
-        "description": "排序函数，本地排序使用一个函数(参考 [Array.sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 compareFunction)，需要服务端排序可设为 true",
-        "type": "Function\\|boolean",
-        "default": "-",
-        "version": ""
-      },
-      "sortOrder": {
-        "property": "sortOrder",
-        "description": "排序的受控属性，外界可用此控制列的排序，可设置为 `'ascend'` `'descend'` `false`",
-        "type": "boolean\\|string",
-        "default": "-",
-        "version": ""
-      },
-      "sortDirections": {
-        "property": "sortDirections",
-        "description": "支持的排序方式，取值为 `'ascend'` `'descend'`",
-        "type": "Array",
-        "default": "`['ascend', 'descend']`",
-        "version": "3.15.2"
-      },
-      "title": {
-        "property": "title",
-        "description": "列头显示文字（函数用法 `3.10.0` 后支持）",
-        "type": "ReactNode\\|({ sortOrder, sortColumn, filters }) => ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "width": {
-        "property": "width",
-        "description": "列宽度（[指定了也不生效？](https://github.com/ant-design/ant-design/issues/13825#issuecomment-449889241)）",
-        "type": "string\\|number",
-        "default": "-",
-        "version": ""
-      },
-      "onCell": {
-        "property": "onCell",
-        "description": "设置单元格属性",
-        "type": "Function(record, rowIndex)",
-        "default": "-",
-        "version": ""
-      },
-      "onFilter": {
-        "property": "onFilter",
-        "description": "本地模式下，确定筛选的运行函数",
-        "type": "Function",
-        "default": "-",
-        "version": ""
-      },
-      "onFilterDropdownVisibleChange": {
-        "property": "onFilterDropdownVisibleChange",
-        "description": "自定义筛选菜单可见变化时调用",
-        "type": "function(visible) {}",
-        "default": "-",
-        "version": ""
-      },
-      "onHeaderCell": {
-        "property": "onHeaderCell",
-        "description": "设置头部单元格属性",
-        "type": "Function(column)",
-        "default": "-",
         "version": ""
       }
     },
@@ -7118,6 +6925,199 @@
         "default": "`() => TableHtmlElement`",
         "version": "3.21.0"
       }
+    },
+    "Table.Column": {
+      "align": {
+        "property": "align",
+        "description": "设置列的对齐方式",
+        "type": "'left' \\| 'right' \\| 'center'",
+        "default": "'left'",
+        "version": "3.3.2"
+      },
+      "ellipsis": {
+        "property": "ellipsis",
+        "description": "超过宽度将自动省略，暂不支持和排序筛选一起使用。<br />设置为 `true` 时，表格布局将变成 `tableLayout=\"fixed\"`。",
+        "type": "boolean",
+        "default": "false",
+        "version": "3.24.0"
+      },
+      "className": {
+        "property": "className",
+        "description": "列样式类名",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "colSpan": {
+        "property": "colSpan",
+        "description": "表头列合并,设置为 0 时，不渲染",
+        "type": "number",
+        "default": "",
+        "version": ""
+      },
+      "dataIndex": {
+        "property": "dataIndex",
+        "description": "列数据在数据项中对应的 key，支持 `a.b.c`、`a[0].b.c[1]` 的嵌套写法",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "defaultFilteredValue": {
+        "property": "defaultFilteredValue",
+        "description": "默认筛选值",
+        "type": "string\\[]",
+        "default": "-",
+        "version": ""
+      },
+      "defaultSortOrder": {
+        "property": "defaultSortOrder",
+        "description": "默认排序顺序",
+        "type": "'ascend' \\| 'descend'",
+        "default": "-",
+        "version": "3.9.3"
+      },
+      "filterDropdown": {
+        "property": "filterDropdown",
+        "description": "可以自定义筛选菜单，此函数只负责渲染图层，需要自行编写各种交互",
+        "type": "React.ReactNode \\| (props: [FilterDropdownProps](https://git.io/fjP5h)) => React.ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "filterDropdownVisible": {
+        "property": "filterDropdownVisible",
+        "description": "用于控制自定义筛选菜单是否可见",
+        "type": "boolean",
+        "default": "-",
+        "version": ""
+      },
+      "filtered": {
+        "property": "filtered",
+        "description": "标识数据是否经过过滤，筛选图标会高亮",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "filteredValue": {
+        "property": "filteredValue",
+        "description": "筛选的受控属性，外界可用此控制列的筛选状态，值为已筛选的 value 数组",
+        "type": "string\\[]",
+        "default": "-",
+        "version": ""
+      },
+      "filterIcon": {
+        "property": "filterIcon",
+        "description": "自定义 filter 图标。",
+        "type": "ReactNode\\|(filtered: boolean) => ReactNode",
+        "default": "false",
+        "version": ""
+      },
+      "filterMultiple": {
+        "property": "filterMultiple",
+        "description": "是否多选",
+        "type": "boolean",
+        "default": "true",
+        "version": ""
+      },
+      "filters": {
+        "property": "filters",
+        "description": "表头的筛选菜单项",
+        "type": "object\\[]",
+        "default": "-",
+        "version": ""
+      },
+      "fixed": {
+        "property": "fixed",
+        "description": "列是否固定，可选 `true`(等效于 left) `'left'` `'right'`",
+        "type": "boolean\\|string",
+        "default": "false",
+        "version": ""
+      },
+      "key": {
+        "property": "key",
+        "description": "React 需要的 key，如果已经设置了唯一的 `dataIndex`，可以忽略这个属性",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "render": {
+        "property": "render",
+        "description": "生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return 里面可以设置表格[行/列合并](#components-table-demo-colspan-rowspan)",
+        "type": "Function(text, record, index) {}",
+        "default": "-",
+        "version": ""
+      },
+      "sorter": {
+        "property": "sorter",
+        "description": "排序函数，本地排序使用一个函数(参考 [Array.sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 compareFunction)，需要服务端排序可设为 true",
+        "type": "Function\\|boolean",
+        "default": "-",
+        "version": ""
+      },
+      "sortOrder": {
+        "property": "sortOrder",
+        "description": "排序的受控属性，外界可用此控制列的排序，可设置为 `'ascend'` `'descend'` `false`",
+        "type": "boolean\\|string",
+        "default": "-",
+        "version": ""
+      },
+      "sortDirections": {
+        "property": "sortDirections",
+        "description": "支持的排序方式，取值为 `'ascend'` `'descend'`",
+        "type": "Array",
+        "default": "`['ascend', 'descend']`",
+        "version": "3.15.2"
+      },
+      "title": {
+        "property": "title",
+        "description": "列头显示文字（函数用法 `3.10.0` 后支持）",
+        "type": "ReactNode\\|({ sortOrder, sortColumn, filters }) => ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "width": {
+        "property": "width",
+        "description": "列宽度（[指定了也不生效？](https://github.com/ant-design/ant-design/issues/13825#issuecomment-449889241)）",
+        "type": "string\\|number",
+        "default": "-",
+        "version": ""
+      },
+      "onCell": {
+        "property": "onCell",
+        "description": "设置单元格属性",
+        "type": "Function(record, rowIndex)",
+        "default": "-",
+        "version": ""
+      },
+      "onFilter": {
+        "property": "onFilter",
+        "description": "本地模式下，确定筛选的运行函数",
+        "type": "Function",
+        "default": "-",
+        "version": ""
+      },
+      "onFilterDropdownVisibleChange": {
+        "property": "onFilterDropdownVisibleChange",
+        "description": "自定义筛选菜单可见变化时调用",
+        "type": "function(visible) {}",
+        "default": "-",
+        "version": ""
+      },
+      "onHeaderCell": {
+        "property": "onHeaderCell",
+        "description": "设置头部单元格属性",
+        "type": "Function(column)",
+        "default": "-",
+        "version": ""
+      }
+    },
+    "Table.ColumnGroup": {
+      "title": {
+        "property": "title",
+        "description": "列头显示文字",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      }
     }
   },
   "en": {
@@ -7193,6 +7193,59 @@
         "version": ""
       }
     },
+    "Affix": {
+      "offsetBottom": {
+        "property": "offsetBottom",
+        "description": "Offset from the bottom of the viewport (in pixels)",
+        "type": "number",
+        "default": "-",
+        "version": ""
+      },
+      "offsetTop": {
+        "property": "offsetTop",
+        "description": "Offset from the top of the viewport (in pixels)",
+        "type": "number",
+        "default": "0",
+        "version": ""
+      },
+      "target": {
+        "property": "target",
+        "description": "Specifies the scrollable area DOM node",
+        "type": "() => HTMLElement",
+        "default": "() => window",
+        "version": ""
+      },
+      "onChange": {
+        "property": "onChange",
+        "description": "Callback for when Affix state is changed",
+        "type": "Function(affixed)",
+        "default": "-",
+        "version": ""
+      }
+    },
+    "Anchor.Link": {
+      "href": {
+        "property": "href",
+        "description": "target of hyperlink",
+        "type": "string",
+        "default": "",
+        "version": ""
+      },
+      "title": {
+        "property": "title",
+        "description": "content of hyperlink",
+        "type": "string\\|ReactNode",
+        "default": "",
+        "version": ""
+      },
+      "target": {
+        "property": "target",
+        "description": "Specifies where to display the linked URL",
+        "type": "string",
+        "default": "",
+        "version": ""
+      }
+    },
     "Anchor": {
       "affix": {
         "property": "affix",
@@ -7263,59 +7316,6 @@
         "type": "(currentActiveLink: string) => void",
         "default": "",
         "version": "3.24.0"
-      }
-    },
-    "Affix": {
-      "offsetBottom": {
-        "property": "offsetBottom",
-        "description": "Offset from the bottom of the viewport (in pixels)",
-        "type": "number",
-        "default": "-",
-        "version": ""
-      },
-      "offsetTop": {
-        "property": "offsetTop",
-        "description": "Offset from the top of the viewport (in pixels)",
-        "type": "number",
-        "default": "0",
-        "version": ""
-      },
-      "target": {
-        "property": "target",
-        "description": "Specifies the scrollable area DOM node",
-        "type": "() => HTMLElement",
-        "default": "() => window",
-        "version": ""
-      },
-      "onChange": {
-        "property": "onChange",
-        "description": "Callback for when Affix state is changed",
-        "type": "Function(affixed)",
-        "default": "-",
-        "version": ""
-      }
-    },
-    "Anchor.Link": {
-      "href": {
-        "property": "href",
-        "description": "target of hyperlink",
-        "type": "string",
-        "default": "",
-        "version": ""
-      },
-      "title": {
-        "property": "title",
-        "description": "content of hyperlink",
-        "type": "string\\|ReactNode",
-        "default": "",
-        "version": ""
-      },
-      "target": {
-        "property": "target",
-        "description": "Specifies where to display the linked URL",
-        "type": "string",
-        "default": "",
-        "version": ""
       }
     },
     "AutoComplete": {
@@ -7474,57 +7474,6 @@
         "version": "3.9.3"
       }
     },
-    "Avatar": {
-      "icon": {
-        "property": "icon",
-        "description": "the `Icon` type for an icon avatar, see `Icon` Component or use ReactNode",
-        "type": "string \\| ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "shape": {
-        "property": "shape",
-        "description": "the shape of avatar",
-        "type": "`circle` \\| `square`",
-        "default": "`circle`",
-        "version": ""
-      },
-      "size": {
-        "property": "size",
-        "description": "the size of the avatar",
-        "type": "number \\| string: `large` `small` `default`",
-        "default": "`default`",
-        "version": ""
-      },
-      "src": {
-        "property": "src",
-        "description": "the address of the image for an image avatar",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "srcSet": {
-        "property": "srcSet",
-        "description": "a list of sources to use for different screen resolutions",
-        "type": "string",
-        "default": "-",
-        "version": "3.11.0"
-      },
-      "alt": {
-        "property": "alt",
-        "description": "This attribute defines the alternative text describing the image",
-        "type": "string",
-        "default": "-",
-        "version": "3.7.0"
-      },
-      "onError": {
-        "property": "onError",
-        "description": "handler when img load error, return false to prevent default fallback behavior",
-        "type": "() => boolean",
-        "default": "-",
-        "version": "3.8.0"
-      }
-    },
     "BackTop": {
       "target": {
         "property": "target",
@@ -7643,90 +7592,169 @@
         "version": "`/`"
       }
     },
-    "Button": {
-      "disabled": {
-        "property": "disabled",
-        "description": "disabled state of button",
-        "type": "boolean",
-        "default": "`false`",
-        "version": "3.5.1"
-      },
-      "ghost": {
-        "property": "ghost",
-        "description": "make background transparent and invert text and border colors, added in 2.7",
-        "type": "boolean",
-        "default": "`false`",
-        "version": ""
-      },
-      "href": {
-        "property": "href",
-        "description": "redirect url of link button",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "htmlType": {
-        "property": "htmlType",
-        "description": "set the original html `type` of `button`, see: [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#attr-type)",
-        "type": "string",
-        "default": "`button`",
-        "version": ""
-      },
+    "Avatar": {
       "icon": {
         "property": "icon",
-        "description": "set the icon of button, see: Icon component",
-        "type": "string",
+        "description": "the `Icon` type for an icon avatar, see `Icon` Component or use ReactNode",
+        "type": "string \\| ReactNode",
         "default": "-",
-        "version": ""
-      },
-      "loading": {
-        "property": "loading",
-        "description": "set the loading status of button",
-        "type": "boolean \\| { delay: number }",
-        "default": "`false`",
         "version": ""
       },
       "shape": {
         "property": "shape",
-        "description": "can be set to `circle`, `round` or omitted",
-        "type": "string",
-        "default": "-",
+        "description": "the shape of avatar",
+        "type": "`circle` \\| `square`",
+        "default": "`circle`",
         "version": ""
       },
       "size": {
         "property": "size",
-        "description": "can be set to `small` `large` or omitted",
-        "type": "string",
+        "description": "the size of the avatar",
+        "type": "number \\| string: `large` `small` `default`",
         "default": "`default`",
         "version": ""
       },
-      "target": {
-        "property": "target",
-        "description": "same as target attribute of a, works when href is specified",
+      "src": {
+        "property": "src",
+        "description": "the address of the image for an image avatar",
         "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "srcSet": {
+        "property": "srcSet",
+        "description": "a list of sources to use for different screen resolutions",
+        "type": "string",
+        "default": "-",
+        "version": "3.11.0"
+      },
+      "alt": {
+        "property": "alt",
+        "description": "This attribute defines the alternative text describing the image",
+        "type": "string",
+        "default": "-",
+        "version": "3.7.0"
+      },
+      "onError": {
+        "property": "onError",
+        "description": "handler when img load error, return false to prevent default fallback behavior",
+        "type": "() => boolean",
+        "default": "-",
+        "version": "3.8.0"
+      }
+    },
+    "Card": {
+      "actions": {
+        "property": "actions",
+        "description": "The action list, shows at the bottom of the Card.",
+        "type": "Array&lt;ReactNode>",
+        "default": "-",
+        "version": ""
+      },
+      "activeTabKey": {
+        "property": "activeTabKey",
+        "description": "Current TabPane's key",
+        "type": "string",
+        "default": "-",
+        "version": "3.3.0"
+      },
+      "headStyle": {
+        "property": "headStyle",
+        "description": "Inline style to apply to the card head",
+        "type": "object",
+        "default": "-",
+        "version": "3.8.0"
+      },
+      "bodyStyle": {
+        "property": "bodyStyle",
+        "description": "Inline style to apply to the card content",
+        "type": "object",
+        "default": "-",
+        "version": ""
+      },
+      "bordered": {
+        "property": "bordered",
+        "description": "Toggles rendering of the border around the card",
+        "type": "boolean",
+        "default": "`true`",
+        "version": ""
+      },
+      "cover": {
+        "property": "cover",
+        "description": "Card cover",
+        "type": "ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "defaultActiveTabKey": {
+        "property": "defaultActiveTabKey",
+        "description": "Initial active TabPane's key, if `activeTabKey` is not set.",
+        "type": "string",
+        "default": "-",
+        "version": "3.3.0"
+      },
+      "extra": {
+        "property": "extra",
+        "description": "Content to render in the top-right corner of the card",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "hoverable": {
+        "property": "hoverable",
+        "description": "Lift up when hovering card",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "loading": {
+        "property": "loading",
+        "description": "Shows a loading indicator while the contents of the card are being fetched",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "tabList": {
+        "property": "tabList",
+        "description": "List of TabPane's head.",
+        "type": "Array&lt;{key: string, tab: ReactNode}>",
+        "default": "-",
+        "version": ""
+      },
+      "tabBarExtraContent": {
+        "property": "tabBarExtraContent",
+        "description": "Extra content in tab bar",
+        "type": "React.ReactNode",
+        "default": "-",
+        "version": "3.23.0"
+      },
+      "size": {
+        "property": "size",
+        "description": "Size of card",
+        "type": "`default` \\| `small`",
+        "default": "`default`",
+        "version": "3.12.0"
+      },
+      "title": {
+        "property": "title",
+        "description": "Card title",
+        "type": "string\\|ReactNode",
         "default": "-",
         "version": ""
       },
       "type": {
         "property": "type",
-        "description": "can be set to `primary` `ghost` `dashed` `danger` `link`(added in 3.17) or omitted (meaning `default`)",
+        "description": "Card style type, can be set to `inner` or not set",
         "type": "string",
-        "default": "`default`",
-        "version": ""
-      },
-      "onClick": {
-        "property": "onClick",
-        "description": "set the handler to handle `click` event",
-        "type": "(event) => void",
         "default": "-",
         "version": ""
       },
-      "block": {
-        "property": "block",
-        "description": "option to fit button width to its parent width",
-        "type": "boolean",
-        "default": "`false`",
-        "version": "3.8.0"
+      "onTabChange": {
+        "property": "onTabChange",
+        "description": "Callback when tab is switched",
+        "type": "(key) => void",
+        "default": "-",
+        "version": ""
       }
     },
     "Calendar": {
@@ -7859,118 +7887,90 @@
         "version": ""
       }
     },
-    "Card": {
-      "actions": {
-        "property": "actions",
-        "description": "The action list, shows at the bottom of the Card.",
-        "type": "Array&lt;ReactNode>",
-        "default": "-",
+    "Button": {
+      "disabled": {
+        "property": "disabled",
+        "description": "disabled state of button",
+        "type": "boolean",
+        "default": "`false`",
+        "version": "3.5.1"
+      },
+      "ghost": {
+        "property": "ghost",
+        "description": "make background transparent and invert text and border colors, added in 2.7",
+        "type": "boolean",
+        "default": "`false`",
         "version": ""
       },
-      "activeTabKey": {
-        "property": "activeTabKey",
-        "description": "Current TabPane's key",
+      "href": {
+        "property": "href",
+        "description": "redirect url of link button",
         "type": "string",
         "default": "-",
-        "version": "3.3.0"
-      },
-      "headStyle": {
-        "property": "headStyle",
-        "description": "Inline style to apply to the card head",
-        "type": "object",
-        "default": "-",
-        "version": "3.8.0"
-      },
-      "bodyStyle": {
-        "property": "bodyStyle",
-        "description": "Inline style to apply to the card content",
-        "type": "object",
-        "default": "-",
         "version": ""
       },
-      "bordered": {
-        "property": "bordered",
-        "description": "Toggles rendering of the border around the card",
-        "type": "boolean",
-        "default": "`true`",
+      "htmlType": {
+        "property": "htmlType",
+        "description": "set the original html `type` of `button`, see: [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#attr-type)",
+        "type": "string",
+        "default": "`button`",
         "version": ""
       },
-      "cover": {
-        "property": "cover",
-        "description": "Card cover",
-        "type": "ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "defaultActiveTabKey": {
-        "property": "defaultActiveTabKey",
-        "description": "Initial active TabPane's key, if `activeTabKey` is not set.",
+      "icon": {
+        "property": "icon",
+        "description": "set the icon of button, see: Icon component",
         "type": "string",
         "default": "-",
-        "version": "3.3.0"
-      },
-      "extra": {
-        "property": "extra",
-        "description": "Content to render in the top-right corner of the card",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "hoverable": {
-        "property": "hoverable",
-        "description": "Lift up when hovering card",
-        "type": "boolean",
-        "default": "false",
         "version": ""
       },
       "loading": {
         "property": "loading",
-        "description": "Shows a loading indicator while the contents of the card are being fetched",
-        "type": "boolean",
-        "default": "false",
+        "description": "set the loading status of button",
+        "type": "boolean \\| { delay: number }",
+        "default": "`false`",
         "version": ""
       },
-      "tabList": {
-        "property": "tabList",
-        "description": "List of TabPane's head.",
-        "type": "Array&lt;{key: string, tab: ReactNode}>",
+      "shape": {
+        "property": "shape",
+        "description": "can be set to `circle`, `round` or omitted",
+        "type": "string",
         "default": "-",
         "version": ""
-      },
-      "tabBarExtraContent": {
-        "property": "tabBarExtraContent",
-        "description": "Extra content in tab bar",
-        "type": "React.ReactNode",
-        "default": "-",
-        "version": "3.23.0"
       },
       "size": {
         "property": "size",
-        "description": "Size of card",
-        "type": "`default` \\| `small`",
+        "description": "can be set to `small` `large` or omitted",
+        "type": "string",
         "default": "`default`",
-        "version": "3.12.0"
+        "version": ""
       },
-      "title": {
-        "property": "title",
-        "description": "Card title",
-        "type": "string\\|ReactNode",
+      "target": {
+        "property": "target",
+        "description": "same as target attribute of a, works when href is specified",
+        "type": "string",
         "default": "-",
         "version": ""
       },
       "type": {
         "property": "type",
-        "description": "Card style type, can be set to `inner` or not set",
+        "description": "can be set to `primary` `ghost` `dashed` `danger` `link`(added in 3.17) or omitted (meaning `default`)",
         "type": "string",
+        "default": "`default`",
+        "version": ""
+      },
+      "onClick": {
+        "property": "onClick",
+        "description": "set the handler to handle `click` event",
+        "type": "(event) => void",
         "default": "-",
         "version": ""
       },
-      "onTabChange": {
-        "property": "onTabChange",
-        "description": "Callback when tab is switched",
-        "type": "(key) => void",
-        "default": "-",
-        "version": ""
+      "block": {
+        "property": "block",
+        "description": "option to fit button width to its parent width",
+        "type": "boolean",
+        "default": "`false`",
+        "version": "3.8.0"
       }
     },
     "Card.Meta": {
@@ -8007,57 +8007,6 @@
         "description": "title content",
         "type": "ReactNode",
         "default": "-",
-        "version": ""
-      }
-    },
-    "Carousel": {
-      "afterChange": {
-        "property": "afterChange",
-        "description": "Callback function called after the current index changes",
-        "type": "function(current)",
-        "default": "-",
-        "version": ""
-      },
-      "autoplay": {
-        "property": "autoplay",
-        "description": "Whether to scroll automatically",
-        "type": "boolean",
-        "default": "`false`",
-        "version": ""
-      },
-      "beforeChange": {
-        "property": "beforeChange",
-        "description": "Callback function called before the current index changes",
-        "type": "function(from, to)",
-        "default": "-",
-        "version": ""
-      },
-      "dotPosition": {
-        "property": "dotPosition",
-        "description": "The position of the dots, which can be one of `top` `bottom` `left` `right`",
-        "type": "string",
-        "default": "bottom",
-        "version": "3.17.0"
-      },
-      "dots": {
-        "property": "dots",
-        "description": "Whether to show the dots at the bottom of the gallery",
-        "type": "boolean",
-        "default": "`true`",
-        "version": ""
-      },
-      "easing": {
-        "property": "easing",
-        "description": "Transition interpolation function name",
-        "type": "string",
-        "default": "`linear`",
-        "version": ""
-      },
-      "effect": {
-        "property": "effect",
-        "description": "Transition effect",
-        "type": "`scrollx` \\| `fade`",
-        "default": "`scrollx`",
         "version": ""
       }
     },
@@ -8275,94 +8224,6 @@
         "version": "3.6.2"
       }
     },
-    "Checkbox.Group": {
-      "defaultValue": {
-        "property": "defaultValue",
-        "description": "Default selected value",
-        "type": "string\\[]",
-        "default": "\\[]",
-        "version": "3.6.2"
-      },
-      "disabled": {
-        "property": "disabled",
-        "description": "Disable all checkboxes",
-        "type": "boolean",
-        "default": "false",
-        "version": "3.6.2"
-      },
-      "name": {
-        "property": "name",
-        "description": "The `name` property of all `input[type=\"checkbox\"]` children",
-        "type": "string",
-        "default": "-",
-        "version": "3.16.0"
-      },
-      "options": {
-        "property": "options",
-        "description": "Specifies options",
-        "type": "string\\[]",
-        "default": "\\[]",
-        "version": "3.6.2"
-      },
-      "value": {
-        "property": "value",
-        "description": "Used for setting the currently selected value.",
-        "type": "string\\[]",
-        "default": "\\[]",
-        "version": "3.6.2"
-      },
-      "onChange": {
-        "property": "onChange",
-        "description": "The callback function that is triggered when the state changes.",
-        "type": "Function(checkedValue)",
-        "default": "-",
-        "version": "3.6.2"
-      }
-    },
-    "Collapse.Panel": {
-      "disabled": {
-        "property": "disabled",
-        "description": "If `true`, panel cannot be opened or closed",
-        "type": "boolean",
-        "default": "`false`",
-        "version": ""
-      },
-      "forceRender": {
-        "property": "forceRender",
-        "description": "Forced render of content on panel, instead of lazy rending after clicking on header",
-        "type": "boolean",
-        "default": "`false`",
-        "version": "3.2.0"
-      },
-      "header": {
-        "property": "header",
-        "description": "Title of the panel",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "key": {
-        "property": "key",
-        "description": "Unique key identifying the panel from among its siblings",
-        "type": "string\\|number",
-        "default": "-",
-        "version": ""
-      },
-      "showArrow": {
-        "property": "showArrow",
-        "description": "If `false`, panel will not show arrow icon",
-        "type": "boolean",
-        "default": "`true`",
-        "version": "3.1.0"
-      },
-      "extra": {
-        "property": "extra",
-        "description": "extra element in the corner",
-        "type": "ReactNode",
-        "default": "-",
-        "version": "3.14.0"
-      }
-    },
     "Collapse": {
       "activeKey": {
         "property": "activeKey",
@@ -8421,6 +8282,101 @@
         "version": "3.6.5"
       }
     },
+    "Checkbox.Group": {
+      "defaultValue": {
+        "property": "defaultValue",
+        "description": "Default selected value",
+        "type": "string\\[]",
+        "default": "\\[]",
+        "version": "3.6.2"
+      },
+      "disabled": {
+        "property": "disabled",
+        "description": "Disable all checkboxes",
+        "type": "boolean",
+        "default": "false",
+        "version": "3.6.2"
+      },
+      "name": {
+        "property": "name",
+        "description": "The `name` property of all `input[type=\"checkbox\"]` children",
+        "type": "string",
+        "default": "-",
+        "version": "3.16.0"
+      },
+      "options": {
+        "property": "options",
+        "description": "Specifies options",
+        "type": "string\\[]",
+        "default": "\\[]",
+        "version": "3.6.2"
+      },
+      "value": {
+        "property": "value",
+        "description": "Used for setting the currently selected value.",
+        "type": "string\\[]",
+        "default": "\\[]",
+        "version": "3.6.2"
+      },
+      "onChange": {
+        "property": "onChange",
+        "description": "The callback function that is triggered when the state changes.",
+        "type": "Function(checkedValue)",
+        "default": "-",
+        "version": "3.6.2"
+      }
+    },
+    "Carousel": {
+      "afterChange": {
+        "property": "afterChange",
+        "description": "Callback function called after the current index changes",
+        "type": "function(current)",
+        "default": "-",
+        "version": ""
+      },
+      "autoplay": {
+        "property": "autoplay",
+        "description": "Whether to scroll automatically",
+        "type": "boolean",
+        "default": "`false`",
+        "version": ""
+      },
+      "beforeChange": {
+        "property": "beforeChange",
+        "description": "Callback function called before the current index changes",
+        "type": "function(from, to)",
+        "default": "-",
+        "version": ""
+      },
+      "dotPosition": {
+        "property": "dotPosition",
+        "description": "The position of the dots, which can be one of `top` `bottom` `left` `right`",
+        "type": "string",
+        "default": "bottom",
+        "version": "3.17.0"
+      },
+      "dots": {
+        "property": "dots",
+        "description": "Whether to show the dots at the bottom of the gallery",
+        "type": "boolean",
+        "default": "`true`",
+        "version": ""
+      },
+      "easing": {
+        "property": "easing",
+        "description": "Transition interpolation function name",
+        "type": "string",
+        "default": "`linear`",
+        "version": ""
+      },
+      "effect": {
+        "property": "effect",
+        "description": "Transition effect",
+        "type": "`scrollx` \\| `fade`",
+        "default": "`scrollx`",
+        "version": ""
+      }
+    },
     "Comment": {
       "actions": {
         "property": "actions",
@@ -8463,6 +8419,50 @@
         "type": "string\\|ReactNode",
         "default": "-",
         "version": "3.11.0"
+      }
+    },
+    "Collapse.Panel": {
+      "disabled": {
+        "property": "disabled",
+        "description": "If `true`, panel cannot be opened or closed",
+        "type": "boolean",
+        "default": "`false`",
+        "version": ""
+      },
+      "forceRender": {
+        "property": "forceRender",
+        "description": "Forced render of content on panel, instead of lazy rending after clicking on header",
+        "type": "boolean",
+        "default": "`false`",
+        "version": "3.2.0"
+      },
+      "header": {
+        "property": "header",
+        "description": "Title of the panel",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "key": {
+        "property": "key",
+        "description": "Unique key identifying the panel from among its siblings",
+        "type": "string\\|number",
+        "default": "-",
+        "version": ""
+      },
+      "showArrow": {
+        "property": "showArrow",
+        "description": "If `false`, panel will not show arrow icon",
+        "type": "boolean",
+        "default": "`true`",
+        "version": "3.1.0"
+      },
+      "extra": {
+        "property": "extra",
+        "description": "extra element in the corner",
+        "type": "ReactNode",
+        "default": "-",
+        "version": "3.14.0"
       }
     },
     "Descriptions": {
@@ -8523,43 +8523,6 @@
         "type": "number",
         "default": "1",
         "version": "3.19.0"
-      }
-    },
-    "Divider": {
-      "className": {
-        "property": "className",
-        "description": "className of container",
-        "type": "string",
-        "default": "-",
-        "version": "3.5.4"
-      },
-      "dashed": {
-        "property": "dashed",
-        "description": "whether line is dashed",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "orientation": {
-        "property": "orientation",
-        "description": "position of title inside divider",
-        "type": "enum: `left` `right` `center`",
-        "default": "`center`",
-        "version": "3.3.0"
-      },
-      "style": {
-        "property": "style",
-        "description": "style object of container",
-        "type": "object",
-        "default": "-",
-        "version": "3.5.4"
-      },
-      "type": {
-        "property": "type",
-        "description": "direction type of divider",
-        "type": "enum: `horizontal` `vertical`",
-        "default": "`horizontal`",
-        "version": ""
       }
     },
     "Dropdown": {
@@ -8625,6 +8588,298 @@
         "type": "Function(visible)",
         "default": "-",
         "version": ""
+      }
+    },
+    "Divider": {
+      "className": {
+        "property": "className",
+        "description": "className of container",
+        "type": "string",
+        "default": "-",
+        "version": "3.5.4"
+      },
+      "dashed": {
+        "property": "dashed",
+        "description": "whether line is dashed",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "orientation": {
+        "property": "orientation",
+        "description": "position of title inside divider",
+        "type": "enum: `left` `right` `center`",
+        "default": "`center`",
+        "version": "3.3.0"
+      },
+      "style": {
+        "property": "style",
+        "description": "style object of container",
+        "type": "object",
+        "default": "-",
+        "version": "3.5.4"
+      },
+      "type": {
+        "property": "type",
+        "description": "direction type of divider",
+        "type": "enum: `horizontal` `vertical`",
+        "default": "`horizontal`",
+        "version": ""
+      }
+    },
+    "Dropdown.Button": {
+      "disabled": {
+        "property": "disabled",
+        "description": "Whether the dropdown menu is disabled",
+        "type": "boolean",
+        "default": "-",
+        "version": ""
+      },
+      "icon": {
+        "property": "icon",
+        "description": "Icon (appears on the right)",
+        "type": "ReactNode",
+        "default": "-",
+        "version": "3.17.0"
+      },
+      "overlay": {
+        "property": "overlay",
+        "description": "The dropdown menu",
+        "type": "[Menu](/components/menu)",
+        "default": "-",
+        "version": ""
+      },
+      "placement": {
+        "property": "placement",
+        "description": "Placement of popup menu: `bottomLeft` `bottomCenter` `bottomRight` `topLeft` `topCenter` `topRight`",
+        "type": "String",
+        "default": "`bottomLeft`",
+        "version": ""
+      },
+      "size": {
+        "property": "size",
+        "description": "Size of the button, the same as [Button](/components/button)",
+        "type": "string",
+        "default": "`default`",
+        "version": ""
+      },
+      "trigger": {
+        "property": "trigger",
+        "description": "The trigger mode which executes the dropdown action",
+        "type": "Array&lt;`click`\\|`hover`\\|`contextMenu`>",
+        "default": "`['hover']`",
+        "version": ""
+      },
+      "type": {
+        "property": "type",
+        "description": "Type of the button, the same as [Button](/components/button)",
+        "type": "string",
+        "default": "`default`",
+        "version": ""
+      },
+      "visible": {
+        "property": "visible",
+        "description": "Whether the dropdown menu is currently visible",
+        "type": "boolean",
+        "default": "-",
+        "version": ""
+      },
+      "onClick": {
+        "property": "onClick",
+        "description": "The same as [Button](/components/button): called when you click the button on the left",
+        "type": "Function",
+        "default": "-",
+        "version": ""
+      },
+      "onVisibleChange": {
+        "property": "onVisibleChange",
+        "description": "Called when the visible state is changed",
+        "type": "Function",
+        "default": "-",
+        "version": ""
+      }
+    },
+    "Empty": {
+      "description": {
+        "property": "description",
+        "description": "Customize description",
+        "type": "string \\| ReactNode",
+        "default": "-",
+        "version": "3.12.0"
+      },
+      "imageStyle": {
+        "property": "imageStyle",
+        "description": "style of image",
+        "type": "CSSProperties",
+        "default": "-",
+        "version": "3.16.0"
+      },
+      "image": {
+        "property": "image",
+        "description": "Customize image. Will tread as image url when string provided.",
+        "type": "string \\| ReactNode",
+        "default": "`Empty.PRESENTED_IMAGE_DEFAULT`",
+        "version": "3.12.0"
+      }
+    },
+    "Col": {
+      "offset": {
+        "property": "offset",
+        "description": "the number of cells to offset Col from the left",
+        "type": "number",
+        "default": "0",
+        "version": ""
+      },
+      "order": {
+        "property": "order",
+        "description": "raster order, used in `flex` layout mode",
+        "type": "number",
+        "default": "0",
+        "version": ""
+      },
+      "pull": {
+        "property": "pull",
+        "description": "the number of cells that raster is moved to the left",
+        "type": "number",
+        "default": "0",
+        "version": ""
+      },
+      "push": {
+        "property": "push",
+        "description": "the number of cells that raster is moved to the right",
+        "type": "number",
+        "default": "0",
+        "version": ""
+      },
+      "span": {
+        "property": "span",
+        "description": "raster number of cells to occupy, 0 corresponds to `display: none`",
+        "type": "number",
+        "default": "none",
+        "version": ""
+      },
+      "xs": {
+        "property": "xs",
+        "description": "`<576px` and also default setting, could be a `span` value or an object containing above props",
+        "type": "number\\|object",
+        "default": "-",
+        "version": ""
+      },
+      "sm": {
+        "property": "sm",
+        "description": "`≥576px`, could be a `span` value or an object containing above props",
+        "type": "number\\|object",
+        "default": "-",
+        "version": ""
+      },
+      "md": {
+        "property": "md",
+        "description": "`≥768px`, could be a `span` value or an object containing above props",
+        "type": "number\\|object",
+        "default": "-",
+        "version": ""
+      },
+      "lg": {
+        "property": "lg",
+        "description": "`≥992px`, could be a `span` value or an object containing above props",
+        "type": "number\\|object",
+        "default": "-",
+        "version": ""
+      },
+      "xl": {
+        "property": "xl",
+        "description": "`≥1200px`, could be a `span` value or an object containing above props",
+        "type": "number\\|object",
+        "default": "-",
+        "version": ""
+      },
+      "xxl": {
+        "property": "xxl",
+        "description": "`≥1600px`, could be a `span` value or an object containing above props",
+        "type": "number\\|object",
+        "default": "-",
+        "version": ""
+      }
+    },
+    "Row": {
+      "align": {
+        "property": "align",
+        "description": "the vertical alignment of the flex layout: `top` `middle` `bottom`",
+        "type": "string",
+        "default": "`top`",
+        "version": ""
+      },
+      "gutter": {
+        "property": "gutter",
+        "description": "spacing between grids, could be a number or a object like `{ xs: 8, sm: 16, md: 24}`. or you can use array to make horizontal and vertical spacing work at the same time `[horizontal, vertical]` (supported after `3.24.0`)",
+        "type": "number/object/array",
+        "default": "0",
+        "version": ""
+      },
+      "justify": {
+        "property": "justify",
+        "description": "horizontal arrangement of the flex layout: `start` `end` `center` `space-around` `space-between`",
+        "type": "string",
+        "default": "`start`",
+        "version": ""
+      },
+      "type": {
+        "property": "type",
+        "description": "layout mode, optional `flex`, [browser support](http://caniuse.com/#search=flex)",
+        "type": "string",
+        "default": "",
+        "version": ""
+      }
+    },
+    "Icon": {
+      "type": {
+        "property": "type",
+        "description": "Type of the icon",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "style": {
+        "property": "style",
+        "description": "Style properties of icon, like `fontSize` and `color`",
+        "type": "CSSProperties",
+        "default": "-",
+        "version": ""
+      },
+      "theme": {
+        "property": "theme",
+        "description": "Theme variant of the icon",
+        "type": "'filled' \\| 'outlined' \\| 'twoTone'",
+        "default": "'outlined'",
+        "version": "3.9.0"
+      },
+      "spin": {
+        "property": "spin",
+        "description": "Rotate icon with animation",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "rotate": {
+        "property": "rotate",
+        "description": "Rotate by n degrees (added in 3.13.0, not working in IE9)",
+        "type": "number",
+        "default": "-",
+        "version": "3.13.0"
+      },
+      "component": {
+        "property": "component",
+        "description": "The component used for the root node. This will override the **`type`** property.",
+        "type": "ComponentType&lt;CustomIconComponentProps>",
+        "default": "-",
+        "version": "3.9.0"
+      },
+      "twoToneColor": {
+        "property": "twoToneColor",
+        "description": "Only supports the two-tone icon. Specify the primary color.",
+        "type": "string (hex color)",
+        "default": "-",
+        "version": "3.9.0"
       }
     },
     "Drawer": {
@@ -8769,437 +9024,6 @@
         "version": "3.19.8"
       }
     },
-    "Dropdown.Button": {
-      "disabled": {
-        "property": "disabled",
-        "description": "Whether the dropdown menu is disabled",
-        "type": "boolean",
-        "default": "-",
-        "version": ""
-      },
-      "icon": {
-        "property": "icon",
-        "description": "Icon (appears on the right)",
-        "type": "ReactNode",
-        "default": "-",
-        "version": "3.17.0"
-      },
-      "overlay": {
-        "property": "overlay",
-        "description": "The dropdown menu",
-        "type": "[Menu](/components/menu)",
-        "default": "-",
-        "version": ""
-      },
-      "placement": {
-        "property": "placement",
-        "description": "Placement of popup menu: `bottomLeft` `bottomCenter` `bottomRight` `topLeft` `topCenter` `topRight`",
-        "type": "String",
-        "default": "`bottomLeft`",
-        "version": ""
-      },
-      "size": {
-        "property": "size",
-        "description": "Size of the button, the same as [Button](/components/button)",
-        "type": "string",
-        "default": "`default`",
-        "version": ""
-      },
-      "trigger": {
-        "property": "trigger",
-        "description": "The trigger mode which executes the dropdown action",
-        "type": "Array&lt;`click`\\|`hover`\\|`contextMenu`>",
-        "default": "`['hover']`",
-        "version": ""
-      },
-      "type": {
-        "property": "type",
-        "description": "Type of the button, the same as [Button](/components/button)",
-        "type": "string",
-        "default": "`default`",
-        "version": ""
-      },
-      "visible": {
-        "property": "visible",
-        "description": "Whether the dropdown menu is currently visible",
-        "type": "boolean",
-        "default": "-",
-        "version": ""
-      },
-      "onClick": {
-        "property": "onClick",
-        "description": "The same as [Button](/components/button): called when you click the button on the left",
-        "type": "Function",
-        "default": "-",
-        "version": ""
-      },
-      "onVisibleChange": {
-        "property": "onVisibleChange",
-        "description": "Called when the visible state is changed",
-        "type": "Function",
-        "default": "-",
-        "version": ""
-      }
-    },
-    "Empty": {
-      "description": {
-        "property": "description",
-        "description": "Customize description",
-        "type": "string \\| ReactNode",
-        "default": "-",
-        "version": "3.12.0"
-      },
-      "imageStyle": {
-        "property": "imageStyle",
-        "description": "style of image",
-        "type": "CSSProperties",
-        "default": "-",
-        "version": "3.16.0"
-      },
-      "image": {
-        "property": "image",
-        "description": "Customize image. Will tread as image url when string provided.",
-        "type": "string \\| ReactNode",
-        "default": "`Empty.PRESENTED_IMAGE_DEFAULT`",
-        "version": "3.12.0"
-      }
-    },
-    "Row": {
-      "align": {
-        "property": "align",
-        "description": "the vertical alignment of the flex layout: `top` `middle` `bottom`",
-        "type": "string",
-        "default": "`top`",
-        "version": ""
-      },
-      "gutter": {
-        "property": "gutter",
-        "description": "spacing between grids, could be a number or a object like `{ xs: 8, sm: 16, md: 24}`. or you can use array to make horizontal and vertical spacing work at the same time `[horizontal, vertical]` (supported after `3.24.0`)",
-        "type": "number/object/array",
-        "default": "0",
-        "version": ""
-      },
-      "justify": {
-        "property": "justify",
-        "description": "horizontal arrangement of the flex layout: `start` `end` `center` `space-around` `space-between`",
-        "type": "string",
-        "default": "`start`",
-        "version": ""
-      },
-      "type": {
-        "property": "type",
-        "description": "layout mode, optional `flex`, [browser support](http://caniuse.com/#search=flex)",
-        "type": "string",
-        "default": "",
-        "version": ""
-      }
-    },
-    "Col": {
-      "offset": {
-        "property": "offset",
-        "description": "the number of cells to offset Col from the left",
-        "type": "number",
-        "default": "0",
-        "version": ""
-      },
-      "order": {
-        "property": "order",
-        "description": "raster order, used in `flex` layout mode",
-        "type": "number",
-        "default": "0",
-        "version": ""
-      },
-      "pull": {
-        "property": "pull",
-        "description": "the number of cells that raster is moved to the left",
-        "type": "number",
-        "default": "0",
-        "version": ""
-      },
-      "push": {
-        "property": "push",
-        "description": "the number of cells that raster is moved to the right",
-        "type": "number",
-        "default": "0",
-        "version": ""
-      },
-      "span": {
-        "property": "span",
-        "description": "raster number of cells to occupy, 0 corresponds to `display: none`",
-        "type": "number",
-        "default": "none",
-        "version": ""
-      },
-      "xs": {
-        "property": "xs",
-        "description": "`<576px` and also default setting, could be a `span` value or an object containing above props",
-        "type": "number\\|object",
-        "default": "-",
-        "version": ""
-      },
-      "sm": {
-        "property": "sm",
-        "description": "`≥576px`, could be a `span` value or an object containing above props",
-        "type": "number\\|object",
-        "default": "-",
-        "version": ""
-      },
-      "md": {
-        "property": "md",
-        "description": "`≥768px`, could be a `span` value or an object containing above props",
-        "type": "number\\|object",
-        "default": "-",
-        "version": ""
-      },
-      "lg": {
-        "property": "lg",
-        "description": "`≥992px`, could be a `span` value or an object containing above props",
-        "type": "number\\|object",
-        "default": "-",
-        "version": ""
-      },
-      "xl": {
-        "property": "xl",
-        "description": "`≥1200px`, could be a `span` value or an object containing above props",
-        "type": "number\\|object",
-        "default": "-",
-        "version": ""
-      },
-      "xxl": {
-        "property": "xxl",
-        "description": "`≥1600px`, could be a `span` value or an object containing above props",
-        "type": "number\\|object",
-        "default": "-",
-        "version": ""
-      }
-    },
-    "Icon": {
-      "type": {
-        "property": "type",
-        "description": "Type of the icon",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "style": {
-        "property": "style",
-        "description": "Style properties of icon, like `fontSize` and `color`",
-        "type": "CSSProperties",
-        "default": "-",
-        "version": ""
-      },
-      "theme": {
-        "property": "theme",
-        "description": "Theme variant of the icon",
-        "type": "'filled' \\| 'outlined' \\| 'twoTone'",
-        "default": "'outlined'",
-        "version": "3.9.0"
-      },
-      "spin": {
-        "property": "spin",
-        "description": "Rotate icon with animation",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "rotate": {
-        "property": "rotate",
-        "description": "Rotate by n degrees (added in 3.13.0, not working in IE9)",
-        "type": "number",
-        "default": "-",
-        "version": "3.13.0"
-      },
-      "component": {
-        "property": "component",
-        "description": "The component used for the root node. This will override the **`type`** property.",
-        "type": "ComponentType&lt;CustomIconComponentProps>",
-        "default": "-",
-        "version": "3.9.0"
-      },
-      "twoToneColor": {
-        "property": "twoToneColor",
-        "description": "Only supports the two-tone icon. Specify the primary color.",
-        "type": "string (hex color)",
-        "default": "-",
-        "version": "3.9.0"
-      }
-    },
-    "Input.TextArea": {
-      "autoSize": {
-        "property": "autoSize",
-        "description": "Height autosize feature, can be set to \\`true",
-        "type": "false`or an object`{ minRows: 2, maxRows: 6 }`. `autosize`is deprecated after`3.24.0`, please use `autoSize\\`.",
-        "default": "boolean\\|object",
-        "version": "false"
-      },
-      "defaultValue": {
-        "property": "defaultValue",
-        "description": "The initial input content",
-        "type": "string",
-        "default": "",
-        "version": ""
-      },
-      "value": {
-        "property": "value",
-        "description": "The input content value",
-        "type": "string",
-        "default": "",
-        "version": ""
-      },
-      "onPressEnter": {
-        "property": "onPressEnter",
-        "description": "The callback function that is triggered when Enter key is pressed.",
-        "type": "function(e)",
-        "default": "",
-        "version": ""
-      },
-      "allowClear": {
-        "property": "allowClear",
-        "description": "allow to remove input content with clear icon",
-        "type": "boolean",
-        "default": "",
-        "version": "3.25.0"
-      }
-    },
-    "Input.Group": {
-      "compact": {
-        "property": "compact",
-        "description": "Whether use compact style",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "size": {
-        "property": "size",
-        "description": "The size of `Input.Group` specifies the size of the included `Input` fields. Available: `large` `default` `small`",
-        "type": "string",
-        "default": "`default`",
-        "version": ""
-      }
-    },
-    "Input.Search": {
-      "enterButton": {
-        "property": "enterButton",
-        "description": "to show an enter button after input. This prop is conflict with addon.",
-        "type": "boolean\\|ReactNode",
-        "default": "false",
-        "version": ""
-      },
-      "onSearch": {
-        "property": "onSearch",
-        "description": "The callback function triggered when you click on the search-icon, the clear-icon or press the Enter key.",
-        "type": "function(value, event)",
-        "default": "",
-        "version": ""
-      },
-      "loading": {
-        "property": "loading",
-        "description": "Search box with loading.",
-        "type": "boolean",
-        "default": "",
-        "version": ""
-      }
-    },
-    "InputNumber": {
-      "autoFocus": {
-        "property": "autoFocus",
-        "description": "get focus when component mounted",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "defaultValue": {
-        "property": "defaultValue",
-        "description": "initial value",
-        "type": "number",
-        "default": "",
-        "version": ""
-      },
-      "disabled": {
-        "property": "disabled",
-        "description": "disable the input",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "formatter": {
-        "property": "formatter",
-        "description": "Specifies the format of the value presented",
-        "type": "function(value: number \\| string): string",
-        "default": "-",
-        "version": ""
-      },
-      "max": {
-        "property": "max",
-        "description": "max value",
-        "type": "number",
-        "default": "Infinity",
-        "version": ""
-      },
-      "min": {
-        "property": "min",
-        "description": "min value",
-        "type": "number",
-        "default": "-Infinity",
-        "version": ""
-      },
-      "parser": {
-        "property": "parser",
-        "description": "Specifies the value extracted from formatter",
-        "type": "function( string): number",
-        "default": "-",
-        "version": ""
-      },
-      "precision": {
-        "property": "precision",
-        "description": "precision of input value",
-        "type": "number",
-        "default": "-",
-        "version": ""
-      },
-      "decimalSeparator": {
-        "property": "decimalSeparator",
-        "description": "decimal separator",
-        "type": "string",
-        "default": "-",
-        "version": "3.10.1"
-      },
-      "size": {
-        "property": "size",
-        "description": "height of input box",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "step": {
-        "property": "step",
-        "description": "The number to which the current value is increased or decreased. It can be an integer or decimal.",
-        "type": "number\\|string",
-        "default": "1",
-        "version": ""
-      },
-      "value": {
-        "property": "value",
-        "description": "current value",
-        "type": "number",
-        "default": "",
-        "version": ""
-      },
-      "onChange": {
-        "property": "onChange",
-        "description": "The callback triggered when the value is changed.",
-        "type": "function(value: number \\| string)",
-        "default": "",
-        "version": ""
-      },
-      "onPressEnter": {
-        "property": "onPressEnter",
-        "description": "The callback function that is triggered when Enter key is pressed.",
-        "type": "function(e)",
-        "default": "",
-        "version": ""
-      }
-    },
     "Input": {
       "addonAfter": {
         "property": "addonAfter",
@@ -9300,6 +9124,66 @@
         "version": "3.12.0"
       }
     },
+    "Input.Search": {
+      "enterButton": {
+        "property": "enterButton",
+        "description": "to show an enter button after input. This prop is conflict with addon.",
+        "type": "boolean\\|ReactNode",
+        "default": "false",
+        "version": ""
+      },
+      "onSearch": {
+        "property": "onSearch",
+        "description": "The callback function triggered when you click on the search-icon, the clear-icon or press the Enter key.",
+        "type": "function(value, event)",
+        "default": "",
+        "version": ""
+      },
+      "loading": {
+        "property": "loading",
+        "description": "Search box with loading.",
+        "type": "boolean",
+        "default": "",
+        "version": ""
+      }
+    },
+    "Input.TextArea": {
+      "autoSize": {
+        "property": "autoSize",
+        "description": "Height autosize feature, can be set to \\`true",
+        "type": "false`or an object`{ minRows: 2, maxRows: 6 }`. `autosize`is deprecated after`3.24.0`, please use `autoSize\\`.",
+        "default": "boolean\\|object",
+        "version": "false"
+      },
+      "defaultValue": {
+        "property": "defaultValue",
+        "description": "The initial input content",
+        "type": "string",
+        "default": "",
+        "version": ""
+      },
+      "value": {
+        "property": "value",
+        "description": "The input content value",
+        "type": "string",
+        "default": "",
+        "version": ""
+      },
+      "onPressEnter": {
+        "property": "onPressEnter",
+        "description": "The callback function that is triggered when Enter key is pressed.",
+        "type": "function(e)",
+        "default": "",
+        "version": ""
+      },
+      "allowClear": {
+        "property": "allowClear",
+        "description": "allow to remove input content with clear icon",
+        "type": "boolean",
+        "default": "",
+        "version": "3.25.0"
+      }
+    },
     "Input.Password": {
       "visibilityToggle": {
         "property": "visibilityToggle",
@@ -9329,6 +9213,106 @@
         "description": "to customize the styles",
         "type": "object",
         "default": "-",
+        "version": ""
+      }
+    },
+    "InputNumber": {
+      "autoFocus": {
+        "property": "autoFocus",
+        "description": "get focus when component mounted",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "defaultValue": {
+        "property": "defaultValue",
+        "description": "initial value",
+        "type": "number",
+        "default": "",
+        "version": ""
+      },
+      "disabled": {
+        "property": "disabled",
+        "description": "disable the input",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "formatter": {
+        "property": "formatter",
+        "description": "Specifies the format of the value presented",
+        "type": "function(value: number \\| string): string",
+        "default": "-",
+        "version": ""
+      },
+      "max": {
+        "property": "max",
+        "description": "max value",
+        "type": "number",
+        "default": "Infinity",
+        "version": ""
+      },
+      "min": {
+        "property": "min",
+        "description": "min value",
+        "type": "number",
+        "default": "-Infinity",
+        "version": ""
+      },
+      "parser": {
+        "property": "parser",
+        "description": "Specifies the value extracted from formatter",
+        "type": "function( string): number",
+        "default": "-",
+        "version": ""
+      },
+      "precision": {
+        "property": "precision",
+        "description": "precision of input value",
+        "type": "number",
+        "default": "-",
+        "version": ""
+      },
+      "decimalSeparator": {
+        "property": "decimalSeparator",
+        "description": "decimal separator",
+        "type": "string",
+        "default": "-",
+        "version": "3.10.1"
+      },
+      "size": {
+        "property": "size",
+        "description": "height of input box",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "step": {
+        "property": "step",
+        "description": "The number to which the current value is increased or decreased. It can be an integer or decimal.",
+        "type": "number\\|string",
+        "default": "1",
+        "version": ""
+      },
+      "value": {
+        "property": "value",
+        "description": "current value",
+        "type": "number",
+        "default": "",
+        "version": ""
+      },
+      "onChange": {
+        "property": "onChange",
+        "description": "The callback triggered when the value is changed.",
+        "type": "function(value: number \\| string)",
+        "default": "",
+        "version": ""
+      },
+      "onPressEnter": {
+        "property": "onPressEnter",
+        "description": "The callback function that is triggered when Enter key is pressed.",
+        "type": "function(e)",
+        "default": "",
         "version": ""
       }
     },
@@ -9525,22 +9509,6 @@
         "version": "3.20.1"
       }
     },
-    "List.Item": {
-      "actions": {
-        "property": "actions",
-        "description": "The actions content of list item. If `itemLayout` is `vertical`, shows the content on bottom, otherwise shows content on the far right.",
-        "type": "Array<ReactNode>",
-        "default": "-",
-        "version": ""
-      },
-      "extra": {
-        "property": "extra",
-        "description": "The extra content of list item. If `itemLayout` is `vertical`, shows the content on right, otherwise shows content on the far right.",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      }
-    },
     "List.Item.Meta": {
       "avatar": {
         "property": "avatar",
@@ -9559,6 +9527,38 @@
       "title": {
         "property": "title",
         "description": "The title of list item",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      }
+    },
+    "Input.Group": {
+      "compact": {
+        "property": "compact",
+        "description": "Whether use compact style",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "size": {
+        "property": "size",
+        "description": "The size of `Input.Group` specifies the size of the included `Input` fields. Available: `large` `default` `small`",
+        "type": "string",
+        "default": "`default`",
+        "version": ""
+      }
+    },
+    "List.Item": {
+      "actions": {
+        "property": "actions",
+        "description": "The actions content of list item. If `itemLayout` is `vertical`, shows the content on bottom, otherwise shows content on the far right.",
+        "type": "Array<ReactNode>",
+        "default": "-",
+        "version": ""
+      },
+      "extra": {
+        "property": "extra",
+        "description": "The extra content of list item. If `itemLayout` is `vertical`, shows the content on right, otherwise shows content on the far right.",
         "type": "string\\|ReactNode",
         "default": "-",
         "version": ""
@@ -9706,6 +9706,29 @@
         "version": ""
       }
     },
+    "Menu.Item": {
+      "disabled": {
+        "property": "disabled",
+        "description": "Whether menu item is disabled",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "key": {
+        "property": "key",
+        "description": "Unique ID of the menu item",
+        "type": "string",
+        "default": "",
+        "version": ""
+      },
+      "title": {
+        "property": "title",
+        "description": "Set display title for collapsed item",
+        "type": "string",
+        "default": "",
+        "version": "3.11.0"
+      }
+    },
     "Menu": {
       "defaultOpenKeys": {
         "property": "defaultOpenKeys",
@@ -9841,29 +9864,6 @@
         "version": "3.16.0"
       }
     },
-    "Menu.Item": {
-      "disabled": {
-        "property": "disabled",
-        "description": "Whether menu item is disabled",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "key": {
-        "property": "key",
-        "description": "Unique ID of the menu item",
-        "type": "string",
-        "default": "",
-        "version": ""
-      },
-      "title": {
-        "property": "title",
-        "description": "Set display title for collapsed item",
-        "type": "string",
-        "default": "",
-        "version": "3.11.0"
-      }
-    },
     "Menu.SubMenu": {
       "popupClassName": {
         "property": "popupClassName",
@@ -9908,76 +9908,20 @@
         "version": ""
       }
     },
-    "PageHeader": {
+    "Menu.ItemGroup": {
+      "children": {
+        "property": "children",
+        "description": "sub-menu items",
+        "type": "MenuItem\\[]",
+        "default": "",
+        "version": ""
+      },
       "title": {
         "property": "title",
-        "description": "Custom title text",
-        "type": "ReactNode",
-        "default": "-",
-        "version": "3.14.0"
-      },
-      "subTitle": {
-        "property": "subTitle",
-        "description": "Custom subtitle text",
-        "type": "ReactNode",
-        "default": "-",
-        "version": "3.14.0"
-      },
-      "ghost": {
-        "property": "ghost",
-        "description": "PageHeader type, will change background color",
-        "type": "boolean",
-        "default": "true",
-        "version": "3.24.0"
-      },
-      "avatar": {
-        "property": "avatar",
-        "description": "Avatar next to the title bar",
-        "type": "[avatar props](/components/avatar/)",
-        "default": "-",
-        "version": "3.22.0"
-      },
-      "backIcon": {
-        "property": "backIcon",
-        "description": "Custom back icon, if false the back icon will not be displayed",
-        "type": "ReactNode",
-        "default": "`<Icon type=\"arrow-left\" />`",
-        "version": "3.14.0"
-      },
-      "tags": {
-        "property": "tags",
-        "description": "Tag list next to title",
-        "type": "[Tag](https://ant.design/components/tag-cn/)\\[] \\| [Tag](https://ant.design/components/tag-cn/)",
-        "default": "-",
-        "version": "3.14.0"
-      },
-      "extra": {
-        "property": "extra",
-        "description": "Operating area, at the end of the line of the title line",
-        "type": "ReactNode",
-        "default": "-",
-        "version": "3.14.0"
-      },
-      "breadcrumb": {
-        "property": "breadcrumb",
-        "description": "Breadcrumb configuration",
-        "type": "[breadcrumb](https://ant.design/components/breadcrumb-cn/)",
-        "default": "-",
-        "version": "3.14.0"
-      },
-      "footer": {
-        "property": "footer",
-        "description": "PageHeader's footer, generally used to render TabBar",
-        "type": "ReactNode",
-        "default": "-",
-        "version": "3.14.0"
-      },
-      "onBack": {
-        "property": "onBack",
-        "description": "Back icon click event",
-        "type": "`()=>void`",
-        "default": "`()=>history.back()`",
-        "version": "3.14.0"
+        "description": "title of the group",
+        "type": "string\\|ReactNode",
+        "default": "",
+        "version": ""
       }
     },
     "Modal": {
@@ -10162,6 +10106,78 @@
         "type": "function(e)",
         "default": "-",
         "version": ""
+      }
+    },
+    "PageHeader": {
+      "title": {
+        "property": "title",
+        "description": "Custom title text",
+        "type": "ReactNode",
+        "default": "-",
+        "version": "3.14.0"
+      },
+      "subTitle": {
+        "property": "subTitle",
+        "description": "Custom subtitle text",
+        "type": "ReactNode",
+        "default": "-",
+        "version": "3.14.0"
+      },
+      "ghost": {
+        "property": "ghost",
+        "description": "PageHeader type, will change background color",
+        "type": "boolean",
+        "default": "true",
+        "version": "3.24.0"
+      },
+      "avatar": {
+        "property": "avatar",
+        "description": "Avatar next to the title bar",
+        "type": "[avatar props](/components/avatar/)",
+        "default": "-",
+        "version": "3.22.0"
+      },
+      "backIcon": {
+        "property": "backIcon",
+        "description": "Custom back icon, if false the back icon will not be displayed",
+        "type": "ReactNode",
+        "default": "`<Icon type=\"arrow-left\" />`",
+        "version": "3.14.0"
+      },
+      "tags": {
+        "property": "tags",
+        "description": "Tag list next to title",
+        "type": "[Tag](https://ant.design/components/tag-cn/)\\[] \\| [Tag](https://ant.design/components/tag-cn/)",
+        "default": "-",
+        "version": "3.14.0"
+      },
+      "extra": {
+        "property": "extra",
+        "description": "Operating area, at the end of the line of the title line",
+        "type": "ReactNode",
+        "default": "-",
+        "version": "3.14.0"
+      },
+      "breadcrumb": {
+        "property": "breadcrumb",
+        "description": "Breadcrumb configuration",
+        "type": "[breadcrumb](https://ant.design/components/breadcrumb-cn/)",
+        "default": "-",
+        "version": "3.14.0"
+      },
+      "footer": {
+        "property": "footer",
+        "description": "PageHeader's footer, generally used to render TabBar",
+        "type": "ReactNode",
+        "default": "-",
+        "version": "3.14.0"
+      },
+      "onBack": {
+        "property": "onBack",
+        "description": "Back icon click event",
+        "type": "`()=>void`",
+        "default": "`()=>history.back()`",
+        "version": "3.14.0"
       }
     },
     "Pagination": {
@@ -10350,75 +10366,6 @@
         "version": "3.19.8"
       }
     },
-    "Popover": {
-      "content": {
-        "property": "content",
-        "description": "Content of the card",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "title": {
-        "property": "title",
-        "description": "Title of the card",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      }
-    },
-    "Radio": {
-      "autoFocus": {
-        "property": "autoFocus",
-        "description": "get focus when component mounted",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "checked": {
-        "property": "checked",
-        "description": "Specifies whether the radio is selected.",
-        "type": "boolean",
-        "default": "-",
-        "version": ""
-      },
-      "defaultChecked": {
-        "property": "defaultChecked",
-        "description": "Specifies the initial state: whether or not the radio is selected.",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "disabled": {
-        "property": "disabled",
-        "description": "Disable radio",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "value": {
-        "property": "value",
-        "description": "According to value for comparison, to determine whether the selected",
-        "type": "any",
-        "default": "-",
-        "version": ""
-      }
-    },
-    "Menu.ItemGroup": {
-      "children": {
-        "property": "children",
-        "description": "sub-menu items",
-        "type": "MenuItem\\[]",
-        "default": "",
-        "version": ""
-      },
-      "title": {
-        "property": "title",
-        "description": "title of the group",
-        "type": "string\\|ReactNode",
-        "default": "",
-        "version": ""
-      }
-    },
     "Progress": {
       "type": {
         "property": "type",
@@ -10477,6 +10424,59 @@
         "version": "3.2.0"
       }
     },
+    "Radio": {
+      "autoFocus": {
+        "property": "autoFocus",
+        "description": "get focus when component mounted",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "checked": {
+        "property": "checked",
+        "description": "Specifies whether the radio is selected.",
+        "type": "boolean",
+        "default": "-",
+        "version": ""
+      },
+      "defaultChecked": {
+        "property": "defaultChecked",
+        "description": "Specifies the initial state: whether or not the radio is selected.",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "disabled": {
+        "property": "disabled",
+        "description": "Disable radio",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "value": {
+        "property": "value",
+        "description": "According to value for comparison, to determine whether the selected",
+        "type": "any",
+        "default": "-",
+        "version": ""
+      }
+    },
+    "Popover": {
+      "content": {
+        "property": "content",
+        "description": "Content of the card",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "title": {
+        "property": "title",
+        "description": "Title of the card",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      }
+    },
     "Radio.Group": {
       "defaultValue": {
         "property": "defaultValue",
@@ -10533,6 +10533,120 @@
         "type": "`outline` \\| `solid`",
         "default": "`outline`",
         "version": "3.7.0"
+      }
+    },
+    "Rate": {
+      "allowClear": {
+        "property": "allowClear",
+        "description": "whether to allow clear when click again",
+        "type": "boolean",
+        "default": "true",
+        "version": "3.1.0"
+      },
+      "allowHalf": {
+        "property": "allowHalf",
+        "description": "whether to allow semi selection",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "autoFocus": {
+        "property": "autoFocus",
+        "description": "get focus when component mounted",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "character": {
+        "property": "character",
+        "description": "custom character of rate",
+        "type": "ReactNode",
+        "default": "`<Icon type=\"star\" />`",
+        "version": ""
+      },
+      "className": {
+        "property": "className",
+        "description": "custom class name of rate",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "count": {
+        "property": "count",
+        "description": "star count",
+        "type": "number",
+        "default": "5",
+        "version": ""
+      },
+      "defaultValue": {
+        "property": "defaultValue",
+        "description": "default value",
+        "type": "number",
+        "default": "0",
+        "version": ""
+      },
+      "disabled": {
+        "property": "disabled",
+        "description": "read only, unable to interact",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "style": {
+        "property": "style",
+        "description": "custom style object of rate",
+        "type": "object",
+        "default": "-",
+        "version": ""
+      },
+      "tooltips": {
+        "property": "tooltips",
+        "description": "Customize tooltip by each character",
+        "type": "string\\[]",
+        "default": "-",
+        "version": "3.12.0"
+      },
+      "value": {
+        "property": "value",
+        "description": "current value",
+        "type": "number",
+        "default": "-",
+        "version": ""
+      },
+      "onBlur": {
+        "property": "onBlur",
+        "description": "callback when component lose focus",
+        "type": "Function()",
+        "default": "-",
+        "version": ""
+      },
+      "onChange": {
+        "property": "onChange",
+        "description": "callback when select value",
+        "type": "Function(value: number)",
+        "default": "-",
+        "version": ""
+      },
+      "onFocus": {
+        "property": "onFocus",
+        "description": "callback when component get focus",
+        "type": "Function()",
+        "default": "-",
+        "version": ""
+      },
+      "onHoverChange": {
+        "property": "onHoverChange",
+        "description": "callback when hover item",
+        "type": "Function(value: number)",
+        "default": "-",
+        "version": ""
+      },
+      "onKeyDown": {
+        "property": "onKeyDown",
+        "description": "callback when keydown on component",
+        "type": "Function(event)",
+        "default": "-",
+        "version": ""
       }
     },
     "Result": {
@@ -10896,120 +11010,6 @@
         "version": "3.11.0"
       }
     },
-    "Rate": {
-      "allowClear": {
-        "property": "allowClear",
-        "description": "whether to allow clear when click again",
-        "type": "boolean",
-        "default": "true",
-        "version": "3.1.0"
-      },
-      "allowHalf": {
-        "property": "allowHalf",
-        "description": "whether to allow semi selection",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "autoFocus": {
-        "property": "autoFocus",
-        "description": "get focus when component mounted",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "character": {
-        "property": "character",
-        "description": "custom character of rate",
-        "type": "ReactNode",
-        "default": "`<Icon type=\"star\" />`",
-        "version": ""
-      },
-      "className": {
-        "property": "className",
-        "description": "custom class name of rate",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "count": {
-        "property": "count",
-        "description": "star count",
-        "type": "number",
-        "default": "5",
-        "version": ""
-      },
-      "defaultValue": {
-        "property": "defaultValue",
-        "description": "default value",
-        "type": "number",
-        "default": "0",
-        "version": ""
-      },
-      "disabled": {
-        "property": "disabled",
-        "description": "read only, unable to interact",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "style": {
-        "property": "style",
-        "description": "custom style object of rate",
-        "type": "object",
-        "default": "-",
-        "version": ""
-      },
-      "tooltips": {
-        "property": "tooltips",
-        "description": "Customize tooltip by each character",
-        "type": "string\\[]",
-        "default": "-",
-        "version": "3.12.0"
-      },
-      "value": {
-        "property": "value",
-        "description": "current value",
-        "type": "number",
-        "default": "-",
-        "version": ""
-      },
-      "onBlur": {
-        "property": "onBlur",
-        "description": "callback when component lose focus",
-        "type": "Function()",
-        "default": "-",
-        "version": ""
-      },
-      "onChange": {
-        "property": "onChange",
-        "description": "callback when select value",
-        "type": "Function(value: number)",
-        "default": "-",
-        "version": ""
-      },
-      "onFocus": {
-        "property": "onFocus",
-        "description": "callback when component get focus",
-        "type": "Function()",
-        "default": "-",
-        "version": ""
-      },
-      "onHoverChange": {
-        "property": "onHoverChange",
-        "description": "callback when hover item",
-        "type": "Function(value: number)",
-        "default": "-",
-        "version": ""
-      },
-      "onKeyDown": {
-        "property": "onKeyDown",
-        "description": "callback when keydown on component",
-        "type": "Function(event)",
-        "default": "-",
-        "version": ""
-      }
-    },
     "Select.Option": {
       "disabled": {
         "property": "disabled",
@@ -11047,6 +11047,87 @@
         "version": "3.10.1"
       }
     },
+    "Select.OptGroup": {
+      "key": {
+        "property": "key",
+        "description": "",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "label": {
+        "property": "label",
+        "description": "Group label",
+        "type": "string\\|React.Element",
+        "default": "-",
+        "version": ""
+      }
+    },
+    "Statistic": {
+      "decimalSeparator": {
+        "property": "decimalSeparator",
+        "description": "decimal separator",
+        "type": "string",
+        "default": ".",
+        "version": "3.13.0"
+      },
+      "formatter": {
+        "property": "formatter",
+        "description": "customize value display logic",
+        "type": "(value) => ReactNode",
+        "default": "-",
+        "version": "3.13.0"
+      },
+      "groupSeparator": {
+        "property": "groupSeparator",
+        "description": "group separator",
+        "type": "string",
+        "default": ",",
+        "version": "3.13.0"
+      },
+      "precision": {
+        "property": "precision",
+        "description": "precision of input value",
+        "type": "number",
+        "default": "-",
+        "version": "3.13.0"
+      },
+      "prefix": {
+        "property": "prefix",
+        "description": "prefix node of value",
+        "type": "string \\| ReactNode",
+        "default": "-",
+        "version": "3.13.0"
+      },
+      "suffix": {
+        "property": "suffix",
+        "description": "suffix node of value",
+        "type": "string \\| ReactNode",
+        "default": "-",
+        "version": "3.13.0"
+      },
+      "title": {
+        "property": "title",
+        "description": "Display title",
+        "type": "string \\| ReactNode",
+        "default": "-",
+        "version": "3.13.0"
+      },
+      "value": {
+        "property": "value",
+        "description": "Display value",
+        "type": "string \\| number",
+        "default": "-",
+        "version": "3.13.0"
+      },
+      "valueStyle": {
+        "property": "valueStyle",
+        "description": "Set value css style",
+        "type": "style",
+        "default": "-",
+        "version": "3.13.0"
+      }
+    },
     "Skeleton": {
       "active": {
         "property": "active",
@@ -11082,22 +11163,6 @@
         "type": "boolean \\| [SkeletonTitleProps](#SkeletonTitleProps)",
         "default": "true",
         "version": "3.9.0"
-      }
-    },
-    "Select.OptGroup": {
-      "key": {
-        "property": "key",
-        "description": "",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "label": {
-        "property": "label",
-        "description": "Group label",
-        "type": "string\\|React.Element",
-        "default": "-",
-        "version": ""
       }
     },
     "Slider": {
@@ -11279,34 +11344,20 @@
         "version": ""
       }
     },
-    "Statistic": {
-      "decimalSeparator": {
-        "property": "decimalSeparator",
-        "description": "decimal separator",
+    "Statistic.Countdown": {
+      "format": {
+        "property": "format",
+        "description": "Format as [moment](http://momentjs.com/)",
         "type": "string",
-        "default": ".",
+        "default": "'HH:mm:ss'",
         "version": "3.13.0"
       },
-      "formatter": {
-        "property": "formatter",
-        "description": "customize value display logic",
-        "type": "(value) => ReactNode",
+      "onFinish": {
+        "property": "onFinish",
+        "description": "Trigger when time's up",
+        "type": "() => void",
         "default": "-",
-        "version": "3.13.0"
-      },
-      "groupSeparator": {
-        "property": "groupSeparator",
-        "description": "group separator",
-        "type": "string",
-        "default": ",",
-        "version": "3.13.0"
-      },
-      "precision": {
-        "property": "precision",
-        "description": "precision of input value",
-        "type": "number",
-        "default": "-",
-        "version": "3.13.0"
+        "version": "3.14.0"
       },
       "prefix": {
         "property": "prefix",
@@ -11331,8 +11382,8 @@
       },
       "value": {
         "property": "value",
-        "description": "Display value",
-        "type": "string \\| number",
+        "description": "Set target countdown time",
+        "type": "number \\| moment",
         "default": "-",
         "version": "3.13.0"
       },
@@ -11416,101 +11467,6 @@
         "version": "3.19.0"
       }
     },
-    "Steps.Step": {
-      "description": {
-        "property": "description",
-        "description": "Description of the step, optional property",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "icon": {
-        "property": "icon",
-        "description": "Icon of the step, optional property",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "status": {
-        "property": "status",
-        "description": "To specify the status. It will be automatically set by `current` of `Steps` if not configured. Optional values are: `wait` `process` `finish` `error`",
-        "type": "string",
-        "default": "`wait`",
-        "version": ""
-      },
-      "title": {
-        "property": "title",
-        "description": "Title of the step",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "subTitle": {
-        "property": "subTitle",
-        "description": "Subtitle of the step",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": "3.22.0"
-      },
-      "disabled": {
-        "property": "disabled",
-        "description": "Disable click",
-        "type": "boolean",
-        "default": "false",
-        "version": "3.22.0"
-      }
-    },
-    "Statistic.Countdown": {
-      "format": {
-        "property": "format",
-        "description": "Format as [moment](http://momentjs.com/)",
-        "type": "string",
-        "default": "'HH:mm:ss'",
-        "version": "3.13.0"
-      },
-      "onFinish": {
-        "property": "onFinish",
-        "description": "Trigger when time's up",
-        "type": "() => void",
-        "default": "-",
-        "version": "3.14.0"
-      },
-      "prefix": {
-        "property": "prefix",
-        "description": "prefix node of value",
-        "type": "string \\| ReactNode",
-        "default": "-",
-        "version": "3.13.0"
-      },
-      "suffix": {
-        "property": "suffix",
-        "description": "suffix node of value",
-        "type": "string \\| ReactNode",
-        "default": "-",
-        "version": "3.13.0"
-      },
-      "title": {
-        "property": "title",
-        "description": "Display title",
-        "type": "string \\| ReactNode",
-        "default": "-",
-        "version": "3.13.0"
-      },
-      "value": {
-        "property": "value",
-        "description": "Set target countdown time",
-        "type": "number \\| moment",
-        "default": "-",
-        "version": "3.13.0"
-      },
-      "valueStyle": {
-        "property": "valueStyle",
-        "description": "Set value css style",
-        "type": "style",
-        "default": "-",
-        "version": "3.13.0"
-      }
-    },
     "Switch": {
       "autoFocus": {
         "property": "autoFocus",
@@ -11588,6 +11544,50 @@
         "type": "string",
         "default": "-",
         "version": "3.10.1"
+      }
+    },
+    "Steps.Step": {
+      "description": {
+        "property": "description",
+        "description": "Description of the step, optional property",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "icon": {
+        "property": "icon",
+        "description": "Icon of the step, optional property",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "status": {
+        "property": "status",
+        "description": "To specify the status. It will be automatically set by `current` of `Steps` if not configured. Optional values are: `wait` `process` `finish` `error`",
+        "type": "string",
+        "default": "`wait`",
+        "version": ""
+      },
+      "title": {
+        "property": "title",
+        "description": "Title of the step",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "subTitle": {
+        "property": "subTitle",
+        "description": "Subtitle of the step",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": "3.22.0"
+      },
+      "disabled": {
+        "property": "disabled",
+        "description": "Disable click",
+        "type": "boolean",
+        "default": "false",
+        "version": "3.22.0"
       }
     },
     "Tabs": {
@@ -11704,29 +11704,6 @@
         "version": ""
       }
     },
-    "Tabs.TabPane": {
-      "forceRender": {
-        "property": "forceRender",
-        "description": "Forced render of content in tabs, not lazy render after clicking on tabs",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "key": {
-        "property": "key",
-        "description": "TabPane's key",
-        "type": "string",
-        "default": "-",
-        "version": ""
-      },
-      "tab": {
-        "property": "tab",
-        "description": "Show text in TabPane's head",
-        "type": "string\\|ReactNode",
-        "default": "-",
-        "version": ""
-      }
-    },
     "Tag": {
       "afterClose": {
         "property": "afterClose",
@@ -11762,6 +11739,29 @@
         "type": "boolean",
         "default": "`true`",
         "version": "3.7.0"
+      }
+    },
+    "Tabs.TabPane": {
+      "forceRender": {
+        "property": "forceRender",
+        "description": "Forced render of content in tabs, not lazy render after clicking on tabs",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "key": {
+        "property": "key",
+        "description": "TabPane's key",
+        "type": "string",
+        "default": "-",
+        "version": ""
+      },
+      "tab": {
+        "property": "tab",
+        "description": "Show text in TabPane's head",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
       }
     },
     "Tag.CheckableTag": {
@@ -11978,6 +11978,29 @@
         "version": ""
       }
     },
+    "Timeline.Item": {
+      "color": {
+        "property": "color",
+        "description": "Set the circle's color to `blue`, `red`, `green`, `gray` or other custom colors",
+        "type": "string",
+        "default": "`blue`",
+        "version": ""
+      },
+      "dot": {
+        "property": "dot",
+        "description": "Customize timeline dot",
+        "type": "string\\|ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "position": {
+        "property": "position",
+        "description": "Customize node position",
+        "type": "`left` \\| `right`",
+        "default": "-",
+        "version": "3.17.0"
+      }
+    },
     "Timeline": {
       "pending": {
         "property": "pending",
@@ -12008,27 +12031,153 @@
         "version": "3.8.0"
       }
     },
-    "Timeline.Item": {
-      "color": {
-        "property": "color",
-        "description": "Set the circle's color to `blue`, `red`, `green`, `gray` or other custom colors",
+    "Transfer": {
+      "className": {
+        "property": "className",
+        "description": "A custom CSS class.",
         "type": "string",
-        "default": "`blue`",
+        "default": "\\['', '']",
         "version": ""
       },
-      "dot": {
-        "property": "dot",
-        "description": "Customize timeline dot",
-        "type": "string\\|ReactNode",
+      "dataSource": {
+        "property": "dataSource",
+        "description": "Used for setting the source data. The elements that are part of this array will be present the left column. Except the elements whose keys are included in `targetKeys` prop.",
+        "type": "[TransferItem](https://git.io/vMM64)\\[]",
+        "default": "\\[]",
+        "version": ""
+      },
+      "disabled": {
+        "property": "disabled",
+        "description": "Whether disabled transfer",
+        "type": "boolean",
+        "default": "false",
+        "version": "3.10.0"
+      },
+      "filterOption": {
+        "property": "filterOption",
+        "description": "A function to determine whether an item should show in search result list",
+        "type": "(inputValue, option): boolean",
+        "default": "",
+        "version": ""
+      },
+      "footer": {
+        "property": "footer",
+        "description": "A function used for rendering the footer.",
+        "type": "(props) => ReactNode",
+        "default": "",
+        "version": ""
+      },
+      "lazy": {
+        "property": "lazy",
+        "description": "property of [react-lazy-load](https://github.com/loktar00/react-lazy-load) for lazy rendering items. Turn off it by set to `false`.",
+        "type": "object\\|boolean",
+        "default": "`{ height: 32, offset: 32 }`",
+        "version": ""
+      },
+      "listStyle": {
+        "property": "listStyle",
+        "description": "A custom CSS style used for rendering the transfer columns.",
+        "type": "object\\|({direction: 'left'\\|'right'}) => object",
+        "default": "",
+        "version": ""
+      },
+      "locale": {
+        "property": "locale",
+        "description": "i18n text including filter, empty text, item unit, etc",
+        "type": "{ itemUnit: string; itemsUnit: string; searchPlaceholder: string; notFoundContent: ReactNode; }",
+        "default": "`{ itemUnit: 'item', itemsUnit: 'items', notFoundContent: 'The list is empty', searchPlaceholder: 'Search here' }`",
+        "version": "3.9.0"
+      },
+      "operations": {
+        "property": "operations",
+        "description": "A set of operations that are sorted from top to bottom.",
+        "type": "string\\[]",
+        "default": "\\['>', '&lt;']",
+        "version": ""
+      },
+      "operationStyle": {
+        "property": "operationStyle",
+        "description": "A custom CSS style used for rendering the operations column.",
+        "type": "object",
+        "default": "",
+        "version": "3.6.0"
+      },
+      "render": {
+        "property": "render",
+        "description": "The function to generate the item shown on a column. Based on an record (element of the dataSource array), this function should return a React element which is generated from that record. Also, it can return a plain object with `value` and `label`, `label` is a React element and `value` is for title",
+        "type": "(record) => ReactNode",
+        "default": "",
+        "version": ""
+      },
+      "selectedKeys": {
+        "property": "selectedKeys",
+        "description": "A set of keys of selected items.",
+        "type": "string\\[]",
+        "default": "\\[]",
+        "version": ""
+      },
+      "showSearch": {
+        "property": "showSearch",
+        "description": "If included, a search box is shown on each column.",
+        "type": "boolean",
+        "default": "false",
+        "version": ""
+      },
+      "showSelectAll": {
+        "property": "showSelectAll",
+        "description": "Show select all checkbox on the header",
+        "type": "boolean",
+        "default": "true",
+        "version": "3.18.0"
+      },
+      "style": {
+        "property": "style",
+        "description": "A custom CSS style used for rendering wrapper element.",
+        "type": "object",
+        "default": "",
+        "version": "3.6.0"
+      },
+      "targetKeys": {
+        "property": "targetKeys",
+        "description": "A set of keys of elements that are listed on the right column.",
+        "type": "string\\[]",
+        "default": "\\[]",
+        "version": ""
+      },
+      "titles": {
+        "property": "titles",
+        "description": "A set of titles that are sorted from left to right.",
+        "type": "ReactNode\\[]",
         "default": "-",
         "version": ""
       },
-      "position": {
-        "property": "position",
-        "description": "Customize node position",
-        "type": "`left` \\| `right`",
+      "onChange": {
+        "property": "onChange",
+        "description": "A callback function that is executed when the transfer between columns is complete.",
+        "type": "(targetKeys, direction, moveKeys): void",
+        "default": "",
+        "version": ""
+      },
+      "onScroll": {
+        "property": "onScroll",
+        "description": "A callback function which is executed when scroll options list",
+        "type": "(direction, event): void",
+        "default": "",
+        "version": ""
+      },
+      "onSearch": {
+        "property": "onSearch",
+        "description": "A callback function which is executed when search field are changed",
+        "type": "(direction: 'left'\\|'right', value: string): void",
         "default": "-",
-        "version": "3.17.0"
+        "version": "3.11.0"
+      },
+      "onSelectChange": {
+        "property": "onSelectChange",
+        "description": "A callback function which is executed when selected items are changed.",
+        "type": "(sourceSelectedKeys, targetSelectedKeys): void",
+        "default": "",
+        "version": ""
       }
     },
     "Tooltip": {
@@ -12369,155 +12518,6 @@
         "type": "array\\\\&lt;{ key, title, children, \\[disabled, selectable] }>",
         "default": "-",
         "version": "3.19.8"
-      }
-    },
-    "Transfer": {
-      "className": {
-        "property": "className",
-        "description": "A custom CSS class.",
-        "type": "string",
-        "default": "\\['', '']",
-        "version": ""
-      },
-      "dataSource": {
-        "property": "dataSource",
-        "description": "Used for setting the source data. The elements that are part of this array will be present the left column. Except the elements whose keys are included in `targetKeys` prop.",
-        "type": "[TransferItem](https://git.io/vMM64)\\[]",
-        "default": "\\[]",
-        "version": ""
-      },
-      "disabled": {
-        "property": "disabled",
-        "description": "Whether disabled transfer",
-        "type": "boolean",
-        "default": "false",
-        "version": "3.10.0"
-      },
-      "filterOption": {
-        "property": "filterOption",
-        "description": "A function to determine whether an item should show in search result list",
-        "type": "(inputValue, option): boolean",
-        "default": "",
-        "version": ""
-      },
-      "footer": {
-        "property": "footer",
-        "description": "A function used for rendering the footer.",
-        "type": "(props) => ReactNode",
-        "default": "",
-        "version": ""
-      },
-      "lazy": {
-        "property": "lazy",
-        "description": "property of [react-lazy-load](https://github.com/loktar00/react-lazy-load) for lazy rendering items. Turn off it by set to `false`.",
-        "type": "object\\|boolean",
-        "default": "`{ height: 32, offset: 32 }`",
-        "version": ""
-      },
-      "listStyle": {
-        "property": "listStyle",
-        "description": "A custom CSS style used for rendering the transfer columns.",
-        "type": "object\\|({direction: 'left'\\|'right'}) => object",
-        "default": "",
-        "version": ""
-      },
-      "locale": {
-        "property": "locale",
-        "description": "i18n text including filter, empty text, item unit, etc",
-        "type": "{ itemUnit: string; itemsUnit: string; searchPlaceholder: string; notFoundContent: ReactNode; }",
-        "default": "`{ itemUnit: 'item', itemsUnit: 'items', notFoundContent: 'The list is empty', searchPlaceholder: 'Search here' }`",
-        "version": "3.9.0"
-      },
-      "operations": {
-        "property": "operations",
-        "description": "A set of operations that are sorted from top to bottom.",
-        "type": "string\\[]",
-        "default": "\\['>', '&lt;']",
-        "version": ""
-      },
-      "operationStyle": {
-        "property": "operationStyle",
-        "description": "A custom CSS style used for rendering the operations column.",
-        "type": "object",
-        "default": "",
-        "version": "3.6.0"
-      },
-      "render": {
-        "property": "render",
-        "description": "The function to generate the item shown on a column. Based on an record (element of the dataSource array), this function should return a React element which is generated from that record. Also, it can return a plain object with `value` and `label`, `label` is a React element and `value` is for title",
-        "type": "(record) => ReactNode",
-        "default": "",
-        "version": ""
-      },
-      "selectedKeys": {
-        "property": "selectedKeys",
-        "description": "A set of keys of selected items.",
-        "type": "string\\[]",
-        "default": "\\[]",
-        "version": ""
-      },
-      "showSearch": {
-        "property": "showSearch",
-        "description": "If included, a search box is shown on each column.",
-        "type": "boolean",
-        "default": "false",
-        "version": ""
-      },
-      "showSelectAll": {
-        "property": "showSelectAll",
-        "description": "Show select all checkbox on the header",
-        "type": "boolean",
-        "default": "true",
-        "version": "3.18.0"
-      },
-      "style": {
-        "property": "style",
-        "description": "A custom CSS style used for rendering wrapper element.",
-        "type": "object",
-        "default": "",
-        "version": "3.6.0"
-      },
-      "targetKeys": {
-        "property": "targetKeys",
-        "description": "A set of keys of elements that are listed on the right column.",
-        "type": "string\\[]",
-        "default": "\\[]",
-        "version": ""
-      },
-      "titles": {
-        "property": "titles",
-        "description": "A set of titles that are sorted from left to right.",
-        "type": "ReactNode\\[]",
-        "default": "-",
-        "version": ""
-      },
-      "onChange": {
-        "property": "onChange",
-        "description": "A callback function that is executed when the transfer between columns is complete.",
-        "type": "(targetKeys, direction, moveKeys): void",
-        "default": "",
-        "version": ""
-      },
-      "onScroll": {
-        "property": "onScroll",
-        "description": "A callback function which is executed when scroll options list",
-        "type": "(direction, event): void",
-        "default": "",
-        "version": ""
-      },
-      "onSearch": {
-        "property": "onSearch",
-        "description": "A callback function which is executed when search field are changed",
-        "type": "(direction: 'left'\\|'right', value: string): void",
-        "default": "-",
-        "version": "3.11.0"
-      },
-      "onSelectChange": {
-        "property": "onSelectChange",
-        "description": "A callback function which is executed when selected items are changed.",
-        "type": "(sourceSelectedKeys, targetSelectedKeys): void",
-        "default": "",
-        "version": ""
       }
     },
     "Tree.TreeNode": {
@@ -13357,6 +13357,136 @@
         "version": ""
       }
     },
+    "DatePicker": {
+      "defaultValue": {
+        "property": "defaultValue",
+        "description": "to set default date, if start time or end time is null or undefined, the date range will be an open interval",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "-",
+        "version": ""
+      },
+      "defaultPickerValue": {
+        "property": "defaultPickerValue",
+        "description": "to set default picker date",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "-",
+        "version": "3.10.8"
+      },
+      "disabledTime": {
+        "property": "disabledTime",
+        "description": "to specify the time that cannot be selected",
+        "type": "function(date)",
+        "default": "-",
+        "version": ""
+      },
+      "format": {
+        "property": "format",
+        "description": "to set the date format, refer to [moment.js](http://momentjs.com/). When an array is provided, all values are used for parsing and first value is used for formatting.",
+        "type": "string \\| string\\[]",
+        "default": "\"YYYY-MM-DD\"",
+        "version": ""
+      },
+      "renderExtraFooter": {
+        "property": "renderExtraFooter",
+        "description": "render extra footer in panel",
+        "type": "(mode) => React.ReactNode",
+        "default": "-",
+        "version": ""
+      },
+      "showTime": {
+        "property": "showTime",
+        "description": "to provide an additional time selection",
+        "type": "object\\|boolean",
+        "default": "[TimePicker Options](/components/time-picker/#API)",
+        "version": ""
+      },
+      "showTime.defaultValue": {
+        "property": "showTime.defaultValue",
+        "description": "to set default time of selected date, [demo](#components-date-picker-demo-disabled-date)",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "moment()",
+        "version": ""
+      },
+      "showToday": {
+        "property": "showToday",
+        "description": "whether to show \"Today\" button",
+        "type": "boolean",
+        "default": "true",
+        "version": ""
+      },
+      "value": {
+        "property": "value",
+        "description": "to set date",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "-",
+        "version": ""
+      },
+      "onChange": {
+        "property": "onChange",
+        "description": "a callback function, can be executed when the selected time is changing",
+        "type": "function(date: moment, dateString: string)",
+        "default": "-",
+        "version": ""
+      },
+      "onOk": {
+        "property": "onOk",
+        "description": "callback when click ok button",
+        "type": "function()",
+        "default": "-",
+        "version": ""
+      },
+      "onPanelChange": {
+        "property": "onPanelChange",
+        "description": "Callback function for panel changing",
+        "type": "function(value, mode)",
+        "default": "-",
+        "version": "3.19.8"
+      }
+    },
+    "DatePicker.WeekPicker": {
+      "defaultValue": {
+        "property": "defaultValue",
+        "description": "to set default date",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "-",
+        "version": ""
+      },
+      "defaultPickerValue": {
+        "property": "defaultPickerValue",
+        "description": "to set default picker date",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "-",
+        "version": "3.10.8"
+      },
+      "format": {
+        "property": "format",
+        "description": "to set the date format, refer to [moment.js](http://momentjs.com/)",
+        "type": "string",
+        "default": "\"YYYY-wo\"",
+        "version": ""
+      },
+      "value": {
+        "property": "value",
+        "description": "to set date",
+        "type": "[moment](http://momentjs.com/)",
+        "default": "-",
+        "version": ""
+      },
+      "onChange": {
+        "property": "onChange",
+        "description": "a callback function, can be executed when the selected time is changing",
+        "type": "function(date: moment, dateString: string)",
+        "default": "-",
+        "version": ""
+      },
+      "renderExtraFooter": {
+        "property": "renderExtraFooter",
+        "description": "render extra footer in panel",
+        "type": "(mode) => React.ReactNode",
+        "default": "-",
+        "version": "3.12.0"
+      }
+    },
     "DatePicker.RangePicker": {
       "defaultValue": {
         "property": "defaultValue",
@@ -13450,194 +13580,6 @@
         "version": ""
       }
     },
-    "DatePicker.WeekPicker": {
-      "defaultValue": {
-        "property": "defaultValue",
-        "description": "to set default date",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "-",
-        "version": ""
-      },
-      "defaultPickerValue": {
-        "property": "defaultPickerValue",
-        "description": "to set default picker date",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "-",
-        "version": "3.10.8"
-      },
-      "format": {
-        "property": "format",
-        "description": "to set the date format, refer to [moment.js](http://momentjs.com/)",
-        "type": "string",
-        "default": "\"YYYY-wo\"",
-        "version": ""
-      },
-      "value": {
-        "property": "value",
-        "description": "to set date",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "-",
-        "version": ""
-      },
-      "onChange": {
-        "property": "onChange",
-        "description": "a callback function, can be executed when the selected time is changing",
-        "type": "function(date: moment, dateString: string)",
-        "default": "-",
-        "version": ""
-      },
-      "renderExtraFooter": {
-        "property": "renderExtraFooter",
-        "description": "render extra footer in panel",
-        "type": "(mode) => React.ReactNode",
-        "default": "-",
-        "version": "3.12.0"
-      }
-    },
-    "DatePicker": {
-      "defaultValue": {
-        "property": "defaultValue",
-        "description": "to set default date, if start time or end time is null or undefined, the date range will be an open interval",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "-",
-        "version": ""
-      },
-      "defaultPickerValue": {
-        "property": "defaultPickerValue",
-        "description": "to set default picker date",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "-",
-        "version": "3.10.8"
-      },
-      "disabledTime": {
-        "property": "disabledTime",
-        "description": "to specify the time that cannot be selected",
-        "type": "function(date)",
-        "default": "-",
-        "version": ""
-      },
-      "format": {
-        "property": "format",
-        "description": "to set the date format, refer to [moment.js](http://momentjs.com/). When an array is provided, all values are used for parsing and first value is used for formatting.",
-        "type": "string \\| string\\[]",
-        "default": "\"YYYY-MM-DD\"",
-        "version": ""
-      },
-      "renderExtraFooter": {
-        "property": "renderExtraFooter",
-        "description": "render extra footer in panel",
-        "type": "(mode) => React.ReactNode",
-        "default": "-",
-        "version": ""
-      },
-      "showTime": {
-        "property": "showTime",
-        "description": "to provide an additional time selection",
-        "type": "object\\|boolean",
-        "default": "[TimePicker Options](/components/time-picker/#API)",
-        "version": ""
-      },
-      "showTime.defaultValue": {
-        "property": "showTime.defaultValue",
-        "description": "to set default time of selected date, [demo](#components-date-picker-demo-disabled-date)",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "moment()",
-        "version": ""
-      },
-      "showToday": {
-        "property": "showToday",
-        "description": "whether to show \"Today\" button",
-        "type": "boolean",
-        "default": "true",
-        "version": ""
-      },
-      "value": {
-        "property": "value",
-        "description": "to set date",
-        "type": "[moment](http://momentjs.com/)",
-        "default": "-",
-        "version": ""
-      },
-      "onChange": {
-        "property": "onChange",
-        "description": "a callback function, can be executed when the selected time is changing",
-        "type": "function(date: moment, dateString: string)",
-        "default": "-",
-        "version": ""
-      },
-      "onOk": {
-        "property": "onOk",
-        "description": "callback when click ok button",
-        "type": "function()",
-        "default": "-",
-        "version": ""
-      },
-      "onPanelChange": {
-        "property": "onPanelChange",
-        "description": "Callback function for panel changing",
-        "type": "function(value, mode)",
-        "default": "-",
-        "version": "3.19.8"
-      }
-    },
-    "Form": {
-      "form": {
-        "property": "form",
-        "description": "Decorated by `Form.create()` will be automatically set `this.props.form` property",
-        "type": "object",
-        "default": "n/a",
-        "version": ""
-      },
-      "hideRequiredMark": {
-        "property": "hideRequiredMark",
-        "description": "Hide required mark of all form items",
-        "type": "Boolean",
-        "default": "false",
-        "version": ""
-      },
-      "labelAlign": {
-        "property": "labelAlign",
-        "description": "text align of label of all items",
-        "type": "'left' \\| 'right'",
-        "default": "'right'",
-        "version": "3.15.0"
-      },
-      "labelCol": {
-        "property": "labelCol",
-        "description": "(Added in 3.14.0. Previous version can only set on FormItem.) The layout of label. You can set `span` `offset` to something like `{span: 3, offset: 12}` or `sm: {span: 3, offset: 12}` same as with `<Col>`",
-        "type": "[object](https://ant.design/components/grid/#Col)",
-        "default": "",
-        "version": "3.14.0"
-      },
-      "layout": {
-        "property": "layout",
-        "description": "Define form layout",
-        "type": "'horizontal'\\|'vertical'\\|'inline'",
-        "default": "'horizontal'",
-        "version": ""
-      },
-      "onSubmit": {
-        "property": "onSubmit",
-        "description": "Defines a function will be called if form data validation is successful.",
-        "type": "Function(e:Event)",
-        "default": "",
-        "version": ""
-      },
-      "wrapperCol": {
-        "property": "wrapperCol",
-        "description": "(Added in 3.14.0. Previous version can only set on FormItem.) The layout for input controls, same as `labelCol`",
-        "type": "[object](https://ant.design/components/grid/#Col)",
-        "default": "",
-        "version": "3.14.0"
-      },
-      "colon": {
-        "property": "colon",
-        "description": "change default props colon value of Form.Item (only effective when prop layout is horizontal)",
-        "type": "boolean",
-        "default": "true",
-        "version": "3.15.0"
-      }
-    },
     "Form.Item": {
       "colon": {
         "property": "colon",
@@ -13717,13 +13659,62 @@
         "version": ""
       }
     },
-    "Table.ColumnGroup": {
-      "title": {
-        "property": "title",
-        "description": "Title of the column group",
-        "type": "string\\|ReactNode",
-        "default": "-",
+    "Form": {
+      "form": {
+        "property": "form",
+        "description": "Decorated by `Form.create()` will be automatically set `this.props.form` property",
+        "type": "object",
+        "default": "n/a",
         "version": ""
+      },
+      "hideRequiredMark": {
+        "property": "hideRequiredMark",
+        "description": "Hide required mark of all form items",
+        "type": "Boolean",
+        "default": "false",
+        "version": ""
+      },
+      "labelAlign": {
+        "property": "labelAlign",
+        "description": "text align of label of all items",
+        "type": "'left' \\| 'right'",
+        "default": "'right'",
+        "version": "3.15.0"
+      },
+      "labelCol": {
+        "property": "labelCol",
+        "description": "(Added in 3.14.0. Previous version can only set on FormItem.) The layout of label. You can set `span` `offset` to something like `{span: 3, offset: 12}` or `sm: {span: 3, offset: 12}` same as with `<Col>`",
+        "type": "[object](https://ant.design/components/grid/#Col)",
+        "default": "",
+        "version": "3.14.0"
+      },
+      "layout": {
+        "property": "layout",
+        "description": "Define form layout",
+        "type": "'horizontal'\\|'vertical'\\|'inline'",
+        "default": "'horizontal'",
+        "version": ""
+      },
+      "onSubmit": {
+        "property": "onSubmit",
+        "description": "Defines a function will be called if form data validation is successful.",
+        "type": "Function(e:Event)",
+        "default": "",
+        "version": ""
+      },
+      "wrapperCol": {
+        "property": "wrapperCol",
+        "description": "(Added in 3.14.0. Previous version can only set on FormItem.) The layout for input controls, same as `labelCol`",
+        "type": "[object](https://ant.design/components/grid/#Col)",
+        "default": "",
+        "version": "3.14.0"
+      },
+      "colon": {
+        "property": "colon",
+        "description": "change default props colon value of Form.Item (only effective when prop layout is horizontal)",
+        "type": "boolean",
+        "default": "true",
+        "version": "3.15.0"
       }
     },
     "Table": {
@@ -14125,6 +14116,15 @@
         "property": "onHeaderCell",
         "description": "Set props on per header cell",
         "type": "Function(column)",
+        "default": "-",
+        "version": ""
+      }
+    },
+    "Table.ColumnGroup": {
+      "title": {
+        "property": "title",
+        "description": "Title of the column group",
+        "type": "string\\|ReactNode",
         "default": "-",
         "version": ""
       }

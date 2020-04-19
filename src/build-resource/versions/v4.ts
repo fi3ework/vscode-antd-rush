@@ -54,7 +54,7 @@ export const antdComponentMapV4: ComponentMapping = {
   },
   'Breadcrumb.Separator': {
     docAlias: 'breadcrumb',
-    anchorBeforeProps: '### Breadcrumb.Separator `3.21.0`',
+    anchorBeforeProps: '### Breadcrumb.Separator',
     methods: [],
   },
   Button: {
@@ -231,7 +231,7 @@ export const antdComponentMapV4: ComponentMapping = {
   },
   'Form.Item': {
     docAlias: 'form',
-    anchorBeforeProps: '### Form.Item',
+    anchorBeforeProps: '## Form.Item',
     methods: [],
   },
   Row: {
@@ -269,7 +269,7 @@ export const antdComponentMapV4: ComponentMapping = {
   },
   'Input.Password': {
     docAlias: 'input',
-    anchorBeforeProps: '#### Input.Password.+',
+    anchorBeforeProps: '#### Input.Password',
     methods: [],
   },
   InputNumber: {
@@ -312,7 +312,8 @@ export const antdComponentMapV4: ComponentMapping = {
   //   ],
   // },
   Mentions: {
-    anchorBeforeProps: '### Mentions',
+    // EN document shows `### Mention`, it's a typo.
+    anchorBeforeProps: ['### Mentions', '### Mention'],
     methods: [
       'filterOption',
       'validateSearch',
