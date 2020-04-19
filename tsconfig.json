@@ -1,9 +1,5 @@
 {
   "files": [],
   "references": [{ "path": "src" }, { "path": "test" }],
-  "exclude": ["node_modules"],
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
-  }
+  "exclude": ["node_modules"]
 }

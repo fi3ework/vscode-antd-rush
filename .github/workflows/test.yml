@@ -11,17 +11,18 @@ jobs:
         os: [macos-latest, windows-latest]
         node: [10, 12]
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: test
-        shell: bash
+      - name: yarn - install & compile
         run: |
           yarn
           yarn run webpack-build
           yarn run compile-test
-          yarn test
-        env:
-          CI: true
+      - name: Run headless tests
+        uses: GabrielBB/xvfb-action@v1.0
+        with:
+          run: npm run test

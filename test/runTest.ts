@@ -1,4 +1,4 @@
-import * as path from 'path'
+const path = require('path')
 
 import { runTests } from 'vscode-test'
 
@@ -6,7 +6,7 @@ async function main() {
   try {
     // The folder containing the Extension Manifest package.json
     // Passed to `--extensionDevelopmentPath`
-    const extensionDevelopmentPath = path.resolve(__dirname, '../../')
+    const extensionDevelopmentPath = path.resolve(__dirname, '../')
 
     // The path to the extension test script
     // Passed to --extensionTestsPath
@@ -22,7 +22,7 @@ async function main() {
       ],
     })
   } catch (err) {
-    console.error('Failed to run tests')
+    console.error('Failed to run tests', err)
     process.exit(1)
   }
 }
