@@ -29,7 +29,7 @@ export type InsertKind = 'direct' | 'inquiry'
 export class AntdProvideCompletionItem implements CompletionItemProvider {
   public static insertKindMapping: { [k: string]: InsertKind } = {
     '!': 'direct',
-    '#': 'inquiry',
+    '~': 'inquiry',
   }
   private document: TextDocument
   private position: Position
@@ -37,10 +37,10 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
   private context: CompletionContext
   private antdDocJson: PropsJson
   private configHelper: ConfigHelper
+  private antdVersion: ResourceVersion
   private language: DocLanguage = getLanguageConfiguration(
     workspace.getConfiguration().get('antdRush.language')
   )
-  private antdVersion: ResourceVersion = this.configHelper.getCurrConfig().antdVersion
 
   public constructor(
     document: TextDocument,
@@ -53,8 +53,9 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
     this.position = position
     this.token = token
     this.context = context
-    this.antdDocJson = versionsJson[this.antdVersion].propsJson
     this.configHelper = configHelper
+    this.antdVersion = this.configHelper.getCurrConfig().antdVersion
+    this.antdDocJson = versionsJson[this.antdVersion].propsJson
   }
 
   public provideCompletionItems = async (): Promise<CompletionItem[]> => {
