@@ -1,3 +1,4 @@
 {
-  "debug.node.autoAttach": "on"
+  "debug.node.autoAttach": "on",
+  "eslint.validate": ["javascript", "javascriptreact", "vue", "typescript", "typescriptreact"]
 }
