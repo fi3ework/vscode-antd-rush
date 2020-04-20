@@ -36,15 +36,31 @@ English | [中文](./README-zh_CN.md)
 
 - 💬 Show official documentation for Ant Design component and props
 - ⚡️ Insert component method handler automatically
-- ✨ Easy to upgrade with Ant Design
+- 🗂 Support multiple version documentations (3.x / 4.x)
 - 🌐 Support Chinese and English documentation
 
 ## Caveat
 
-- Currently used version of the Ant Design documentation is **3.26.4**
+- Currently used version of the Ant Design 3.x documentation is **3.26.15**, 4.x uses **4.1.3**
 - `@types/react` is required to be installed in userland project
 
 ## Usage
+
+### Switch antd major version
+
+Extension support both v3 and v4 documentation, v3 by default (it will changed to v4 in the future). You can change the default version and set version of each workspace.
+
+#### Change default version
+
+1. <kbd>⌘</kbd> + <kbd>,</kbd> (macOS), <kbd>Ctrl</kbd> + <kbd>,</kbd> (Windows)
+2. Input `Antd Rush: Default Antd Major Version`
+3. Select default version
+
+#### Change workspace version
+
+1. <kbd>⌘</kbd> + <kbd>shift</kbd> + <kbd>P</kbd> (macOS), <kbd>Ctrl </kbd> + <kbd>shift</kbd> + <kbd>P</kbd> (Windows)
+2. Input `antdrush: set antd version of current workspace`
+3. Select version of current workspace
 
 ### Component props table hover hint
 

@@ -36,7 +36,7 @@ Rush to Ant Design in VS Code
 
 - 💬 为 Ant Design 组件及属性显示对应官方文档
 - ⚡️ 自动插入组件 handler
-- 🗂 支持多版本（3.x / 4.x）
+- 🗂 支持多版本文档（3.x / 4.x）
 - 🌐 支持中/英文档
 
 ## 提示
@@ -48,7 +48,7 @@ Rush to Ant Design in VS Code
 
 ### 切换 antd 版本
 
-同时支持 antd v3 和 v4 版本的文档，默认为 v3，你可以更改使用默认的文档版本，也可以更改每个工作区使用的 antd 版本号。
+同时支持 antd v3 和 v4 版本的文档，默认为 v3（之后会转为 v4），你可以更改使用默认的文档版本，也可以更改每个工作区使用的 antd 版本号。
 
 #### 更改默认版本
 
@@ -61,8 +61,6 @@ Rush to Ant Design in VS Code
 1. <kbd>⌘</kbd> + <kbd>shift</kbd> + <kbd>P</kbd> (macOS), <kbd>Ctrl </kbd> + <kbd>shift</kbd> + <kbd>P</kbd> (Windows)
 2. 输入 `antdrush: set antd version of current workspace`
 3. 选择当前工作区的版本
-
-####
 
 ### 悬浮提示组件 props 表格
 
@@ -80,7 +78,7 @@ Rush to Ant Design in VS Code
 ### 自动插入 method handler
 
 - 触发 `!` 自动插入带默认前缀的 handler（默认前缀预置为 `handle`，可配置）
-- 触发 `#` 在提示输入 handler name 后插入
+- 触发 `~` 在提示输入 handler name 后插入
 - 暂时不会为 TypeScript 自动添加类型标注
 - class component 插入的模板为
 

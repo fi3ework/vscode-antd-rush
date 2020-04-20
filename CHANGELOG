@@ -1,0 +1,11 @@
+# Change Log
+
+## 2.0.0 (April 22, 2020)
+
+- feature: support v4 document
+- feature: support switch document version of each workspace
+- fix(break change): change inquiry character from `#` to `~` (as `#` seems to be taken by VS Code internal completion in lastest versions)
+
+## 1.2.0 (April 18, 2020)
+
+- feature: bump v3 document version to v3.26.15
