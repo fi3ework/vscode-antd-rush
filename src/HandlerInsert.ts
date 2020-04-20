@@ -127,8 +127,7 @@ export class HandlerInsert {
       },
     })
 
-    const fullHandlerName = fullHandlerNameInput!
-    this.fullHandlerName = fullHandlerName
+    this.fullHandlerName = fullHandlerNameInput || addHandlerPrefix(this.handlerName)
     return
   }
 
