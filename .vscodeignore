@@ -18,7 +18,7 @@ tsconfig.options.json
 tslint.json
 webpack.config.js
 yarn.lock
-
+yarn-error.log
 # build dist
 **/*.vsix
 **/*.gif
