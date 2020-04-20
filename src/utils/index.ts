@@ -58,9 +58,9 @@ export function antdRushErrorMsg(message: string) {
 /**
  * Composet ant-design documentation link.
  */
-export function composeDocLink(folder: string, lang: 'en' | 'zh') {
+export function composeDocLink(folder: string, lang: DocLanguage, version: ResourceVersion) {
   const suffix = lang === 'en' ? '' : '-cn'
-  return `https://ant.design/components/${folder}${suffix}/`
+  return `https://${version === 'v4' ? '' : '3x.'}ant.design/components/${folder}${suffix}/`
 }
 
 /**

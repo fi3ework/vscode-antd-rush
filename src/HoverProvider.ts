@@ -101,8 +101,8 @@ export class HoverProvider {
 
       if (!matchedComponent) throw antdRushErrorMsg(`did not match component for ${componentName}`)
 
-      const enDocLink = `[EN](${composeDocLink(componentFolder, 'en')})`
-      const zhDocLink = `[中文](${composeDocLink(componentFolder, 'zh')})`
+      const enDocLink = `[EN](${composeDocLink(componentFolder, 'en', this.antdVersion)})`
+      const zhDocLink = `[中文](${composeDocLink(componentFolder, 'zh', this.antdVersion)})`
       const docLinks =
         this.language === 'en' ? `${enDocLink} | ${zhDocLink}` : `${zhDocLink} | ${enDocLink}`
 

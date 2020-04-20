@@ -157,7 +157,7 @@
   "lint-staged": {
     "*.ts": [
       "prettier --write",
-      "lint"
+      "npm run lint"
     ]
   }
 }
