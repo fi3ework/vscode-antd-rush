@@ -15,3 +15,12 @@ As GitHub's open API has limitation with non-authentication request. It's recomm
 ## 3. Run extension in debug mode
 
 Press <kbd>F5</kbd> to run extension in debug mode.
+
+## scripts
+
+- `build-doc:download-and-parse`: downloaded Markdown files and parse them to JSON which will be shown.
+- `build-doc:parse`: parse Markdowned files under `src/resource/*.md` to JSON.
+- `webpack-build`: bundle extension with Webpack in production.
+- `compile`: compile with tsc in development.
+- `compile-test`: compile test files.
+- `watch`: for debug mode.

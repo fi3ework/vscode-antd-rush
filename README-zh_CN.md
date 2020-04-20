@@ -36,15 +36,33 @@ Rush to Ant Design in VS Code
 
 - 💬 为 Ant Design 组件及属性显示对应官方文档
 - ⚡️ 自动插入组件 handler
-- ✨ 易于随官方进行升级
+- 🗂 支持多版本（3.x / 4.x）
 - 🌐 支持中/英文档
 
 ## 提示
 
-- 当前使用的 Ant Design 文档版本为 **3.26.4**
+- 当前使用的 Ant Design 3.x 版本文档为 **3.26.15**，4.x 版本文档为 **4.1.3**
 - 需要用户的项目中安装了 `@types/react`
 
 ## 功能
+
+### 切换 antd 版本
+
+同时支持 antd v3 和 v4 版本的文档，默认为 v3，你可以更改使用默认的文档版本，也可以更改每个工作区使用的 antd 版本号。
+
+#### 更改默认版本
+
+1. <kbd>⌘</kbd> + <kbd>,</kbd> (macOS), <kbd>Ctrl</kbd> + <kbd>,</kbd> (Windows)
+2. 输入 `Antd Rush: Default Antd Major Version`
+3. 选择默认版本
+
+#### 更改工作区版本
+
+1. <kbd>⌘</kbd> + <kbd>shift</kbd> + <kbd>P</kbd> (macOS), <kbd>Ctrl </kbd> + <kbd>shift</kbd> + <kbd>P</kbd> (Windows)
+2. 输入 `antdrush: set antd version of current workspace`
+3. 选择当前工作区的版本
+
+####
 
 ### 悬浮提示组件 props 表格
 
