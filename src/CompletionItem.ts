@@ -27,7 +27,7 @@ import { ConfigHelper } from './utils/ConfigHelper'
 export type InsertKind = 'direct' | 'inquiry'
 
 export class AntdProvideCompletionItem implements CompletionItemProvider {
-  static insertKindMapping: { [k: string]: InsertKind } = {
+  public static insertKindMapping: { [k: string]: InsertKind } = {
     '!': 'direct',
     '#': 'inquiry',
   }
@@ -55,6 +55,28 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
     this.context = context
     this.antdDocJson = versionsJson[this.antdVersion].propsJson
     this.configHelper = configHelper
+  }
+
+  public provideCompletionItems = async (): Promise<CompletionItem[]> => {
+    const { document, position, token } = this
+    if (token.isCancellationRequested) return []
+    const componentName = await getClosestAntdJsxElementNode(document, position)
+    if (componentName === null) return [] // not in a JSX element
+    const availableHandler = antdComponentMap[componentName].methods
+    if (!availableHandler) return [] // element not from antd
+
+    const classComponentParent = await getParentsWhen<ClassDeclaration>(
+      document,
+      position,
+      isClassExtendsReactComponent,
+      'outward'
+    )
+
+    const items = availableHandler.map((handlerName) =>
+      this.transformHandlerToItem(componentName, handlerName, classComponentParent)
+    )
+
+    return items
   }
 
   private getHandlerDocument = (componentName: string, handlerName: string) => {
@@ -111,31 +133,5 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
 
     item.command = cmd
     return item
-  }
-
-  public provideCompletionItems = async (): Promise<CompletionItem[]> => {
-    const { document, position, token } = this
-    if (token.isCancellationRequested) return []
-
-    const componentName = await getClosestAntdJsxElementNode(document, position)
-
-    if (componentName === null) return [] // not in a JSX element
-
-    const availableHandler = antdComponentMap[componentName].methods
-
-    if (!availableHandler) return [] // element not from antd
-
-    const classComponentParent = await getParentsWhen<ClassDeclaration>(
-      document,
-      position,
-      isClassExtendsReactComponent,
-      'outward'
-    )
-
-    const items = availableHandler.map((handlerName) =>
-      this.transformHandlerToItem(componentName, handlerName, classComponentParent)
-    )
-
-    return items
   }
 }

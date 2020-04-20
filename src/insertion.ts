@@ -7,12 +7,12 @@ import { antdRushErrorMsg } from './utils'
 /**
  * Fill handler template with parameters and its type
  */
-export const composeHandlerString = (
+export function composeHandlerString(
   fullHandlerName: string,
   params: FunctionParam[],
   indent: number,
   type: 'class' | 'functional'
-) => {
+) {
   const paramsText = params.map((p) => p.text).join(', ')
   // TODO: inset param types in ts
   if (type === 'class') {
@@ -41,14 +41,14 @@ ${' '.repeat(indent)}
 /**
  * Add indent to string at start at each line
  */
-export const withIndent = (raw: string, indent: number): string => {
+export function withIndent(raw: string, indent: number): string {
   return raw
     .split('\n')
     .map((line) => ' '.repeat(indent) + line)
     .join('\n')
 }
 
-export const addHandlerPrefix = (handlerName: string): string => {
+export function addHandlerPrefix(handlerName: string): string {
   const handlerPrefix = workspace.getConfiguration().get('antdRush.handlerPrefix')
   const camelizedHandlerName = handlerName.slice(0, 1).toUpperCase() + handlerName.slice(1)
   return `${handlerPrefix}${camelizedHandlerName}`

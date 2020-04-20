@@ -14,6 +14,7 @@ import { ANTD_GITHUB, STORAGE } from './constant'
  */
 let GITHUB_TOKEN = ''
 try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   GITHUB_TOKEN = require('./token').GITHUB_TOKEN
 } catch {
   // noop
@@ -40,7 +41,9 @@ const IGNORED_COMPONENTS: string[] = [
 /**
  * @property {string} [k] component name
  */
-type IShaMap = { [k: string]: { enSha: string; zhSha: string } }
+interface IShaMap {
+  [k: string]: { enSha: string; zhSha: string }
+}
 
 /**
  * Get each component's zh/en Markdown file sha of specific tag

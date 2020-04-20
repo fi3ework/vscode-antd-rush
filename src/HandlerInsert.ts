@@ -4,34 +4,34 @@ import {
   FunctionDeclaration,
   isFunctionDeclaration,
   isVariableStatement,
-  VariableStatement,
+  Node,
   ScriptTarget,
   SourceFile,
-  Node,
+  VariableStatement,
 } from 'typescript'
 import {
   commands,
   Location,
+  Position,
   Range,
+  Selection,
   TextDocument,
   TextEditor,
   TextEditorEdit,
-  workspace,
-  window,
-  Selection,
   TextEditorRevealType,
+  window,
+  workspace,
 } from 'vscode'
 
 import {
-  getFunctionParams,
   FunctionParam,
+  getFunctionParams,
   getParentsWhen,
   insertStringToClassComponent,
   insertStringToFunctionalComponent,
 } from './ast'
-import { addHandlerPrefix } from './insertion'
 import { InsertKind } from './CompletionItem'
-import { Position } from 'vscode'
+import { addHandlerPrefix } from './insertion'
 
 export class HandlerInsert {
   private document: TextDocument
@@ -44,7 +44,7 @@ export class HandlerInsert {
   private insertKind: InsertKind // handleOnChange, myOnSelect ...
   private classComponentParent: ClassDeclaration | null
 
-  constructor(
+  public constructor(
     editor: TextEditor,
     edit: TextEditorEdit,
     triggerCharRange: Range,
@@ -91,7 +91,7 @@ export class HandlerInsert {
       const functionalComponent = await getParentsWhen<FunctionDeclaration | VariableStatement>(
         document,
         symbolPosition,
-        async node => {
+        async (node) => {
           return isFunctionDeclaration(node) || isVariableStatement(node)
         },
         'inward'
@@ -115,15 +115,6 @@ export class HandlerInsert {
     }
   }
 
-  private moveCursor = (insertAt: Position | null, xDelta: number) => {
-    if (!insertAt) return
-    const DELTA_TO_TRAIL_OF_INSERTION = 3
-    const deltaPosition = insertAt.translate(DELTA_TO_TRAIL_OF_INSERTION, xDelta)
-    const cursorTarget = new Selection(deltaPosition, deltaPosition)
-    this.editor.selection = cursorTarget
-    this.editor.revealRange(cursorTarget, TextEditorRevealType.InCenterIfOutsideViewport)
-  }
-
   public tryRiseInputBox = async (): Promise<void> => {
     if (this.insertKind === 'direct') return Promise.resolve()
 
@@ -131,7 +122,7 @@ export class HandlerInsert {
       value: '',
       ignoreFocusOut: true,
       placeHolder: 'Input handler name. e.g. `handleOnChange`',
-      validateInput: text => {
+      validateInput: (text) => {
         return text === '' ? 'Please input handler name' : null
       },
     })
@@ -139,6 +130,34 @@ export class HandlerInsert {
     const fullHandlerName = fullHandlerNameInput || addHandlerPrefix(this.handlerName)
     this.fullHandlerName = fullHandlerName
     return
+  }
+
+  public cleanCompletionPrefix = () => {
+    const { edit, triggerCharRange } = this
+    edit.delete(triggerCharRange)
+  }
+
+  public tryFillCompletionBind = () => {
+    const { insertKind } = this
+    // `direct` mode has been filled by `completionItem`
+    if (insertKind === 'direct') return
+
+    const handlerBindObject = this.classComponentParent ? 'this.' : ''
+    const cursor = this.editor.selection.active
+    const suffix = `={${handlerBindObject}${this.fullHandlerName}}`
+    this.editor.edit((build) => {
+      // NOTE: can not use edit.insert, as it only can be called synchronously
+      build.insert(cursor, suffix)
+    })
+  }
+
+  private moveCursor = (insertAt: Position | null, xDelta: number) => {
+    if (!insertAt) return
+    const DELTA_TO_TRAIL_OF_INSERTION = 3
+    const deltaPosition = insertAt.translate(DELTA_TO_TRAIL_OF_INSERTION, xDelta)
+    const cursorTarget = new Selection(deltaPosition, deltaPosition)
+    this.editor.selection = cursorTarget
+    this.editor.revealRange(cursorTarget, TextEditorRevealType.InCenterIfOutsideViewport)
   }
 
   private getHandlerParams = async (): Promise<FunctionParam[] | null> => {
@@ -164,25 +183,6 @@ export class HandlerInsert {
 
     const functionParams = getFunctionParams(definitionString)
     return functionParams
-  }
-
-  public cleanCompletionPrefix = () => {
-    const { edit, triggerCharRange } = this
-    edit.delete(triggerCharRange)
-  }
-
-  public tryFillCompletionBind = () => {
-    const { insertKind } = this
-    // `direct` mode has been filled by `completionItem`
-    if (insertKind === 'direct') return
-
-    const handlerBindObject = this.classComponentParent ? 'this.' : ''
-    const cursor = this.editor.selection.active
-    const suffix = `={${handlerBindObject}${this.fullHandlerName}}`
-    this.editor.edit(build => {
-      // NOTE: can not use edit.insert, as it only can be called synchronously
-      build.insert(cursor, suffix)
-    })
   }
 
   private countIndentsInNode = (node: Node): number => {

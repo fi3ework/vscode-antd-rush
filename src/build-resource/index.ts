@@ -92,7 +92,7 @@ async function clean(scope: ('markdown' | 'json')[]) {
 /**
  * 🚀
  */
-async function buildResource(download: boolean = true) {
+async function buildResource(download = true) {
   clean(download ? ['markdown', 'json'] : ['json'])
   console.log(logSymbols.success, 'resource cleaned')
   console.log(logSymbols.info, 'start fetching v3')

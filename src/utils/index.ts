@@ -82,7 +82,10 @@ export function toAntdMajorVersion(enumLabel: string | undefined): ResourceVersi
 /**
  * Compose hover/completion item card message.
  */
-type TypeMdType = { value: string; display: 'inline' | 'blockCode' }
+interface TypeMdType {
+  value: string
+  display: 'inline' | 'blockCode'
+}
 
 export function composeCardMessage(
   items: {

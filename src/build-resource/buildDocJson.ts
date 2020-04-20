@@ -22,20 +22,6 @@ import { ComponentDocLocation, ComponentMapping } from './componentMap'
 import { ANTD_GITHUB, STORAGE } from './constant'
 
 export class DefinitionBuilder {
-  public constructor(version: ResourceVersion, mapping: ComponentMapping) {
-    this.version = version
-    this.mapping = mapping
-  }
-
-  public async emitJson(language: DocLanguage) {
-    return await this.buildComponentDefinition(language)
-  }
-
-  private langToMdName: { [k in DocLanguage]: string } = {
-    en: ANTD_GITHUB.EN_MD_NAME,
-    zh: ANTD_GITHUB.ZH_MD_NAME,
-  }
-
   private version: ResourceVersion
   private mapping: ComponentMapping
   private processor = unified().use(markdown)
@@ -43,6 +29,19 @@ export class DefinitionBuilder {
     .use(markdown)
     .use(stringify)
     .data('settings', { looseTable: false })
+  private langToMdName: { [k in DocLanguage]: string } = {
+    en: ANTD_GITHUB.EN_MD_NAME,
+    zh: ANTD_GITHUB.ZH_MD_NAME,
+  }
+
+  public constructor(version: ResourceVersion, mapping: ComponentMapping) {
+    this.version = version
+    this.mapping = mapping
+  }
+
+  public async emitJson(language: DocLanguage) {
+    return this.buildComponentDefinition(language)
+  }
 
   private async buildComponentDefinition(
     language: DocLanguage
@@ -138,7 +137,7 @@ export class DefinitionBuilder {
       const stringifiedNode = this.stringifier.stringify(node)
       const isMatch = anchors.forEach((anchor) => {
         const anchorReg = new RegExp('^' + anchor + '$')
-        if (!!stringifiedNode.match(anchorReg)) anchorNodes.push(node)
+        if (stringifiedNode.match(anchorReg)) anchorNodes.push(node)
       })
       return isMatch
     })

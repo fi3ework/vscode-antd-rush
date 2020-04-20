@@ -21,7 +21,7 @@ export async function activateLS() {
 
 export async function showFile(docUri: vscode.Uri) {
   const doc = await vscode.workspace.openTextDocument(docUri)
-  return await vscode.window.showTextDocument(doc)
+  return vscode.window.showTextDocument(doc)
 }
 
 export async function setEditorContent(
@@ -30,7 +30,7 @@ export async function setEditorContent(
 ): Promise<boolean> {
   const doc = editor.document
   const all = new vscode.Range(doc.positionAt(0), doc.positionAt(doc.getText().length))
-  return editor.edit(eb => eb.replace(all, content))
+  return editor.edit((eb) => eb.replace(all, content))
 }
 
 export function readFileAsync(path: string) {
@@ -46,5 +46,5 @@ export function readFileAsync(path: string) {
 }
 
 export function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }

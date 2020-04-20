@@ -9,13 +9,10 @@ describe('Should show hover on component', async () => {
   const fixturePaths = buildFixtures()
   const componentNames = Object.keys(fixturePaths)
 
-  for (let index = 0; index < componentNames.length; index++) {
-    const componentName = componentNames[index]
+  for (const componentName of componentNames) {
     const p = fixturePaths[componentName]
 
     await it('shows hover for component', async () => {
-      // if (componentName !== 'Statistic') return
-
       await vscode.commands.executeCommand('workbench.action.closeEditorsInGroup')
       const docUri = vscode.Uri.file(p)
       await activateLS()
@@ -23,7 +20,10 @@ describe('Should show hover on component', async () => {
       await sleep(FILE_LOAD_SLEEP_TIME)
       const editor = vscode!.window!.activeTextEditor
       const line = editor?.document.lineAt(6)
-      const subCompCharacters = findAllIndexInString(line?.text!, '.').map(c => c + 1)
+      const lineText = line?.text
+      if (typeof lineText !== 'string')
+        throw Error(`should find text at line ${line} of ${componentName}`)
+      const subCompCharacters = findAllIndexInString(lineText, '.').map((c) => c + 1)
       subCompCharacters.push(5)
       await testComponentHover(docUri, componentName, subCompCharacters)
     })
@@ -36,9 +36,7 @@ async function testComponentHover(docUri: vscode.Uri, componentName: string, col
     bypassSpecialCase(componentName, columns)
     let hasFlag = false
 
-    for (let index = 0; index < columns.length; index++) {
-      const column = columns[index]
-
+    for (const column of columns) {
       const result = (await vscode.commands.executeCommand(
         'vscode.executeHoverProvider',
         docUri,
@@ -61,8 +59,8 @@ async function testComponentHover(docUri: vscode.Uri, componentName: string, col
 }
 
 function isHoverContainsFlag(hovers: vscode.Hover[]): boolean {
-  return hovers.some(hover => {
-    return hover.contents.some(content => {
+  return hovers.some((hover) => {
+    return hover.contents.some((content) => {
       return (content as any).value.includes('文档')
     })
   })
