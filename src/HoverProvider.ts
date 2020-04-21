@@ -63,6 +63,9 @@ export class HoverProvider {
       if (!componentData)
         throw antdRushErrorMsg(`did not match component for ${closestComponentName}`)
 
+      const propData = componentData[interfaceName]
+      if (!propData) return // Might hovering on a native props, such as style or className
+
       const { description: desc, type, version, default: defaultValue } = componentData[
         interfaceName
       ]
