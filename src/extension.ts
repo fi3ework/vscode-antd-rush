@@ -63,7 +63,7 @@ export function activate(context: ExtensionContext) {
   )
 
   /**
-   * Press `!` or `#` to trigger handler intellisense for antd component.
+   * Press `!` or `~` to trigger handler intellisense for antd component.
    */
   const completionItemRegistration = languages.registerCompletionItemProvider(
     ['javascript', 'javascriptreact', 'typescriptreact'],

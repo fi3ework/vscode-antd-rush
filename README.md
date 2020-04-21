@@ -78,7 +78,7 @@ Extension support both v3 and v4 documentation, v3 by default (it will changed t
 ### Insert method handler automatically
 
 - Trigger `!` to auto insert handler with default prefix (default prefix is `handle`, it's configurable)
-- Trigger `#` to insert handler after handler name inquiry
+- Trigger `~` to insert handler after handler name inquiry
 - TypeScript type annotation will not be added for now
 - class component insertion template is
 

@@ -114,7 +114,7 @@ export class AntdProvideCompletionItem implements CompletionItemProvider {
     )
 
     const triggerChar = this.context.triggerCharacter
-    const insertKind = AntdProvideCompletionItem.insertKindMapping[triggerChar || '#']
+    const insertKind = AntdProvideCompletionItem.insertKindMapping[triggerChar || '~']
 
     if (insertKind === 'direct') {
       item.insertText = `${handlerName}={${isInClassComponent ? 'this.' : ''}${addHandlerPrefix(
