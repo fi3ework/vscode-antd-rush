@@ -19,10 +19,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: yarn - install & compile
+      - name: yarn - install & build
         run: |
           yarn
-          yarn run webpack-build
+          yarn run build-prod
           yarn run compile-test
       - name: Run headless tests
         uses: GabrielBB/xvfb-action@v1.0
