@@ -100,7 +100,7 @@
     "lint": "eslint \"src/**\" \"test/**\"",
     "watch-test": "tsc -watch -p ./test",
     "test": "node ./out-test/runTest.js",
-    "vscode:prepublish": "npm run lint && npm run webpack-build"
+    "vscode:prepublish": "npm run lint && npm run build-prod"
   },
   "devDependencies": {
     "@octokit/rest": "^17.1.4",
