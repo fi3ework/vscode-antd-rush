@@ -24,6 +24,9 @@ jobs:
           yarn
           yarn run build-prod
           yarn run compile-test
+      - name: Lint
+        run: |
+          yarn run lint
       - name: Run headless tests
         uses: GabrielBB/xvfb-action@v1.0
         with:
