@@ -1,25 +1,34 @@
 # Contribute
 
-## 1. Pre-build document JSON
+## Fetch documentations
 
-```zsh
-$ yarn run build-doc:download-and-parse
+### 1. Prepare GitHub token
+
+As GitHub's open API has limitation with non-authentication request. It's recommended to add token to request header. Add a file to `{projectRoot}/build-resource/token.ts` and content of
+
+```typescript
+export const GITHUB_TOKEN = `${YOUR_GITHUB_TOKEN}`
 ```
 
-The documentation relevent config is in `./src/build-resource/constant.ts`. It contains the documentation's version will be fetched.
+### 2. Pre-build documentation JSON
 
-## 2. Add GitHub token (optional)
+```zsh
+yarn run build-doc:download-and-parse
+```
 
-As GitHub's open API has limitation with non-authentication request. It's recommend to add token to request header. Use the token of yourself, and add is as `src/build-resource/fetchDocs.ts` lines 9-12 guide.
+The documentation relevent config is in `./src/build-resource/constant.ts`. It contains the documentation's configuration.
 
-## 3. Run extension in debug mode
+## Development
+
+### 1. Run extension in debug mode
 
 Press <kbd>F5</kbd> to run extension in debug mode.
 
-## scripts
+## Scripts
 
-- `build-doc:download-and-parse`: downloaded Markdown files and parse them to JSON which will be shown.
-- `build-doc:parse`: parse Markdowned files under `src/resource/*.md` to JSON.
-- `build-prod`: build a optimized version of dist.
-- `build-dev`: will be runned as pre-task when debugging.
-- `compile-test`: compile test files.
+- `build-doc:download-and-parse`: Download Markdown files and parse them to JSON which will be shown.
+- `build-doc:parse`: Parse Markdowned files under `src/resource/*.md` to JSON without re-download.
+- `build-dev`: Will be runned as pre-task when debugging.
+- `build-prod`: Build a optimized version of dist.
+- `compile-test`: Compile test files.
+- `test`: Run unit test cases.
