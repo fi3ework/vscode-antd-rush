@@ -1,5 +1,9 @@
 import { ComponentMapping } from '../componentMap'
 
+/**
+ * Use .+ to avoid escape of regular expression, could be replaced with escaped string.
+ */
+
 export const antdComponentMapV4: ComponentMapping = {
   Affix: {
     anchorBeforeProps: '## API',
@@ -8,6 +12,11 @@ export const antdComponentMapV4: ComponentMapping = {
   Alert: {
     anchorBeforeProps: '## API',
     methods: ['afterClose', 'onClose'],
+  },
+  'Alert.ErrorBoundary': {
+    docAlias: 'alert',
+    anchorBeforeProps: '### Alert.ErrorBoundary',
+    methods: [],
   },
   Anchor: {
     anchorBeforeProps: '### Anchor Props',
@@ -32,7 +41,12 @@ export const antdComponentMapV4: ComponentMapping = {
     ],
   },
   Avatar: {
-    anchorBeforeProps: '## API',
+    anchorBeforeProps: '### Avatar',
+    methods: ['onError'],
+  },
+  'Avatar.Group': {
+    docAlias: 'avatar',
+    anchorBeforeProps: '### Avatar.Group .+',
     methods: ['onError'],
   },
   BackTop: {
@@ -40,7 +54,12 @@ export const antdComponentMapV4: ComponentMapping = {
     methods: ['target', 'onClick'],
   },
   Badge: {
-    anchorBeforeProps: '## API',
+    anchorBeforeProps: '### Badge',
+    methods: [],
+  },
+  'Badge.Ribbon': {
+    docAlias: 'badge',
+    anchorBeforeProps: '### Badge.Ribbon .+',
     methods: [],
   },
   Breadcrumb: {
@@ -137,62 +156,11 @@ export const antdComponentMapV4: ComponentMapping = {
       'getCalendarContainer',
       'onOpenChange',
       'onPanelChange',
-      // DatePicker
       'disabledTime',
       'renderExtraFooter',
       'onChange',
       'onOk',
       'onPanelChange',
-    ],
-  },
-  'DatePicker.MonthPicker': {
-    docAlias: 'date-picker',
-    anchorBeforeProps: ['### MonthPicker'],
-    methods: [
-      // Picker
-      'dateRender',
-      'disabledDate',
-      'getCalendarContainer',
-      'onOpenChange',
-      'onPanelChange',
-      // MonthPicker
-      'monthCellContentRender',
-      'renderExtraFooter',
-      'onChange',
-    ],
-  },
-  'DatePicker.WeekPicker': {
-    docAlias: 'date-picker',
-    anchorBeforeProps: ['### WeekPicker'],
-    methods: [
-      // Picker
-      'dateRender',
-      'disabledDate',
-      'getCalendarContainer',
-      'onOpenChange',
-      'onPanelChange',
-      // WeekPicker
-      'onChange',
-      'renderExtraFooter',
-    ],
-  },
-  'DatePicker.RangePicker': {
-    docAlias: 'date-picker',
-    anchorBeforeProps: ['### RangePicker'],
-    methods: [
-      // Picker
-      'dateRender',
-      'disabledDate',
-      'getCalendarContainer',
-      'onOpenChange',
-      'onPanelChange',
-      // RangePicker
-      'disabledTime',
-      'ranges',
-      'renderExtraFooter',
-      'onCalendarChange',
-      'onChange',
-      'onOk',
     ],
   },
   Descriptions: {
@@ -234,6 +202,21 @@ export const antdComponentMapV4: ComponentMapping = {
     anchorBeforeProps: '## Form.Item',
     methods: [],
   },
+  'Form.List': {
+    docAlias: 'form',
+    anchorBeforeProps: '## Form.List',
+    methods: [],
+  },
+  'Form.ErrorList': {
+    docAlias: 'form',
+    anchorBeforeProps: '## Form.ErrorList',
+    methods: [],
+  },
+  'Form.Provider': {
+    docAlias: 'form',
+    anchorBeforeProps: '## Form.Provider',
+    methods: [],
+  },
   Row: {
     docAlias: 'grid',
     anchorBeforeProps: '### Row',
@@ -245,6 +228,10 @@ export const antdComponentMapV4: ComponentMapping = {
     methods: [],
   },
   Icon: {
+    anchorBeforeProps: '## API',
+    methods: [],
+  },
+  Image: {
     anchorBeforeProps: '## API',
     methods: [],
   },
@@ -299,18 +286,6 @@ export const antdComponentMapV4: ComponentMapping = {
     anchorBeforeProps: '### List.Item.Meta',
     methods: [],
   },
-  // Mention has been deprecated in 4.x
-  // Mention: {
-  //   anchorBeforeProps: '### Mention',
-  //   methods: [
-  //     'getSuggestionContainer',
-  //     'onBlur',
-  //     'onChange',
-  //     'onFocus',
-  //     'onSearchChange',
-  //     'onSelect',
-  //   ],
-  // },
   Mentions: {
     // EN document shows `### Mention`, it's a typo.
     anchorBeforeProps: ['### Mentions', '### Mention'],
@@ -323,7 +298,13 @@ export const antdComponentMapV4: ComponentMapping = {
       'onFocus',
       'onBlur',
       'getPopupContainer',
+      'onResize',
     ],
+  },
+  'Mentins.Option': {
+    docAlias: 'mentions',
+    anchorBeforeProps: '### Option',
+    methods: [],
   },
   Menu: {
     anchorBeforeProps: '## API',
@@ -430,6 +411,10 @@ export const antdComponentMapV4: ComponentMapping = {
   Slider: {
     anchorBeforeProps: '## API',
     methods: ['tipFormatter', 'onAfterChange', 'onChange', 'getTooltipPopupContainer'],
+  },
+  Space: {
+    anchorBeforeProps: '## API',
+    methods: [],
   },
   Spin: {
     anchorBeforeProps: '## API',

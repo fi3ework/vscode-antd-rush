@@ -92,8 +92,8 @@
     }
   },
   "scripts": {
-    "build-doc:download-and-parse": "cross-env DOWNLOAD=true ts-node ./src/build-resource/index.ts",
-    "build-doc:parse": "cross-env DOWNLOAD=true ts-node ./src/build-resource/index.ts",
+    "build-doc:download-and-parse": "cross-env DOWNLOAD=true ts-node -O '{\"esModuleInterop\":true}' ./src/build-resource/index.ts",
+    "build-doc:parse": "cross-env DOWNLOAD=false ts-node -O '{\"esModuleInterop\":true}' ./src/build-resource/index.ts",
     "build-dev": "cross-env NODE_ENV=development ts-node --files -P ./scripts/tsconfig.json ./scripts",
     "build-prod": "cross-env NODE_ENV=production ts-node --files -P ./scripts/tsconfig.json ./scripts",
     "compile-test": "tsc -p ./test",

@@ -4,8 +4,8 @@ import { ResourceVersion, DocLanguage } from '../types'
 export const ANTD_GITHUB = {
   OWNER_NAME: 'ant-design',
   REPO_NAME: 'ant-design',
-  V3_SOURCE_TAG: '3.26.15',
-  V4_SOURCE_TAG: '4.1.3',
+  V3_SOURCE_TAG: '3.26.18',
+  V4_SOURCE_TAG: '4.7.0',
   EN_MD_NAME: 'index.en-US.md',
   ZH_MD_NAME: 'index.zh-CN.md',
 } as const

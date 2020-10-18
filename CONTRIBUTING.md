@@ -3,7 +3,7 @@
 ## 1. Pre-build document JSON
 
 ```zsh
-$ yarn run build-doc
+$ yarn run build-doc:download-and-parse
 ```
 
 The documentation relevent config is in `./src/build-resource/constant.ts`. It contains the documentation's version will be fetched.

@@ -90,15 +90,28 @@ async function clean(scope: ('markdown' | 'json')[]) {
 }
 
 /**
- * 🚀
+ * Download docs and parse it to ast if argument set to true
  */
-async function buildResource(download = true) {
+async function buildResource({ v3, v4, download }: Record<'v3' | 'v4' | 'download', boolean>) {
   clean(download ? ['markdown', 'json'] : ['json'])
   console.log(logSymbols.success, 'resource cleaned')
-  console.log(logSymbols.info, 'start fetching v3')
-  await buildVersionResource('v3', download)
-  console.log(logSymbols.info, 'start fetching v4')
-  await buildVersionResource('v4', download)
+
+  if (v3) {
+    console.log(logSymbols.info, 'start fetching v3')
+    await buildVersionResource('v3', download)
+  }
+
+  if (v4) {
+    console.log(logSymbols.info, 'start fetching v4')
+    await buildVersionResource('v4', download)
+  }
 }
 
-buildResource(process.env.DOWNLOAD === 'true')
+/**
+ * 🚀
+ */
+buildResource({
+  v3: true,
+  v4: true,
+  download: process.env.DOWNLOAD === 'true',
+})

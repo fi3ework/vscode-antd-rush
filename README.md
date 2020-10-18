@@ -41,7 +41,7 @@ English | [中文](./README-zh_CN.md)
 
 ## Caveat
 
-- Currently used version of the Ant Design 3.x documentation is **3.26.15**, 4.x uses **4.1.3**
+- Currently used version of the Ant Design 3.x documentation is **3.26.18** (latest at 2020/10/18), 4.x uses **4.7.0** (latest at 2020/10/18)
 - `@types/react` is required to be installed in userland project
 
 ## Usage

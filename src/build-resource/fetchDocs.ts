@@ -17,7 +17,7 @@ try {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   GITHUB_TOKEN = require('./token').GITHUB_TOKEN
 } catch {
-  // noop
+  console.info('NO GitHub token available, request frequency will be limited')
 }
 
 const octokit = new Octokit({
