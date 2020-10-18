@@ -97,7 +97,7 @@
     "build-dev": "cross-env NODE_ENV=development ts-node --files -P ./scripts/tsconfig.json ./scripts",
     "build-prod": "cross-env NODE_ENV=production ts-node --files -P ./scripts/tsconfig.json ./scripts",
     "compile-test": "tsc -p ./test",
-    "lint": "eslint \"src/**\" \"test/**\"",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
     "watch-test": "tsc -watch -p ./test",
     "test": "node ./out-test/runTest.js",
     "vscode:prepublish": "npm run lint && npm run build-prod"
