@@ -22,13 +22,15 @@ Rush to Ant Design in VS Code
 <img src="https://vsmarketplacebadge.apphb.com/rating-short/fi3ework.vscode-antd-rush.svg" />
 </a>
 <a href="https://github.com/fi3ework/vscode-antd-rush/actions?query=workflow%3ATest">
-<img src="https://img.shields.io/github/workflow/status/fi3ework/vscode-antd-rush/Test?label=GitHub%20Actions" />
+<img src="https://github.com/fi3ework/vscode-antd-rush/actions/workflows/test.yml/badge.svg" />
 </a>
 </p>
 
 </div>
 
 [Download from Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=fi3ework.vscode-antd-rush)
+
+If this extension is helpful to you, please vote ⭐️⭐️⭐️⭐️⭐️ at [Marketplace](https://marketplace.visualstudio.com/items?itemName=fi3ework.vscode-antd-rush&ssr=false#review-details) 😉.
 
 English | [中文](./README-zh_CN.md)
 
