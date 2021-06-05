@@ -6,8 +6,10 @@ import { activateLS, FILE_LOAD_SLEEP_TIME, showFile, sleep } from '../helper'
 import { findAllIndexInString } from '../utils'
 
 describe('Should show hover on component', async () => {
+  console.log('--- Start building test fixtures ---')
   const fixturePaths = buildFixtures()
   const componentNames = Object.keys(fixturePaths)
+  console.log('--- Finish building test fixtures ---')
 
   for (const componentName of componentNames) {
     const p = fixturePaths[componentName]
