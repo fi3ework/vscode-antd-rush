@@ -41,7 +41,7 @@ Rush to Ant Design in VS Code
 
 ## 提示
 
-- 当前使用的 Ant Design 3.x 版本文档为 **3.26.18** (latest at 2020/10/18)，4.x 版本文档为 **4.7.0** (latest at 2020/10/18)
+- 当前使用的 Ant Design 3.x 版本文档为 **3.26.20** (latest at 2021/06/05)，4.x 版本文档为 **4.16.1** (latest at 2021/06/05)
 - 需要用户的项目中安装了 `@types/react`
 
 ## 功能
