@@ -44,7 +44,7 @@ const App = () => {
 `
 }
 
-export function readComponentMapping(): ComponentMap {
+function readComponentMapping(): ComponentMap {
   const mapping = JSON.parse(
     // TODO: only test v3 now
     fs.readFileSync(path.resolve(__dirname, '../../src/resource/v3/definition.json'), 'utf-8')
@@ -58,5 +58,3 @@ export function getFixtures(): string[] {
   const componentFixtures = fs.readdirSync(FIXTURE_DIR)
   return componentFixtures.map((c) => path.resolve(FIXTURE_DIR, c))
 }
-
-buildFixtures()
